@@ -1,9 +1,21 @@
 /* 主题色 */
-$theme-yellow: yellow;
+$light-yellow: #ffce30;
+$dark-yellow: #ffce30;
 
 /* 默认黄色 */
 #default-skin {
-	color: $theme-yellow;
+	color: #000;
+	.home-header {
+		background: linear-gradient(180deg, #ffce30 0%, #fedd03 100%);
+	}
+	.icon-banzhuan {
+		font-size: 100rpx;
+		color: #f7be1a;
+	}
+	.icon-hudong {
+		font-size: 72rpx;
+		color: #f9c318;
+	}
 }
 /* 深黑 */
 #dark-skin {

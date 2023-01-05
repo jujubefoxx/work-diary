@@ -1,3 +1,15 @@
+// 判断当前早中晚
+function dateState() {
+	let date = new Date();
+	if (date.getHours() >= 6 && date.getHours() < 12) {
+		return 'morning'
+	} else if (date.getHours() >= 12 && date.getHours() < 18) {
+		return 'afternoon'
+	} else {
+		return 'evening'
+	}
+}
+
 // 时间戳格式化
 function formatTime(time) {
 	if (typeof time !== 'number' || time < 0) {
@@ -68,6 +80,7 @@ var dateUtils = {
 };
 
 export {
+	dateState,
 	formatTime,
 	formatLocation,
 	dateUtils

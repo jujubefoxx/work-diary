@@ -1,3 +1,7 @@
+view {
+	box-sizing: border-box;
+}
+
 .pub-gray {
 	color: #b4b3b3
 }
@@ -20,24 +24,24 @@
 
 .green-background {
 	background: #0ec358;
-	border: solid 1px #0ec358 !important;
+	border: solid 2rpx #0ec358 !important;
 	color: #fff;
 }
 
 .orange-background {
 	background: #ffb500;
-	border: solid 1px #ffb500 !important;
+	border: solid 2rpx #ffb500 !important;
 	color: #fff;
 }
 
 .red-background {
 	background: #ff4c4c;
-	border: solid 1px #ff4c4c !important;
+	border: solid 2rpx #ff4c4c !important;
 	color: #fff;
 }
 
 .dai {
-	border: solid 1px #0081ff !important;
+	border: solid 2rpx #0081ff !important;
 }
 
 .pub-flex-1 {
@@ -50,6 +54,10 @@
 
 .inline {
 	display: inline-block;
+}
+
+.flex {
+	display: flex;
 }
 
 .flex-wrap {
@@ -156,67 +164,71 @@
 }
 
 .f-36 {
-	font-size: 36px;
+	font-size: 72rpx;
 }
 
 .f-34 {
-	font-size: 34px;
+	font-size: 68rpx;
 }
 
 .f-32 {
-	font-size: 32px;
+	font-size: 64rpx;
 }
 
 .f-31 {
-	font-size: 31px;
+	font-size: 62rpx;
 }
 
 .f-30 {
-	font-size: 30px;
+	font-size: 60rpx;
 }
 
 .f-29 {
-	font-size: 29px;
+	font-size: 58rpx;
 }
 
 .f-28 {
-	font-size: 28px;
+	font-size: 56rpx;
 }
 
 .f-26 {
-	font-size: 26px;
+	font-size: 52rpx;
 }
 
 .f-25 {
-	font-size: 25px;
+	font-size: 50rpx;
 }
 
 .f-24 {
-	font-size: 24px;
+	font-size: 48rpx;
 }
 
 .f-22 {
-	font-size: 22px;
+	font-size: 44rpx;
 }
 
 .f-20 {
-	font-size: 20px;
+	font-size: 40rpx;
 }
 
 .f-18 {
-	font-size: 18px;
+	font-size: 36rpx;
 }
 
 .f-16 {
-	font-size: 16px;
+	font-size: 32rpx;
 }
 
 .f-14 {
-	font-size: 14px;
+	font-size: 28rpx;
+}
+
+.f-13 {
+	font-size: 26rpx;
 }
 
 .f-12 {
-	font-size: 12px;
+	font-size: 24rpx;
 }
 
 .t-l {
@@ -236,136 +248,136 @@
 }
 
 .m-top10 {
-	margin-top: 10px;
+	margin-top: 20rpx;
 }
 
 .m-top15 {
-	margin-top: 15px;
+	margin-top: 30rpx;
 }
 
 .m-top20 {
-	margin-top: 20px;
+	margin-top: 40rpx;
 }
 
 .m-top30 {
-	margin-top: 30px;
+	margin-top: 60rpx;
 }
 
 .m-bot10 {
-	margin-bottom: 10px;
+	margin-bottom: 20rpx;
 }
 
 .m-bot15 {
-	margin-bottom: 15px;
+	margin-bottom: 30rpx;
 }
 
 .m-bot20 {
-	margin-bottom: 20px;
+	margin-bottom: 40rpx;
 }
 
 .m-bot30 {
-	margin-bottom: 30px;
+	margin-bottom: 60rpx;
 }
 
 .m-l-10 {
-	margin-left: 10px;
+	margin-left: 20rpx;
 }
 
 .m-l-20 {
-	margin-left: 20px;
+	margin-left: 40rpx;
 }
 
 .m-l-30 {
-	margin-left: 30px;
+	margin-left: 60rpx;
 }
 
 .m-r-10 {
-	margin-right: 10px;
+	margin-right: 20rpx;
 }
 
 .m-r-20 {
-	margin-right: 20px;
+	margin-right: 40rpx;
 }
 
 .m-r-30 {
-	margin-right: 30px;
+	margin-right: 60rpx;
 }
 
 .p-t-10 {
-	padding-top: 10px;
+	padding-top: 20rpx;
 }
 
 .p-t-20 {
-	padding-top: 20px;
+	padding-top: 40rpx;
 }
 
 .p-t-30 {
-	padding-top: 30px;
+	padding-top: 60rpx;
 }
 
 .p-b-10 {
-	padding-bottom: 10px;
+	padding-bottom: 20rpx;
 }
 
 .p-b-20 {
-	padding-bottom: 20px;
+	padding-bottom: 40rpx;
 }
 
 .p-b-30 {
-	padding-bottom: 30px;
+	padding-bottom: 60rpx;
 }
 
 .p-l-10 {
-	padding-left: 10px;
+	padding-left: 20rpx;
 }
 
 .p-l-20 {
-	padding-left: 20px;
+	padding-left: 40rpx;
 }
 
 .p-l-30 {
-	padding-left: 30px;
+	padding-left: 60rpx;
 }
 
 .p-r-10 {
-	padding-right: 10px;
+	padding-right: 20rpx;
 }
 
 .p-r-20 {
-	padding-right: 20px;
+	padding-right: 40rpx;
 }
 
 .p-r-30 {
-	padding-right: 30px;
+	padding-right: 60rpx;
 }
 
 .border {
-	border: solid 1px #ddd9d2;
+	border: solid 2rpx #ddd9d2;
 }
 
 .b-r {
-	border-right: 1px solid #ddd9d2;
+	border-right: 2rpx solid #ddd9d2;
 }
 
 .b-l {
-	border-left: 1px solid #ddd9d2;
+	border-left: 2rpx solid #ddd9d2;
 }
 
 .b-b {
-	border-bottom: 1px solid #ddd9d2;
+	border-bottom: 2rpx solid #ddd9d2;
 }
 
 .b-t {
-	border-top: 1px solid #ddd9d2;
+	border-top: 2rpx solid #ddd9d2;
 }
 
-.oneline-hide {
+.line1 {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
 
-.twoline-hide {
+.line2 {
 	display: -webkit-box;
 	word-break: break-all;
 	text-overflow: ellipsis;
@@ -391,29 +403,29 @@
 }
 
 .radius6 {
-	border-radius: 6px;
+	border-radius: 12rpx;
 }
 
 .radius8 {
-	border-radius: 8px;
+	border-radius: 16rpx;
 }
 
 .pad10 {
-	padding: 10px;
+	padding: 20rpx;
 }
 
 .pad20 {
-	padding: 20px;
+	padding: 40rpx;
 }
 
 .pad30 {
-	padding: 30px;
+	padding: 60rpx;
 }
 
 .p-r-l-20 {
-	padding: 0 20px;
+	padding: 0 40rpx;
 }
 
 .p-r-l-30 {
-	padding: 0 30px;
+	padding: 0 60rpx;
 }
