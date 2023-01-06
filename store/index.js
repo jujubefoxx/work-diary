@@ -3,7 +3,8 @@ import {
 } from 'vuex'
 const store = createStore({
 	state: {
-		theme:'default-skin',
+		theme: 'default-skin',
+		isHoliday: false,
 		hasLogin: false,
 		isUniverifyLogin: false,
 		loginProvider: "",
@@ -19,13 +20,11 @@ const store = createStore({
 		univerifyErrorMsg: ''
 	},
 	mutations: {
-		login(state, provider) {
-			state.hasLogin = true;
-			state.loginProvider = provider;
+		changeTheme(state, themeName) {
+			state.theme = themeName;
 		},
-		logout(state) {
-			state.hasLogin = false
-			state.openid = null
+		changeHoliday(state) {
+			state.isHoliday = !state.isHoliday
 		},
 		setOpenid(state, openid) {
 			state.openid = openid

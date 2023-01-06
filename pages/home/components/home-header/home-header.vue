@@ -15,22 +15,35 @@
 </template>
 <script>
 export default {
-	name: 'HomeHeader'
+	name: 'home-header'
 };
 </script>
 <script setup>
 import { computed, ref } from 'vue';
 import { dateState } from '@/common/util.js';
+import storeState from '@/store/state.js';
 // 图片地址
 const { imgUrl } = getApp({ allowDefault: true }).globalData;
+// 是否假期
+const { isHoliday } = storeState(['isHoliday']);
 // 打招呼内容
 const helloWord = {
-	morning: '上午好呀打工人，又是元气满满的一天！',
-	afternoon: '下午好呀打工人，下班后好好犒劳一下辛苦打工的自己吧！',
-	evening: '晚上呀打工人，辛苦了一天早点休息吧！'
+	morning: '又是元气满满的一天！',
+	afternoon: '下班后好好吃一顿吧！',
+	evening: '辛苦了一天早点休息吧！'
+};
+const dateWord = {
+	morning: '上午好呀打工人，',
+	afternoon: '下午好呀打工人，',
+	evening: '晚上呀打工人，'
 };
 // 猫咪说的话
-let leftSaying = helloWord[dateState()];
+const leftSaying = computed(() => {
+	if (isHoliday.value) {
+		return dateWord[dateState()] + '今天猫猫也休息哦';
+	}
+	return dateWord[dateState()] + helloWord[dateState()];
+});
 // 自己说的话
 let rightSaying = ref('');
 // 获取输入内容
@@ -45,7 +58,6 @@ const inputWid = computed(() => {
 		return String(rightSaying.value).length * 28 + 'rpx';
 	}
 });
-
 </script>
 
 <style lang="scss" scoped>
@@ -73,6 +85,7 @@ const inputWid = computed(() => {
 }
 .home-header__right,
 .home-header__left {
+	position: relative;
 	width: fit-content;
 	line-height: 40rpx;
 	background: #ffffff;
@@ -84,6 +97,16 @@ const inputWid = computed(() => {
 	padding: 24rpx 20rpx;
 	margin-top: 12rpx;
 	margin-left: 32rpx;
+	&::before {
+		position: absolute;
+		bottom: -40rpx;
+		content: '';
+		width: 20rpx;
+		height: 20rpx;
+		background: #ffffff;
+		border-radius: 50%;
+		border: 4rpx solid #2c2c2c;
+	}
 }
 .home-header__right {
 	padding: 20rpx;

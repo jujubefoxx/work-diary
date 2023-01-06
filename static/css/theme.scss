@@ -1,12 +1,10 @@
-/* 主题色 */
-$light-yellow: #ffce30;
-$dark-yellow: #ffce30;
+@import '@/uni.scss';
 
 /* 默认黄色 */
 #default-skin {
 	color: #000;
 	.home-header {
-		background: linear-gradient(180deg, #ffce30 0%, #fedd03 100%);
+		background: linear-gradient(180deg, $light-yellow 0%, $light-yellow 100%);
 	}
 	.icon-banzhuan {
 		font-size: 100rpx;
@@ -15,6 +13,18 @@ $dark-yellow: #ffce30;
 	.icon-hudong {
 		font-size: 72rpx;
 		color: #f9c318;
+	}
+	.notebook {
+		.notebook-buckle__top {
+			background: #bf503c;
+		}
+		.notebook-buckle__bottom {
+			background: $dark-yellow;
+		}
+	}
+	.happy-button__list--active {
+		background: $light-yellow;
+		color: #2c2c2c;
 	}
 }
 /* 深黑 */
