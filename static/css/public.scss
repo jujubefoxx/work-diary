@@ -1,0 +1,63 @@
+view {
+	box-sizing: border-box;
+}
+
+/* 黑色投影 */
+.black-shadow {
+	box-shadow: 4rpx 4rpx black;
+}
+
+/* 虚线下划线 */
+.dashed::after {
+	position: absolute;
+	content: '';
+	width: 100%;
+	height: 4rpx;
+	left: 0;
+	bottom: 0;
+	background-image: linear-gradient(to right, #2c2c2c 0%, #2c2c2c 44rpx, transparent 44rpx);
+	background-size: 48rpx 4rpx;
+	background-repeat: repeat-x;
+}
+
+/* 表单 */
+.form-list {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 24rpx;
+	font-size: 30rpx;
+}
+
+.form-list__content {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 300rpx;
+	height: 76rpx;
+	view,
+	input {
+		height: 100%;
+		line-height: 76rpx;
+		text-align: center;
+		border-radius: 12rpx;
+		border: 4rpx solid #2c2c2c;
+		background: #f4f4f6;
+	}
+}
+
+.form-list__range {
+	flex: 1;
+}
+
+.form-list__group {
+	margin-right: 26rpx;
+	width: 82rpx;
+	&:last-child {
+		margin-right: 0;
+	}
+}
+
+.form-list__input {
+	width: 100%;
+}

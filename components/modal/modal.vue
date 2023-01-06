@@ -1,11 +1,11 @@
 <template>
-	<uni-popup ref="popup">
+	<uni-popup ref="popup" :mask-click="false">
 		<view class="modal theme-bg">
 			<view class="modal-title t-c" v-if="showTitle">{{ title }}</view>
 			<view class="modal-content"><slot></slot></view>
 			<view class="flex flex-x-center" v-if="showBtn">
 				<view class="modal-btn light-shadow">
-					<view class="modal-btn__list" :class="{ 'modal-btn__list--border': showComfirm }" v-if="showCancel" @click="$emit('handleCancel')">取消</view>
+					<view class="modal-btn__list" :class="{ 'modal-btn__list--border': showComfirm }" v-if="showCancel" @click="closeModal">取消</view>
 					<view class="modal-btn__list active-btn" v-if="showComfirm" @click="$emit('handleComfirm')">确定</view>
 				</view>
 			</view>
@@ -44,6 +44,9 @@ const props = defineProps({
 });
 function openModal() {
 	popup.value.open('center');
+}
+function closeModal() {
+	popup.value.close();
 }
 defineExpose({ openModal });
 </script>
