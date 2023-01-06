@@ -2,7 +2,15 @@
 
 /* 默认黄色 */
 #default-skin {
-	color: #000;
+	color: #2c2c2c;
+	// 主题背景色
+	.theme-bg {
+		background-color: #fff;
+	}
+	/* 亮色投影 */
+	.light-shadow {
+		box-shadow: 4rpx 4rpx $theme-red;
+	}
 	.home-header {
 		background: linear-gradient(180deg, $light-yellow 0%, $light-yellow 100%);
 	}
@@ -22,7 +30,7 @@
 			background: $dark-yellow;
 		}
 	}
-	.happy-button__list--active {
+	.active-btn {
 		background: $light-yellow;
 		color: #2c2c2c;
 	}

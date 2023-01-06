@@ -1,11 +1,6 @@
 <template>
 	<view class="happy-button black-shadow">
-		<view
-			class="happy-button__list"
-			@click="handleClick(item)"
-			:class="{ 'happy-button__list--active': activeId.includes(Number(item.id)) }"
-			v-for="(item, index) in buttonList"
-		>
+		<view class="happy-button__list" @click="$emit('handleClick', item.id)" :class="{ 'active-btn': activeId.includes(Number(item.id)) }" v-for="(item, index) in buttonList">
 			{{ item.title }}
 		</view>
 	</view>
@@ -16,10 +11,9 @@ export default {
 };
 </script>
 <script setup>
-import { computed, ref, toRefs, defineEmits } from 'vue';
+import { computed, ref, toRefs } from 'vue';
 import { dateState } from '@/common/util.js';
 
-const emit = defineEmits(['handleClick']);
 const props = defineProps({
 	buttonList: {
 		type: Array,
@@ -31,11 +25,7 @@ const props = defineProps({
 	},
 	message: Number
 });
-const { buttonList,activeId } = toRefs(props);
-// 点击按钮
-function handleClick(item) {
-	emit('handleClick', item.id); //emit的使用
-}
+const { buttonList, activeId } = toRefs(props);
 </script>
 
 <style lang="scss" scoped>

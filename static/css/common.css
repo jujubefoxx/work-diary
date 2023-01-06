@@ -7,6 +7,7 @@ view {
 	box-shadow: 4rpx 4rpx black;
 }
 
+
 /* 虚线下划线 */
 .dashed::after {
 	position: absolute;
@@ -14,6 +15,7 @@ view {
 	width: 100%;
 	height: 4rpx;
 	left: 0;
+	bottom: 0;
 	background-image: linear-gradient(to right, #2c2c2c 0%, #2c2c2c 44rpx, transparent 44rpx);
 	background-size: 48rpx 4rpx;
 	background-repeat: repeat-x;
