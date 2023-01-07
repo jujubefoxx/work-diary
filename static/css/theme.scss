@@ -11,6 +11,15 @@
 	.light-shadow {
 		box-shadow: 4rpx 4rpx $theme-red;
 	}
+	.picker-indicator {
+		// width: 454rpx;
+		height: 80rpx;
+		// border-radius: 12rpx;
+		border-top: 4rpx solid #2c2c2c;
+		border-bottom: 4rpx solid #2c2c2c;
+		// box-shadow: 4rpx 4rpx $theme-red;
+	}
+
 	.home-header {
 		background: linear-gradient(180deg, $light-yellow 0%, $light-yellow 100%);
 	}

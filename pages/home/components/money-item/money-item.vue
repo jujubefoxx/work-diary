@@ -70,6 +70,7 @@
 			</view>
 		</view>
 	</modal>
+	<date-time-picker></date-time-picker>
 </template>
 <script>
 export default {
@@ -127,6 +128,7 @@ function handleClick(value) {
 		openModal();
 	}
 }
+
 // 打开填写资料弹窗
 function openModal() {
 	modalChild.value.openModal();

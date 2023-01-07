@@ -4,10 +4,7 @@
 			<view class="modal-title t-c" v-if="showTitle">{{ title }}</view>
 			<view class="modal-content"><slot></slot></view>
 			<view class="flex flex-x-center" v-if="showBtn">
-				<view class="modal-btn light-shadow">
-					<view class="modal-btn__list" :class="{ 'modal-btn__list--border': showComfirm }" v-if="showCancel" @click="closeModal">取消</view>
-					<view class="modal-btn__list active-btn" v-if="showComfirm" @click="$emit('handleComfirm')">确定</view>
-				</view>
+				<comfirm-button @handleCancel="closeModal" @handleComfirm="handleComfirm" :showCancel="showCancel" :showComfirm="showComfirm"></comfirm-button>
 			</view>
 		</view>
 	</uni-popup>
@@ -46,6 +43,11 @@ function openModal() {
 	popup.value.open('center');
 }
 function closeModal() {
+	console.log('1111');
+	popup.value.close();
+}
+function handleComfirm() {
+	console.log('1111');
 	popup.value.close();
 }
 defineExpose({ openModal });
@@ -57,31 +59,12 @@ defineExpose({ openModal });
 	width: 686rpx;
 	border-radius: 22rpx;
 	border: 4rpx solid #000000;
-	padding: 0 52rpx 52rpx;
+	padding: 0 52rpx;
 }
 .modal-title {
 	font-size: 36rpx;
 	font-weight: 600;
 	line-height: 50rpx;
 	margin: 36rpx;
-}
-.modal-btn {
-	display: flex;
-	justify-content: center;
-	border-radius: 200rpx;
-	border: 4rpx solid #2c2c2c;
-	overflow: hidden;
-}
-.modal-btn__list {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 228rpx;
-	height: 88rpx;
-	background: #f4f4f6;
-	color: #535354;
-}
-.modal-btn__list--border {
-	border-right: 4rpx solid #2c2c2c;
 }
 </style>
