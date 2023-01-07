@@ -1,5 +1,6 @@
 <template>
-	<view class="date-time-picker picker-template">
+	<view class="mask" v-show="show" @click="close"></view>
+	<view class="date-time-picker picker-template" :class="{ 'picker-template--show': show }">
 		<picker-view class="picker-view" :immediate-change="true" :value="pickerValue" @change="bindChange" indicator-class="picker-indicator">
 			<template v-if="mode === 'time'">
 				<picker-view-column>
@@ -26,7 +27,7 @@
 				</picker-view-column>
 			</template>
 		</picker-view>
-		<comfirm-button @handleComfirm="handleComfirm" @handleCancel="handleCancel"></comfirm-button>
+		<comfirm-button @handleComfirm="handleComfirm" @handleCancel="close"></comfirm-button>
 	</view>
 </template>
 <script>
@@ -37,6 +38,10 @@ export default {
 <script setup>
 import { ref, toRefs, nextTick } from 'vue';
 const props = defineProps({
+	show: {
+		type: Boolean,
+		default: () => true
+	},
 	// 模式:time 时间选择器 date日期选择器 other其它 根据columnList生成
 	mode: {
 		type: String,
@@ -60,7 +65,7 @@ const props = defineProps({
 	// 初始位置
 	value: {
 		type: Array,
-		default: () => [9, 0]
+		default: () => []
 	},
 	// 自定义选择器
 	columnList: {
@@ -70,6 +75,8 @@ const props = defineProps({
 });
 const { mode, value, showYears, showMonth, showDays, columnList } = toRefs(props);
 const emit = defineEmits(['comfirm']);
+// 展示开关
+let show = ref(false);
 
 // 时间选择器
 const hours = [];
@@ -102,15 +109,15 @@ for (let i = 1; i <= 31; i++) {
 }
 
 // 选择的值
-let pickerValue = [];
+let pickerValue = ref([]);
 if (value.value.length > 0) {
-	pickerValue = value.value;
+	pickerValue.value = value.value;
 } else if (mode.value === 'date') {
 	// 不传value时默认当前年月日
-	pickerValue = [9999, month - 1, day - 1];
+	pickerValue.value = [9999, month - 1, day - 1];
 } else {
 	// 默认值
-	pickerValue = [0, 0];
+	pickerValue.value = [0, 0];
 }
 
 function bindChange(e) {
@@ -138,9 +145,8 @@ function bindChange(e) {
 			days = allDay;
 		}
 	}
-	pickerValue = e.detail.value;
+	pickerValue.value = e.detail.value;
 }
-function handleCancel() {}
 function handleComfirm() {
 	// 传值
 	let data = [];
@@ -153,17 +159,29 @@ function handleComfirm() {
 	} else {
 		list = columnList.value;
 	}
-	pickerValue.forEach((item, index) => {
-		data.push(list[index][pickerValue[index]]);
+	pickerValue.value.forEach((item, index) => {
+		data.push(list[index][pickerValue.value[index]]);
 	});
-	emit('comfirm', data, pickerValue);
+	emit('comfirm', data, pickerValue.value);
 }
+// 打开
+function open(value) {
+	show.value = true;
+	if (value) {
+		pickerValue.value = value;
+	}
+}
+// 关闭
+function close() {
+	show.value = false;
+}
+defineExpose({ open, close });
 </script>
 
 <style lang="scss" scoped>
 .date-time-picker {
-	padding-left: 42rpx;
+	// padding-left: 42rpx;
 	padding-top: 42rpx;
-	padding-right: 42rpx;
+	// padding-right: 42rpx;
 }
 </style>

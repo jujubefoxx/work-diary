@@ -31,17 +31,17 @@
 			<view class="form-list">
 				<text class="form-list__title">上下班时间</text>
 				<view class="form-list__content">
-					<view class="form-list__range light-shadow">{{ profileForm.workingTime }}</view>
+					<view class="form-list__range light-shadow" @click="openPicker('workingTime')">{{ filterTime(profileForm.workingTime) }}</view>
 					<text style="margin: 0 14rpx;">~</text>
-					<view class="form-list__range light-shadow">{{ profileForm.closingTime }}</view>
+					<view class="form-list__range light-shadow" @click="openPicker('closingTime')">{{ filterTime(profileForm.closingTime) }}</view>
 				</view>
 			</view>
 			<view class="form-list">
 				<text class="form-list__title">午休时间</text>
 				<view class="form-list__content">
-					<view class="form-list__range light-shadow">{{ profileForm.breakStart }}</view>
+					<view class="form-list__range light-shadow" @click="openPicker('breakStart')">{{ filterTime(profileForm.breakStart) }}</view>
 					<text style="margin: 0 14rpx;">~</text>
-					<view class="form-list__range light-shadow">{{ profileForm.breakEnd }}</view>
+					<view class="form-list__range light-shadow" @click="openPicker('breakEnd')">{{ filterTime(profileForm.breakEnd) }}</view>
 				</view>
 			</view>
 			<view class="form-list">
@@ -70,7 +70,7 @@
 			</view>
 		</view>
 	</modal>
-	<date-time-picker></date-time-picker>
+	<date-time-picker ref="picker" :mode="pickerMode" @comfirm="pickerComfirm"></date-time-picker>
 </template>
 <script>
 export default {
@@ -88,6 +88,8 @@ let hasProfileData = ref(false);
 const moneyProfile = ref({});
 // 模态框
 const modalChild = ref(null);
+// 选择器
+const picker = ref(null);
 // 获取资料
 function getProfile() {
 	const profile = uni.getStorageSync('moneyProfile');
@@ -96,7 +98,6 @@ function getProfile() {
 		hasProfileData.value = true;
 	}
 }
-
 // 按钮
 const buttonList = {
 	noData: {
@@ -138,17 +139,17 @@ const moneyTypeList = [{ id: 1, title: '月薪' }, { id: 2, title: '日薪' }, {
 // 资料表单
 const profileForm = ref({
 	// 上班时间
-	workingTime: '9:00',
+	workingTime: [9, 0],
 	// 下班时间
-	closingTime: '18:00',
-	// 上班工时时间戳
-	workTimestamp: '',
+	closingTime: [18, 0],
+	// 上班工时（分）
+	workMinutes: compareTime([9, 0], [18, 0]),
 	// 午休开始时间
-	breakStart: '12:00',
+	breakStart: [12, 0],
 	// 午休结束时间
-	breakEnd: '14:00',
-	// 午休时间时间戳
-	breakTimestamp: '',
+	breakEnd: [14, 0],
+	// 午休时间（分）
+	breakMinutes: compareTime([9, 0], [18, 0]),
 	// 薪资类型 1月薪  2日薪  3时薪
 	moneyType: 1,
 	// 薪资
@@ -158,6 +159,71 @@ const profileForm = ref({
 	// 发薪时间 不定时==>none 日结==>day 其余为数字
 	payoffTime: '15'
 });
+// 转换时间数组格式
+function filterTime(array) {
+	const [hour, time] = array;
+	return `${hour < 10 ? '0' + hour : hour}:${time < 10 ? '0' + time : time}`;
+}
+// 当前使用选择器的表单
+let activeName = '';
+// 选择器值
+let pickerValue = ref([]);
+// 选择器模式
+let pickerMode = ref('');
+// 打开时间选择器
+function openPicker(name, mode = 'time') {
+	activeName = name;
+	pickerValue = profileForm.value[name];
+	pickerMode.value = mode;
+	picker.value.open(pickerValue);
+}
+
+// 计算时间差
+function compareTime(st, et) {
+	// 开始时间 st 结束时间 et
+	let s = st[0] * 60 + Number(st[1]);
+	let e = et[0] * 60 + Number(et[1]);
+	return e - s;
+}
+// 确认选择
+function pickerComfirm(data, index) {
+	// 时间范围判断
+	const rangeTime = ['closingTime', 'workingTime', 'breakStart', 'breakEnd'];
+	if (rangeTime.includes(activeName)) {
+		// 开始时间
+		let startTime = [];
+		// 结束时间
+		let endTime = [];
+		// 分组
+		const startArr = ['workingTime', 'breakStart'];
+		const endArr = ['closingTime', 'breakEnd'];
+		// 下标组
+		const startIndex = startArr.indexOf(activeName);
+		const endIndex = endArr.indexOf(activeName);
+		if (startIndex !== -1) {
+			// 开始时间
+			startTime = data;
+			// 结束时间
+			endTime = profileForm.value[endArr[startIndex]];
+		} else {
+			// 开始时间
+			startTime = profileForm.value[startArr[endIndex]];
+			// 结束时间
+			endTime = data;
+		}
+		const realMinutes = compareTime(startTime, endTime);
+		// 时间范围判断
+		if (realMinutes <= 0) {
+			uni.showToast({
+				title: '上班时间必须早于下班时间哦，目前还不支持夜班模式~',
+				icon: 'none'
+			});
+			return;
+		}
+	}
+	profileForm.value[activeName] = data;
+	picker.value.close();
+}
 </script>
 
 <style lang="scss" scoped>
