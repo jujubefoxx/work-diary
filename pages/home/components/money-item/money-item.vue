@@ -47,13 +47,18 @@
 			<view class="form-list">
 				<text class="form-list__title">薪资类型</text>
 				<view class="form-list__content">
-					<view v-for="item in moneyTypeList" :class="{ 'active-btn': profileForm.moneyType === Number(item.id) }" class="form-list__group f-14 light-shadow">
+					<view
+						v-for="item in moneyTypeList"
+						@click="handleChoose(item.id)"
+						:class="{ 'active-btn': profileForm.moneyType === Number(item.id) }"
+						class="form-list__group f-14 light-shadow"
+					>
 						{{ item.title }}
 					</view>
 				</view>
 			</view>
 			<view class="form-list">
-				<text class="form-list__title">一个月多少钱钱</text>
+				<text class="form-list__title">{{ activeType.string }}多少钱钱</text>
 				<view class="form-list__content"><input class="form-list__input light-shadow" v-model="profileForm.money" maxlength="6" /></view>
 			</view>
 			<view class="form-list">
@@ -78,7 +83,7 @@ export default {
 };
 </script>
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { dateState } from '@/common/util.js';
 import { useStore } from 'vuex';
 const store = useStore();
@@ -135,7 +140,11 @@ function openModal() {
 	modalChild.value.openModal();
 }
 
-const moneyTypeList = [{ id: 1, title: '月薪' }, { id: 2, title: '日薪' }, { id: 3, title: '时薪' }];
+const moneyTypeList = [
+	{ id: 1, title: '月薪', string: '一个月', default: '8000' },
+	{ id: 2, title: '日薪', string: '一天', default: '200' },
+	{ id: 3, title: '时薪', string: '一小时', default: '30' }
+];
 // 资料表单
 const profileForm = ref({
 	// 上班时间
@@ -164,6 +173,12 @@ function filterTime(array) {
 	const [hour, time] = array;
 	return `${hour < 10 ? '0' + hour : hour}:${time < 10 ? '0' + time : time}`;
 }
+// 当前薪资类型
+const activeType = computed(() => {
+	const obj = moneyTypeList.find(item => item.id === profileForm.value.moneyType);
+	profileForm.value.money = obj.default;
+	return obj;
+});
 // 当前使用选择器的表单
 let activeName = '';
 // 选择器值
@@ -215,7 +230,7 @@ function pickerComfirm(data, index) {
 		// 时间范围判断
 		if (realMinutes <= 0) {
 			uni.showToast({
-				title: '上班时间必须早于下班时间哦，目前还不支持夜班模式~',
+				title: ['closingTime', 'workingTime'].includes(activeName) ? '上班时间必须早于下班时间哦，目前还不支持夜班模式~' : '结束时间必须早于开始时间哦',
 				icon: 'none'
 			});
 			return;
@@ -223,6 +238,10 @@ function pickerComfirm(data, index) {
 	}
 	profileForm.value[activeName] = data;
 	picker.value.close();
+}
+// 选择薪资类型
+function handleChoose(id) {
+	profileForm.value.moneyType = id;
 }
 </script>
 
