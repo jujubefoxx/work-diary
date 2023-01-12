@@ -5,7 +5,7 @@
 			<view class="money-item__title dashed line1">
 				<template v-if="!$store.state.isHoliday">
 					今天已赚
-					<text class="money-item__num">{{ hasProfileData ? 9999.99 : 0 }}</text>
+					<text class="money-item__num">{{ hasProfileData ? computedMoney : 0 }}</text>
 					元
 				</template>
 				<template v-else>
@@ -87,8 +87,8 @@ export default {
 };
 </script>
 <script setup>
-import { computed, ref, watch } from 'vue';
-import { dateState } from '@/common/util.js';
+import { computed, ref, watch, isRef } from 'vue';
+import { dateState, getNowDate } from '@/common/util.js';
 import { useStore } from 'vuex';
 const store = useStore();
 // 是否填写信息
@@ -99,19 +99,46 @@ const moneyProfile = ref({});
 const modalChild = ref(null);
 // 选择器
 const picker = ref(null);
+// 今日工作时长/秒
+let realWorkTimes = 0;
+// 定时器
+let timer = null;
+// 今日已赚
+let computedMoney = ref(0);
 // 获取资料
 function getProfile() {
 	const profile = uni.getStorageSync('profile');
 	if (profile) {
 		moneyProfile.value = profile;
 		hasProfileData.value = true;
+		timer = setInterval(() => {
+			const date = new Date();
+			// 当前时间
+			const now = [date.getHours(), date.getMinutes(), date.getSeconds()];
+			const { workingTime, closingTime } = moneyProfile.value;
+			// 开始工作时长/秒
+			const realWorkingTime = compareTime(workingTime, now, 's');
+			// 开始工作
+			const workingStart = realWorkingTime >= 0;
+			// 结束工作
+			const workingEnd = compareTime(closingTime, now) >= 0;
+			// 上班中
+			if (workingStart) {
+				computedMoney.value = (secordMoney.value * realWorkingTime).toFixed(2);
+			}
+			// 下班了
+			if (workingEnd) {
+				clearInterval(timer);
+			}
+			console.log('定时器运作中');
+		}, 1000);
 	}
 }
 // 秒薪
 const secordMoney = computed(() => {
 	const type = Number(moneyProfile.value.moneyType);
-	// 上班工时（分）
-	const workMinute = moneyProfile.value.workMinute - moneyProfile.value.breakMinutes;
+	// 上班工时/分
+	const workMinute = moneyProfile.value.workMinutes - moneyProfile.value.breakMinutes;
 	// 日薪
 	let dayMoney = type === 2 ? moneyProfile.value.money : 0;
 	if (type === 1) {
@@ -121,15 +148,6 @@ const secordMoney = computed(() => {
 	let hourMoney = type === 3 ? moneyProfile.value.money : dayMoney / (workMinute / 60);
 	// 秒薪
 	return hourMoney / 60 / 60;
-});
-// 今日已赚
-const computedMoney = computed(() => {
-	console.log(secordMoney);
-	// const type=Number(moneyProfile.value.moneyType)
-	// // 月薪
-	// if(type===1){
-	// 	moneyProfile.value.moneyType
-	// }
 });
 
 getProfile();
@@ -165,14 +183,6 @@ function handleClick(value) {
 	}
 }
 
-// 打开填写资料弹窗
-function openModal() {
-	modalChild.value.openModal();
-}
-// 关闭填写资料弹窗
-function closeModal() {
-	modalChild.value.closeModal();
-}
 const modalTips = { title: '秒薪计算方法', content: ['1.秒薪=时薪/60/60', '2.时薪=日薪/日工作时长<br>', '3.日薪=月薪/月工作日'] };
 const moneyTypeList = [
 	{ id: 1, title: '月薪', string: '一个月', default: '8000', maxLength: 6 },
@@ -196,12 +206,25 @@ const profileForm = ref({
 	// 薪资类型 1月薪  2日薪  3时薪
 	moneyType: 1,
 	// 薪资
-	money: 8000,
+	money: '8000',
 	// 月工时
 	workDays: 22,
 	// 发薪时间
 	payoffTime: 15
 });
+
+// 打开填写资料弹窗
+function openModal() {
+	if (hasProfileData.value) {
+		moneyTypeList.find(item => item.id === moneyProfile.value.moneyType).default = moneyProfile.value.money;
+		profileForm.value = moneyProfile.value;
+	}
+	modalChild.value.openModal();
+}
+// 关闭填写资料弹窗
+function closeModal() {
+	modalChild.value.closeModal();
+}
 // 转换时间数组格式
 function filterTime(array) {
 	const [hour, time] = array;
@@ -259,10 +282,25 @@ function openPicker(name, mode = 'time') {
 }
 
 // 计算时间差
-function compareTime(st, et) {
+function compareTime(st, et, mode = 'm') {
 	// 开始时间 st 结束时间 et
 	let s = st[0] * 60 + Number(st[1]);
 	let e = et[0] * 60 + Number(et[1]);
+
+	// 秒
+	if (mode === 's') {
+		// 开始时间 st 结束时间 et
+		if (!st[2]) {
+			st[2] = 0;
+		}
+		if (!et[2]) {
+			st[2] = 0;
+		}
+		s = st[0] * 60 * 60 + st[1] * 60 + Number(st[2]);
+		e = et[0] * 60 * 60 + et[1] * 60 + Number(et[2]);
+	} else {
+	}
+
 	return e - s;
 }
 // 确认选择
@@ -338,8 +376,7 @@ function comfirmModal() {
 	}
 	// 保存资料信息
 	uni.setStorageSync('profile', profileForm.value);
-	moneyProfile.value = profileForm.value;
-	hasProfileData.value = true;
+	getProfile();
 	closeModal();
 }
 </script>
