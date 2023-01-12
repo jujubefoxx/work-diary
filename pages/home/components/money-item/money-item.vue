@@ -87,7 +87,7 @@ export default {
 };
 </script>
 <script setup>
-import { computed, ref, watch, isRef } from 'vue';
+import { computed, ref } from 'vue';
 import { dateState, getNowDate } from '@/common/util.js';
 import { useStore } from 'vuex';
 const store = useStore();
@@ -107,7 +107,7 @@ let timer = null;
 let computedMoney = ref(0);
 // 获取资料
 function getProfile() {
-	const profile = uni.getStorageSync('profile');
+	const { profile } = store.state;
 	if (profile) {
 		moneyProfile.value = profile;
 		hasProfileData.value = true;
@@ -374,8 +374,7 @@ function comfirmModal() {
 		});
 		return;
 	}
-	// 保存资料信息
-	uni.setStorageSync('profile', profileForm.value);
+	store.commit('setProfile', profileForm.value);
 	getProfile();
 	closeModal();
 }

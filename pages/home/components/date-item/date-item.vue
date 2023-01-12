@@ -26,14 +26,13 @@ export default {
 };
 </script>
 <script setup>
-import { computed, ref, watch, isRef } from 'vue';
+import { ref } from 'vue';
 import { dateState, getNowDate } from '@/common/util.js';
 import { useStore } from 'vuex';
 const store = useStore();
+const picker = ref(null);
 const { year, month, day } = store.state.currentDayDate;
 let weather = ref(store.state.currentDayDate.weather);
-console.log(weather, store.state.currentDayDate.weather, uni.getStorageSync('currentDayDate'));
-const picker = ref(null);
 const columnList = [['出太阳', '大阴天', '下雨啦', '刮大风', '下雪咯', '不知道']];
 // 点击选择天气
 function handleClick() {
@@ -52,6 +51,7 @@ function pickerComfirm(data) {
 	display: flex;
 	justify-content: space-between;
 	margin-top: 20rpx;
+	margin-bottom: 40rpx;
 }
 .date-item__left {
 	padding-top: 20rpx;

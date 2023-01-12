@@ -6,7 +6,7 @@ const store = createStore({
 		theme: 'default-skin',
 		isHoliday: false,
 		currentDayDate: uni.getStorageSync('currentDayDate'),
-		isUniverifyLogin: false,
+		profile: uni.getStorageSync('profile'),
 		loginProvider: "",
 		openid: null,
 		testvuex: false,
@@ -31,8 +31,10 @@ const store = createStore({
 			uni.setStorageSync('currentDayDate', data);
 			state.currentDayDate = data
 		},
-		setTestTrue(state) {
-			state.testvuex = true
+		setProfile(state, data) {
+			// 保存资料信息
+			uni.setStorageSync('profile', data);
+			state.profile = data
 		},
 		setTestFalse(state) {
 			state.testvuex = false

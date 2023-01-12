@@ -4,6 +4,7 @@
 		<notebook>
 			<money-item></money-item>
 			<date-item></date-item>
+			<commemoration></commemoration>
 		</notebook>
 	</view>
 </template>
@@ -12,6 +13,7 @@
 import HomeHeader from './components/home-header/home-header.vue';
 import MoneyItem from './components/money-item/money-item.vue';
 import DateItem from './components/date-item/date-item.vue';
+import Commemoration from './components/commemoration/commemoration.vue';
 </script>
 
 <style lang="scss" scoped></style>

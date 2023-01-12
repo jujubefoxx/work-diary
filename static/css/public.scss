@@ -113,3 +113,36 @@ view {
 	color: #565656;
 	line-height: 34rpx;
 }
+
+// 首页主模块
+.home-item {
+	width: 100%;
+	background: #ffffff;
+	border-radius: 24rpx;
+	border: 4rpx solid #2c2c2c;
+	box-shadow: 0rpx 4rpx 12rpx 2rpx rgba(74, 64, 0, 0.05);
+	margin-bottom: 20rpx;
+	padding: 24rpx 28rpx;
+	.home-item__header {
+		display: flex;
+		justify-content: space-between;
+	}
+	.home-item__title {
+		height: 44rpx;
+		font-size: 32rpx;
+		font-weight: 600;
+		color: #2c2c2c;
+		line-height: 44rpx;
+	}
+	.home-item__btn {
+		width: 92rpx;
+		height: 42rpx;
+		background: #ffffff;
+		border-radius: 22rpx;
+		border: 4rpx solid #2c2c2c;
+		font-size: 24rpx;
+		color: #2c2c2c;
+		line-height: 34rpx;
+		text-align: center;
+	}
+}

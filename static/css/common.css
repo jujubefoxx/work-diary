@@ -251,6 +251,10 @@ view {
 	font-weight: bold;
 }
 
+.f-w-400 {
+	font-weight: 400;
+}
+
 .m-top10 {
 	margin-top: 20rpx;
 }
