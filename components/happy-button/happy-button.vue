@@ -17,7 +17,7 @@ import { dateState } from '@/common/util.js';
 const props = defineProps({
 	buttonList: {
 		type: Array,
-		default: () => [{ alias: '', title: '按钮名称', id: 0 }, { alias: '', title: '按钮名称', id: 1 }]
+		default: () => [{ title: '按钮名称', id: 0 }, { title: '按钮名称', id: 1 }]
 	},
 	activeId: {
 		type: Array,

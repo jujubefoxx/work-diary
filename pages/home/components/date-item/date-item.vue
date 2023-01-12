@@ -1,0 +1,114 @@
+<template>
+	<view class="date-item">
+		<!-- 左侧信息 -->
+		<view class="date-item__left">
+			<view class="note-btn light-shadow flex flex-y-center flex-x-center">
+				<view class="note-btn__icon"><text class="iconfont icon-notebook"></text></view>
+				打工人记事本
+			</view>
+			<!-- <view class="money-item__title dashed line1"></view> -->
+			<!-- <view class="money-item__btn"></view> -->
+			<!-- 右侧按钮 -->
+		</view>
+		<view class="date-item__right">
+			<view class="date-item__date flex flex-x-center dashed">
+				<text>{{ year }}年{{ month }}月{{ day }}日</text>
+				<text v-show="weather" class="date-item__weather">{{ weather }}</text>
+			</view>
+			<happy-button :button-list="[{ title: weather ? '修改天气' : '新增天气', id: 0 }]" @handleClick="handleClick"></happy-button>
+		</view>
+	</view>
+	<date-time-picker ref="picker" mode="other" :columnList="columnList" @comfirm="pickerComfirm"></date-time-picker>
+</template>
+<script>
+export default {
+	name: 'date-item'
+};
+</script>
+<script setup>
+import { computed, ref, watch, isRef } from 'vue';
+import { dateState, getNowDate } from '@/common/util.js';
+import { useStore } from 'vuex';
+const store = useStore();
+const { year, month, day } = store.state.currentDayDate;
+let weather = ref(store.state.currentDayDate.weather);
+console.log(weather, store.state.currentDayDate.weather, uni.getStorageSync('currentDayDate'));
+const picker = ref(null);
+const columnList = [['出太阳', '大阴天', '下雨啦', '刮大风', '下雪咯', '不知道']];
+// 点击选择天气
+function handleClick() {
+	picker.value.open();
+}
+function pickerComfirm(data) {
+	const obj = store.state.currentDayDate;
+	obj.weather = weather.value = data[0];
+	store.commit('setCurrentDayDate', obj);
+	picker.value.close();
+}
+</script>
+
+<style lang="scss" scoped>
+.date-item {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 20rpx;
+}
+.date-item__left {
+	padding-top: 20rpx;
+}
+.date-item__right {
+	flex-direction: column;
+	display: flex;
+	align-items: flex-end;
+}
+.date-item__date {
+	width: 344rpx;
+	height: 64rpx;
+	border-radius: 4rpx;
+	font-size: 30rpx;
+	font-weight: 600;
+	color: #ffffff;
+	line-height: 64rpx;
+}
+.date-item__weather {
+	margin-left: 8rpx;
+}
+.happy-button {
+	margin-right: 4rpx;
+	margin-top: 4rpx;
+}
+.dashed::after {
+	bottom: -4rpx;
+}
+
+.note-btn {
+	width: 308rpx;
+	height: 100rpx;
+	background: #ffffff;
+	border-radius: 24rpx;
+	border: 4rpx solid #2c2c2c;
+	font-size: 28rpx;
+	font-weight: 600;
+	color: #2c2c2c;
+	line-height: 100rpx;
+
+	.iconfont {
+		position: relative;
+		font-weight: 400;
+		font-size: 52rpx;
+		margin-right: 16rpx;
+	}
+}
+.note-btn__icon {
+	position: relative;
+	&::before {
+		position: absolute;
+		content: '';
+		width: 50rpx;
+		height: 50rpx;
+		top: 20rpx;
+		left: -20rpx;
+		border-radius: 50%;
+	}
+}
+</style>

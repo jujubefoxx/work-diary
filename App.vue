@@ -1,4 +1,5 @@
 <script>
+import { getNowDate } from '@/common/util.js';
 export default {
 	globalData: {
 		imgUrl: {
@@ -12,7 +13,18 @@ export default {
 	},
 	onLaunch: function() {},
 	onShow: function() {
-		console.log('App Show');
+		const { year, month, day } = getNowDate();
+		const currentDayDate = {
+			year,
+			month,
+			day,
+			dateStr: `${year}-${month}-${day}`,
+			weather: ''
+		};
+		const storeData = uni.getStorageSync('currentDayDate');
+		if (!storeData || (storeData && currentDayDate.dateStr !== storeData.dateStr)) {
+			this.$store.commit('setCurrentDayDate', currentDayDate);
+		}
 	},
 	onHide: function() {
 		console.log('App Hide');

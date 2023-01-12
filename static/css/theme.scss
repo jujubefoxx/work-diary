@@ -43,6 +43,12 @@
 		background: $light-yellow;
 		color: #2c2c2c;
 	}
+	.note-btn__icon::before {
+		background: $dark-yellow;
+	}
+	.date-item__date {
+		background: #668a8a;
+	}
 }
 /* 深黑 */
 #dark-skin {

@@ -117,7 +117,7 @@ if (value.value.length > 0) {
 	pickerValue.value = [9999, month - 1, day - 1];
 } else {
 	// 默认值
-	pickerValue.value = [0, 0];
+	pickerValue.value = [0];
 }
 
 function bindChange(e) {

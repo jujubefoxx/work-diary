@@ -5,7 +5,7 @@ const store = createStore({
 	state: {
 		theme: 'default-skin',
 		isHoliday: false,
-		hasLogin: false,
+		currentDayDate: uni.getStorageSync('currentDayDate'),
 		isUniverifyLogin: false,
 		loginProvider: "",
 		openid: null,
@@ -26,8 +26,10 @@ const store = createStore({
 		changeHoliday(state) {
 			state.isHoliday = !state.isHoliday
 		},
-		setOpenid(state, openid) {
-			state.openid = openid
+		setCurrentDayDate(state, data) {
+			// 更新当天的信息
+			uni.setStorageSync('currentDayDate', data);
+			state.currentDayDate = data
 		},
 		setTestTrue(state) {
 			state.testvuex = true

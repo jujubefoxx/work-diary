@@ -7,6 +7,9 @@ view {
 	box-shadow: 4rpx 4rpx black;
 }
 
+.dashed {
+	position: relative;
+}
 /* 虚线下划线 */
 .dashed::after {
 	position: absolute;
@@ -103,10 +106,10 @@ view {
 		font-weight: 400;
 	}
 	text:nth-child(2) {
-		margin-left: 24px;
+		margin-left: 48rpx;
 	}
-	line-height: 17px;
-	font-size: 12px;
+	line-height: 34rpx;
+	font-size: 24rpx;
 	color: #565656;
-	line-height: 17px;
+	line-height: 34rpx;
 }
