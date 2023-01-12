@@ -115,11 +115,12 @@ var dateUtils = {
 		return new Date(a[0], a[1] - 1, a[2], a[3], a[4], a[5]);
 	}
 };
+
 /**
  * 计算距离该日期的天数
- *  date  该日期 [day]  [month,day] [weekArr] [year,month,day]
- *  type 计算类型：1 重复月 2 重复年 3 重复周 4 不重复
- *  如果日期相同 返回0
+ *  date 格式月重复[day] 年重复[month,day] 周重复[weekArr] 不重复[year,month,day]
+ *  type 计算类型：1 月重复 2 年重复 3 周重复 4 不重复
+ *  如果为当天 返回0
  */
 function getRepeatDay(date, type = 1) {
 	const {
@@ -130,7 +131,7 @@ function getRepeatDay(date, type = 1) {
 	} = getNowDate();
 	let nowDate = year + '-' + month + '-' + day
 	let newDate = ''
-	let isFuture = false;
+	let isFuture = false; // 是否未来的日期
 
 	// 计算相差的天
 	function compareDay(nowDay, newDay, future) {
@@ -142,7 +143,9 @@ function getRepeatDay(date, type = 1) {
 			return getDaysBetween(nowDate, newDate)
 		}
 	}
+
 	// 每月的该日重复
+	// date格式为[day] 如[1]代表每月1日进行提醒
 	if (type === 1) {
 		isFuture = day < date[0];
 		// 如果为当天 返回0
@@ -152,7 +155,9 @@ function getRepeatDay(date, type = 1) {
 			return compareDay(day, date[0], isFuture)
 		}
 	}
+
 	// 每年的该月该日重复
+	// date格式为[month,day] 如[11,1]代表每年11月1日进行提醒
 	if (type === 2) {
 		const sameMonth = month === date[0];
 		const sameDay = day === date[1];
@@ -169,14 +174,25 @@ function getRepeatDay(date, type = 1) {
 			return getDaysBetween(nowDate, newDate)
 		}
 	}
+
 	// 每周几重复
+	// date格式为星期数组 [0,1,2,3,4,5,6] 如[1,4]代表每周一和每周四进行提醒
 	if (type === 3) {
-		// date格式为星期数组 [0,1,2,3,4,5,6]
-		const nowWeek = new Day().getDay();
+		const nowWeek = new Date().getDay();
 		if (date.includes(nowWeek)) {
 			return 0
+		} else {
+			let arr = []; // 距离值
+			date.forEach((i) => {
+				if (i > nowWeek) {
+					arr.push(i - nowWeek);
+				} else {
+					arr.push(weekArr.length - nowWeek + i);
+				}
+			})
+			// 取最小值
+			return Math.min(...arr)
 		}
-
 	}
 	// // 年重复的计算
 	// if (type === 2) {
@@ -208,12 +224,6 @@ function getRepeatDay(date, type = 1) {
 function getDaysBetween(date1, date2) {
 	var startDate = Date.parse(date1);
 	var endDate = Date.parse(date2);
-	if (startDate > endDate) {
-		return 0;
-	}
-	if (startDate == endDate) {
-		return 1;
-	}
 	var days = (endDate - startDate) / (1 * 24 * 60 * 60 * 1000);
 	return days;
 }

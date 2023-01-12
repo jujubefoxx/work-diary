@@ -34,7 +34,7 @@ import { computed, ref, watch, isRef } from 'vue';
 import { dateState, getNowDate, getRepeatDay } from '@/common/util.js';
 import { useStore } from 'vuex';
 const store = useStore();
-console.log(getRepeatDay([6, 1], 2));
+console.log(getRepeatDay([1], 3));
 // 图片地址
 const { imgUrl } = getApp({ allowDefault: true }).globalData;
 </script>
