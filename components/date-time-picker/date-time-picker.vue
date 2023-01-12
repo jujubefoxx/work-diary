@@ -10,7 +10,7 @@
 					<view class="picker-view__item" v-for="(item, index) in minutes" :key="index">{{ item < 10 ? '0' + item : item }}</view>
 				</picker-view-column>
 			</template>
-			<template v-if="mode === 'date'">
+			<template v-else-if="mode === 'date'">
 				<picker-view-column>
 					<view class="picker-view__item" v-for="(item, index) in years" :key="index">{{ item }}年</view>
 				</picker-view-column>

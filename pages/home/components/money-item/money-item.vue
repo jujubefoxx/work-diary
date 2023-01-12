@@ -50,7 +50,7 @@
 					<view
 						v-for="item in moneyTypeList"
 						@click="handleChoose(item.id)"
-						:class="{ 'active-btn': profileForm.moneyType === Number(item.id) }"
+						:class="{ 'active-btn': profileForm.moneyType === item.id }"
 						class="form-list__group f-14 light-shadow"
 					>
 						{{ item.title }}
@@ -59,23 +59,23 @@
 			</view>
 			<view class="form-list">
 				<text class="form-list__title">{{ activeType.string }}多少钱钱</text>
-				<view class="form-list__content"><input class="form-list__input light-shadow" v-model="profileForm.money" maxlength="6" /></view>
+				<view class="form-list__content"><input type="digit" class="form-list__input light-shadow" v-model="profileForm.money" :maxlength="activeType.maxLength" /></view>
 			</view>
-			<view class="form-list">
+			<view class="form-list" v-if="profileForm.moneyType === 1">
 				<text class="form-list__title">月打工天数</text>
 				<view class="form-list__content">
-					<view class="form-list__input light-shadow">{{ profileForm.workDays }}</view>
+					<view class="form-list__input light-shadow" @click="openPicker('workDays', 'other')">{{ profileForm.workDays }}</view>
 				</view>
 			</view>
 			<view class="form-list">
 				<text class="form-list__title">每月多少号发工资</text>
 				<view class="form-list__content">
-					<view class="form-list__input light-shadow">{{ profileForm.payoffTime }}</view>
+					<view class="form-list__input light-shadow" @click="openPicker('payoffTime', 'other')">{{ profileForm.payoffTime }}</view>
 				</view>
 			</view>
 		</view>
 	</modal>
-	<date-time-picker ref="picker" :mode="pickerMode" @comfirm="pickerComfirm"></date-time-picker>
+	<date-time-picker ref="picker" :mode="pickerMode" :columnList="columnList" @comfirm="pickerComfirm"></date-time-picker>
 </template>
 <script>
 export default {
@@ -141,9 +141,9 @@ function openModal() {
 }
 
 const moneyTypeList = [
-	{ id: 1, title: '月薪', string: '一个月', default: '8000' },
-	{ id: 2, title: '日薪', string: '一天', default: '200' },
-	{ id: 3, title: '时薪', string: '一小时', default: '30' }
+	{ id: 1, title: '月薪', string: '一个月', default: '8000', maxLength: 6 },
+	{ id: 2, title: '日薪', string: '一天', default: '200', maxLength: 4 },
+	{ id: 3, title: '时薪', string: '一小时', default: '30', maxLength: 3 }
 ];
 // 资料表单
 const profileForm = ref({
@@ -162,11 +162,11 @@ const profileForm = ref({
 	// 薪资类型 1月薪  2日薪  3时薪
 	moneyType: 1,
 	// 薪资
-	money: '8000',
+	money: 8000,
 	// 月工时
-	workDays: '22',
-	// 发薪时间 不定时==>none 日结==>day 其余为数字
-	payoffTime: '15'
+	workDays: 22,
+	// 发薪时间
+	payoffTime: 15
 });
 // 转换时间数组格式
 function filterTime(array) {
@@ -185,11 +185,42 @@ let activeName = '';
 let pickerValue = ref([]);
 // 选择器模式
 let pickerMode = ref('');
+// 自定义选择列表
+let columnList = ref([]);
 // 打开时间选择器
 function openPicker(name, mode = 'time') {
 	activeName = name;
 	pickerValue = profileForm.value[name];
 	pickerMode.value = mode;
+
+	if (mode === 'other' && name === 'workDays') {
+		columnList.value = [[]];
+		for (let i = 1; i <= 31; i++) {
+			columnList.value[0].push(i);
+		}
+		pickerValue = [profileForm.value[name] - 1];
+	} else if (mode === 'other' && name === 'payoffTime') {
+		columnList.value = [['不定时', '日结']];
+		for (let i = 1; i <= 28; i++) {
+			columnList.value[0].push(i);
+		}
+		columnList.value[0].push('每月最后一天');
+		let index = 15;
+		const value = profileForm.value[name];
+		if (isNaN(value)) {
+			if (value === '不定时') {
+				index = 0;
+			} else if (value === '日结') {
+				index = 1;
+			} else {
+				index = 99;
+			}
+		} else {
+			index = Number(value + 1);
+		}
+		pickerValue = [index];
+	}
+
 	picker.value.open(pickerValue);
 }
 
@@ -235,8 +266,10 @@ function pickerComfirm(data, index) {
 			});
 			return;
 		}
+		profileForm.value[activeName] = data;
+	} else {
+		profileForm.value[activeName] = data[0];
 	}
-	profileForm.value[activeName] = data;
 	picker.value.close();
 }
 // 选择薪资类型
