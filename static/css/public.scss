@@ -97,3 +97,16 @@ view {
 	line-height: 80rpx;
 	text-align: center;
 }
+
+.modal-tips {
+	h4 {
+		font-weight: 400;
+	}
+	text:nth-child(2) {
+		margin-left: 24px;
+	}
+	line-height: 17px;
+	font-size: 12px;
+	color: #565656;
+	line-height: 17px;
+}

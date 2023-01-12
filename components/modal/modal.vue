@@ -17,6 +17,7 @@ export default {
 <script setup>
 import { ref, toRefs, nextTick } from 'vue';
 const popup = ref(null);
+const emit = defineEmits(['comfirmModal']);
 const props = defineProps({
 	showTitle: {
 		type: Boolean,
@@ -43,14 +44,12 @@ function openModal() {
 	popup.value.open('center');
 }
 function closeModal() {
-	console.log('1111');
 	popup.value.close();
 }
 function handleComfirm() {
-	console.log('1111');
-	popup.value.close();
+	emit('comfirmModal');
 }
-defineExpose({ openModal });
+defineExpose({ openModal, closeModal });
 </script>
 
 <style lang="scss" scoped>

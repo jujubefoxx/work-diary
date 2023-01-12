@@ -26,7 +26,7 @@
 		</view>
 	</view>
 	<!-- 填写资料表格 -->
-	<modal ref="modalChild">
+	<modal ref="modalChild" @comfirmModal="comfirmModal">
 		<view class="form">
 			<view class="form-list">
 				<text class="form-list__title">上下班时间</text>
@@ -74,6 +74,10 @@
 				</view>
 			</view>
 		</view>
+		<view class="modal-tips">
+			<h4>{{ modalTips.title }}</h4>
+			<p><text v-for="item in modalTips.content" v-html="item"></text></p>
+		</view>
 	</modal>
 	<date-time-picker ref="picker" :mode="pickerMode" :columnList="columnList" @comfirm="pickerComfirm"></date-time-picker>
 </template>
@@ -97,12 +101,38 @@ const modalChild = ref(null);
 const picker = ref(null);
 // 获取资料
 function getProfile() {
-	const profile = uni.getStorageSync('moneyProfile');
+	const profile = uni.getStorageSync('profile');
 	if (profile) {
 		moneyProfile.value = profile;
 		hasProfileData.value = true;
 	}
 }
+// 秒薪
+const secordMoney = computed(() => {
+	const type = Number(moneyProfile.value.moneyType);
+	// 上班工时（分）
+	const workMinute = moneyProfile.value.workMinute - moneyProfile.value.breakMinutes;
+	// 日薪
+	let dayMoney = type === 2 ? moneyProfile.value.money : 0;
+	if (type === 1) {
+		dayMoney = moneyProfile.value.money / moneyProfile.value.workDays;
+	}
+	// 时薪
+	let hourMoney = type === 3 ? moneyProfile.value.money : dayMoney / (workMinute / 60);
+	// 秒薪
+	return hourMoney / 60 / 60;
+});
+// 今日已赚
+const computedMoney = computed(() => {
+	console.log(secordMoney);
+	// const type=Number(moneyProfile.value.moneyType)
+	// // 月薪
+	// if(type===1){
+	// 	moneyProfile.value.moneyType
+	// }
+});
+
+getProfile();
 // 按钮
 const buttonList = {
 	noData: {
@@ -139,7 +169,11 @@ function handleClick(value) {
 function openModal() {
 	modalChild.value.openModal();
 }
-
+// 关闭填写资料弹窗
+function closeModal() {
+	modalChild.value.closeModal();
+}
+const modalTips = { title: '秒薪计算方法', content: ['1.秒薪=时薪/60/60', '2.时薪=日薪/日工作时长<br>', '3.日薪=月薪/月工作日'] };
 const moneyTypeList = [
 	{ id: 1, title: '月薪', string: '一个月', default: '8000', maxLength: 6 },
 	{ id: 2, title: '日薪', string: '一天', default: '200', maxLength: 4 },
@@ -158,7 +192,7 @@ const profileForm = ref({
 	// 午休结束时间
 	breakEnd: [14, 0],
 	// 午休时间（分）
-	breakMinutes: compareTime([9, 0], [18, 0]),
+	breakMinutes: compareTime([12, 0], [14, 0]),
 	// 薪资类型 1月薪  2日薪  3时薪
 	moneyType: 1,
 	// 薪资
@@ -275,6 +309,38 @@ function pickerComfirm(data, index) {
 // 选择薪资类型
 function handleChoose(id) {
 	profileForm.value.moneyType = id;
+}
+// 提交表单
+function comfirmModal() {
+	const { workingTime, breakStart, breakMinutes, workMinutes, closingTime, breakEnd } = profileForm.value;
+	// 异常处理
+	if (compareTime(workingTime, breakStart) <= 0) {
+		uni.showToast({
+			title: '你咋先午休再上班？',
+			icon: 'none'
+		});
+		return;
+	}
+	if (compareTime(breakEnd, closingTime) <= 0) {
+		uni.showToast({
+			title: '你咋下班了还没午休结束？',
+			icon: 'none'
+		});
+		return;
+	}
+	// 午休时长大于工作时长
+	if (breakMinutes >= workMinutes) {
+		uni.showToast({
+			title: '你不会上班的时候一直在午休吧',
+			icon: 'none'
+		});
+		return;
+	}
+	// 保存资料信息
+	uni.setStorageSync('profile', profileForm.value);
+	moneyProfile.value = profileForm.value;
+	hasProfileData.value = true;
+	closeModal();
 }
 </script>
 
