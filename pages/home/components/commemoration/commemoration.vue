@@ -30,7 +30,7 @@
 				<view class="commemoration-list__remark">{{ item.remark }}</view>
 			</view>
 		</view>
-		<modal ref="modalChild" :title="isEdit ? '修改激动时刻' : '新增激动时刻'">
+		<modal ref="modalChild" @comfirmModal="comfirmModal" :title="isEdit ? '修改激动时刻' : '新增激动时刻'">
 			<view class="form">
 				<view class="form-list">
 					<text class="form-list__title">给日子起个名吧</text>
@@ -47,7 +47,6 @@
 					<text class="form-list__title">{{ activeType.title }}</text>
 					<view class="form-list__content">
 						<input class="form-list__input light-shadow" disabled v-model="filterDateText" placeholder="请选择时间" @click="openPicker('date')" />
-						<!-- <view class="form-list__input light-shadow" @click="openPicker('date')">{{ activeType.title }}</view> -->
 					</view>
 				</view>
 				<view class="form-list">
@@ -60,9 +59,9 @@
 				<p><text v-for="item in modalTips.content" v-html="item"></text></p>
 			</view>
 		</modal>
-		<date-time-picker ref="picker" mode="other" :columnList="columnList" @comfirm="pickerComfirm"></date-time-picker>
-		<checkbox-item ref="checkbox" :columnList="weekArr" @comfirm="checkboxComfirm"></checkbox-item>
 	</view>
+	<checkbox-item ref="checkbox" :columnList="weekArr" @comfirm="checkboxComfirm"></checkbox-item>
+	<date-time-picker ref="picker" :showYears="showYears" :showMonths="showMonths" :mode="pickerMode" :columnList="columnList" @comfirm="pickerComfirm"></date-time-picker>
 </template>
 <script>
 export default {
@@ -148,10 +147,13 @@ const formData = ref({});
 
 // 是否编辑状态
 let isEdit = ref(false);
+// 编辑状态的表单下标
+let activeIndex = ref(0);
 // 打开填写资料弹窗
 function openModal(isEditValue = false, index) {
 	isEdit.value = isEditValue;
 	if (isEdit.value) {
+		activeIndex.value = index;
 		formData.value = commemorationList.value[index];
 	} else {
 		formData.value = {
@@ -169,6 +171,7 @@ function openModal(isEditValue = false, index) {
 }
 // 关闭填写资料弹窗
 function closeModal() {
+	console.log('111111');
 	modalChild.value.closeModal();
 }
 // 当前日期
@@ -178,23 +181,62 @@ const activeType = computed(() => {
 
 // 当前使用选择器的表单
 let activeName = '';
+// 选择器值
+let pickerValue = ref([]);
+// 选择器模式
+let pickerMode = ref('');
+// 选择器开关
+let showYears = ref(true);
+let showMonths = ref(true);
 // 重复类型选择列表
 const columnList = [typeList.map(i => i.title)];
 // 打开重复类型选择器
 function openPicker(string) {
+	activeName = string;
 	if (string === 'type') {
-		picker.value.open([activeType.id - 1]);
+		pickerValue.value = [activeType.value.id - 1];
+		pickerMode.value = 'other';
 	} else if (string === 'date') {
 		// 周重复
 		if (activeType.value.id === 3) {
 			checkbox.value.open(formData.value.date);
+			return;
+		} else {
+			pickerValue.value = formData.value.date;
+			pickerMode.value = 'date';
+			// 月重复
+			if (activeType.value.id === 1) {
+				showMonths.value = false;
+				showYears.value = false;
+			}
+			// 年重复
+			if (activeType.value.id === 2) {
+				showMonths.value = true;
+				showYears.value = false;
+			}
+			// 不重复
+			if (activeType.value.id === 4) {
+				const { year, month, day } = getNowDate();
+				const { date } = formData.value;
+				const [index1, index2, index3] = pickerValue.value.length === 0 ? [year, month, day] : date;
+				pickerValue.value = [index1 - 1990, index2 - 1, index3 - 1];
+				showMonths.value = true;
+				showYears.value = true;
+			}
 		}
 	}
+	picker.value.open(pickerValue.value);
 }
 
 // 选择器确认
 function pickerComfirm(data) {
-	formData.value.type = typeList.find(item => item.title === data[0]).id;
+	if (activeName === 'type') {
+		formData.value.type = typeList.find(item => item.title === data[0]).id;
+		formData.value.date = [];
+	} else if (activeName === 'date') {
+		formData.value.date = data;
+	}
+
 	picker.value.close();
 }
 
@@ -217,7 +259,15 @@ const filterDateText = computed(() => {
 		}
 		return arr.join(',');
 	}
+	if (activeType.value.id === 4) {
+		const { date } = formData.value;
+		return date.length > 0 ? `${date[0]}年${date[1]}月${date[2]}日` : '';
+	}
+	return '';
 });
+
+// 提交表单
+function comfirmModal() {}
 </script>
 
 <style lang="scss" scoped>

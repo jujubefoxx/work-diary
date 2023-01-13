@@ -49,7 +49,7 @@ const props = defineProps({
 		default: () => true
 	},
 	// 显示月份
-	showMonth: {
+	showMonths: {
 		type: Boolean,
 		default: () => true
 	},
@@ -69,7 +69,7 @@ const props = defineProps({
 		default: () => []
 	}
 });
-const { mode, value, showYears, showMonth, showDays, columnList } = toRefs(props);
+const { mode, value, showYears, showMonths, showDays, columnList } = toRefs(props);
 const emit = defineEmits(['comfirm']);
 // 展示开关
 let show = ref(false);
@@ -90,10 +90,11 @@ const years = [];
 const year = date.getFullYear();
 const months = [];
 const month = date.getMonth() + 1;
-const days = [];
+let days = [];
 const day = date.getDate();
-const allDay = []; // 所有日期
-for (let i = 1990; i <= date.getFullYear(); i++) {
+const allDay = [];
+// 所有日期
+for (let i = 1990; i <= 2030; i++) {
 	years.push(i);
 }
 for (let i = 1; i <= 12; i++) {
@@ -110,7 +111,7 @@ if (value.value.length > 0) {
 	pickerValue.value = value.value;
 } else if (mode.value === 'date') {
 	// 不传value时默认当前年月日
-	pickerValue.value = [9999, month - 1, day - 1];
+	pickerValue.value = [year - 1990, month - 1, day - 1];
 } else {
 	// 默认值
 	pickerValue.value = [0];
@@ -118,12 +119,7 @@ if (value.value.length > 0) {
 
 function bindChange(e) {
 	const val = e.detail.value;
-	if (mode.value === 'date' && showMonth.value && showYears.value && showDays.value) {
-		let d = new Date();
-		let y = d.getFullYear();
-		let m = d.getMonth() + 1; //月
-		let dayx = d.getDate();
-
+	if (mode.value === 'date' && showMonths.value && showYears.value && showDays.value) {
 		if ([4, 6, 9, 11].includes(months[val[1]])) {
 			// 设置大小月
 			days = days.slice(0, 30);
@@ -149,7 +145,7 @@ function handleComfirm() {
 	// 列表
 	let list = [];
 	if (mode.value === 'date') {
-		list = [showYears ? [] : years, showMonth ? [] : months, showDays ? [] : days].filter(item => item.length > 0);
+		list = [showYears.value ? years : [], showMonths.value ? months : [], showDays.value ? days : []].filter(item => item.length > 0);
 	} else if (mode.value === 'time') {
 		list = [hours, minutes];
 	} else {
@@ -158,12 +154,13 @@ function handleComfirm() {
 	pickerValue.value.forEach((item, index) => {
 		data.push(list[index][pickerValue.value[index]]);
 	});
+
 	emit('comfirm', data, pickerValue.value);
 }
 // 打开
 function open(value) {
 	show.value = true;
-	if (value) {
+	if (value.length > 0) {
 		pickerValue.value = value;
 	}
 }
