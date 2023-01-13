@@ -5,7 +5,7 @@
 			<view class="money-item__title dashed line1">
 				<template v-if="!$store.state.isHoliday">
 					今天已赚
-					<text class="money-item__num">{{ hasProfileData ? computedMoney : 0 }}</text>
+					<text class="money-item__num">{{ hasProfileData ? computedMoney : '？' }}</text>
 					元
 				</template>
 				<template v-else>
@@ -87,7 +87,7 @@ export default {
 };
 </script>
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { dateState, getNowDate } from '@/common/util.js';
 import { useStore } from 'vuex';
 const store = useStore();
@@ -169,7 +169,12 @@ const buttonList = {
 
 // 黄色按钮的Id
 let activeId = ref([0, 1]);
-
+watch(
+	() => store.state.isHoliday,
+	() => {
+		activeId.value = store.state.isHoliday ? [0, 2] : [0, 1];
+	}
+);
 // 点击按钮事件
 function handleClick(value) {
 	const id = Number(value);

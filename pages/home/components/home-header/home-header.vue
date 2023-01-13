@@ -21,11 +21,13 @@ export default {
 <script setup>
 import { computed, ref } from 'vue';
 import { dateState } from '@/common/util.js';
-import storeState from '@/store/state.js';
+import { useStore } from 'vuex';
+// import { mapState } from 'vuex'
+const store = useStore();
 // 图片地址
 const { imgUrl } = getApp({ allowDefault: true }).globalData;
 // 是否假期
-const { isHoliday } = storeState(['isHoliday']);
+const isHoliday = computed(() => store.state.isHoliday);
 // 打招呼内容
 const helloWord = {
 	morning: '又是元气满满的一天！',
@@ -35,7 +37,7 @@ const helloWord = {
 const dateWord = {
 	morning: '上午好呀打工人，',
 	afternoon: '下午好呀打工人，',
-	evening: '晚上呀打工人，'
+	evening: '晚上好呀打工人，'
 };
 // 猫咪说的话
 const leftSaying = computed(() => {

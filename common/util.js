@@ -194,32 +194,18 @@ function getRepeatDay(date, type = 1) {
 			return Math.min(...arr)
 		}
 	}
-	// // 年重复的计算
-	// if (type === 2) {
-	// 	const sameYear = year === date[0];
-	// 	const sameMonth = month === date[1];
-	// 	const sameDay = day === date[2];
-	// 	isFuture = year < date[0] ||
-	// 		(sameYear && month < date[1]) ||
-	// 		(sameYear && sameMonth && day < date[2]);
-	// 	// 如果为当天 返回0
-	// 	if (sameYear && sameMonth && sameDay) {
-	// 		return 0
-	// 	} else if (sameYear && sameMonth) {
-	// 		// 同年月 计算日
-	// 		return compareDay(day, date[2], isFuture)
-	// 	} else if (sameYear) {
-	// 		// 每年的该月该日
-	// 		nowDate = year + '-' + month + '-' + day
-	// 		newDate = (isFuture ? year : year + 1) + '-' + date[1] + '-' + date[0]
-	// 		return getDaysBetween(nowDate, newDate)
-	// 	}
+	// 不重复
+	// date格式为[year,month,day] 如[2022,1,4]代表今天距离该天的日期
+	if (type === 4) {
+		newDate = date[0] + '-' + date[1] + '-' + date[2]
+		return getDaysBetween(nowDate, newDate)
+	}
 }
 /**
  * 计算两个日期之间的天数
  *  date1  开始日期 yyyy-MM-dd
  *  date2  结束日期 yyyy-MM-dd
- *  如果日期相同 返回一天 开始日期大于结束日期，返回0
+ *  开始日期大于结束日期，返回负数
  */
 function getDaysBetween(date1, date2) {
 	var startDate = Date.parse(date1);

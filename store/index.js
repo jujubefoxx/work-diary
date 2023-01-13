@@ -23,8 +23,12 @@ const store = createStore({
 		changeTheme(state, themeName) {
 			state.theme = themeName;
 		},
-		changeHoliday(state) {
-			state.isHoliday = !state.isHoliday
+		changeHoliday(state, data) {
+			if (data) {
+				state.isHoliday = data
+			} else {
+				state.isHoliday = !state.isHoliday
+			}
 		},
 		setCurrentDayDate(state, data) {
 			// 更新当天的信息
@@ -66,8 +70,10 @@ const store = createStore({
 		}
 	},
 	getters: {
-		currentColor(state) {
-			return state.colorList[state.colorIndex]
+		// 发工资时间
+		payoffTime(state) {
+			if (isNaN(state.profile.payoffTime)) return 0
+			return state.profile.payoffTime
 		}
 	},
 	actions: {
