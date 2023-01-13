@@ -40,6 +40,7 @@ view {
 	height: 76rpx;
 	view,
 	input {
+		box-sizing: border-box;
 		height: 100%;
 		line-height: 70rpx;
 		text-align: center;
@@ -104,9 +105,6 @@ view {
 .modal-tips {
 	h4 {
 		font-weight: 400;
-	}
-	text:nth-child(2) {
-		margin-left: 48rpx;
 	}
 	line-height: 34rpx;
 	font-size: 24rpx;

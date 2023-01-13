@@ -38,10 +38,6 @@ export default {
 <script setup>
 import { ref, toRefs, nextTick } from 'vue';
 const props = defineProps({
-	show: {
-		type: Boolean,
-		default: () => true
-	},
 	// 模式:time 时间选择器 date日期选择器 other其它 根据columnList生成
 	mode: {
 		type: String,

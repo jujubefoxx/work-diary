@@ -126,33 +126,49 @@ function getRepeatDay(date, type = 1) {
 	const {
 		year,
 		month,
-		day,
-		week
+		week,
+		day
 	} = getNowDate();
 	let nowDate = year + '-' + month + '-' + day
 	let newDate = ''
 	let isFuture = false; // 是否未来的日期
+	// 当月的最后一天
+	const lastDay = new Date(year, month, 0).getDate()
 
 	// 计算相差的天
 	function compareDay(nowDay, newDay, future) {
 		if (future) {
-			return newDay - nowDay
+			// 异常判断（当月没有该日期）
+			if (newDay > lastDay) {
+				newDate = year + '-' + (month + 1) + '-' + date[0]
+				return getDaysBetween(nowDate, newDate)
+			} else {
+				return newDay - nowDay
+			}
 		} else {
+			// 异常判断（下月没有该日期）
+			const nextLastDay = new Date(year, month + 1, 0).getDate()
 			// 传入为某个日期，格式转换
 			newDate = year + '-' + (month + 1) + '-' + newDay
+
+			if (newDay > nextLastDay) {
+				newDate = year + '-' + (month + 2) + '-' + newDay
+			}
+
 			return getDaysBetween(nowDate, newDate)
 		}
 	}
 
 	// 每月的该日重复
-	// date格式为[day] 如[1]代表每月1日进行提醒
+	// date格式为[day] 如[1]代表每月1日进行提醒 其中99代表每个月的最后一天
 	if (type === 1) {
-		isFuture = day < date[0];
+		let newDay = date[0] === 99 ? lastDay : date[0];
+		isFuture = day < newDay;
 		// 如果为当天 返回0
-		if (day === date[0]) {
+		if (day === newDay) {
 			return 0
 		} else {
-			return compareDay(day, date[0], isFuture)
+			return compareDay(day, newDay, isFuture)
 		}
 	}
 
@@ -215,6 +231,7 @@ function getDaysBetween(date1, date2) {
 }
 
 export {
+	weekArr,
 	dateState,
 	formatTime,
 	formatLocation,

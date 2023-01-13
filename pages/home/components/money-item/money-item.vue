@@ -3,7 +3,7 @@
 		<!-- 左侧信息 -->
 		<view class="money-item__left">
 			<view class="money-item__title dashed line1">
-				<template v-if="!$store.state.isHoliday">
+				<template v-if="!hasProfileData || !$store.state.isHoliday">
 					今天已赚
 					<text class="money-item__num">{{ hasProfileData ? computedMoney : '？' }}</text>
 					元
@@ -427,5 +427,10 @@ function comfirmModal() {
 	background: #ffffff;
 	border: 4rpx solid #2c2c2c;
 	margin-left: 26rpx;
+}
+.modal-tips {
+	text:nth-child(2) {
+		margin-left: 48rpx;
+	}
 }
 </style>

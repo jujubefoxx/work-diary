@@ -2,7 +2,7 @@
 	<view class="commemoration home-item">
 		<view class="home-item__header">
 			<h4 class="home-item__title">激动时刻</h4>
-			<view class="home-item__btn light-shadow">自定</view>
+			<view class="home-item__btn light-shadow" @click="openModal()">新增</view>
 		</view>
 		<view class="commemoration-item">
 			<!-- 发工资日，需和填写资料配合，不可修改 -->
@@ -15,7 +15,12 @@
 				<view class="commemoration-list__remark">开开心心收米米</view>
 			</view>
 			<!-- 可自定的日期 -->
-			<view v-for="(item, index) in commemorationList" class="commemoration-list" :style="'background-image: url(' + (item.alias ? imgUrl.foodCat : imgUrl.loveCat) + ')'">
+			<view
+				v-for="(item, index) in commemorationList"
+				@click="openModal(true, index)"
+				class="commemoration-list"
+				:style="'background-image: url(' + (item.alias ? imgUrl.foodCat : imgUrl.loveCat) + ')'"
+			>
 				<view class="commemoration-list__date">
 					<text>{{ isToday(item.date, item.type) ? '今天' : Math.abs(getRepeatDay(item.date, item.type)) }}</text>
 					<text v-if="!isToday(item.date, item.type)" class="f-12 f-w-400">天</text>
@@ -25,6 +30,38 @@
 				<view class="commemoration-list__remark">{{ item.remark }}</view>
 			</view>
 		</view>
+		<modal ref="modalChild" :title="isEdit ? '修改激动时刻' : '新增激动时刻'">
+			<view class="form">
+				<view class="form-list">
+					<text class="form-list__title">给日子起个名吧</text>
+					<view class="form-list__content"><input class="form-list__input light-shadow" v-model="formData.title" maxlength="4" placeholder="不超过四个字" /></view>
+				</view>
+				<view class="form-list">
+					<text class="form-list__title">重复类型</text>
+					<view class="form-list__content">
+						<input class="form-list__input light-shadow" disabled v-model="activeType.title" placeholder="请选择重复类型" @click="openPicker('type')" />
+						<!-- <view class="form-list__input light-shadow">{{ formData.type ? activeType.title : '请选择重复类型' }}</view> -->
+					</view>
+				</view>
+				<view class="form-list" v-if="activeType.title">
+					<text class="form-list__title">{{ activeType.title }}</text>
+					<view class="form-list__content">
+						<input class="form-list__input light-shadow" disabled v-model="filterDateText" placeholder="请选择时间" @click="openPicker('date')" />
+						<!-- <view class="form-list__input light-shadow" @click="openPicker('date')">{{ activeType.title }}</view> -->
+					</view>
+				</view>
+				<view class="form-list">
+					<text class="form-list__title">备注</text>
+					<view class="form-list__content"><input class="form-list__input light-shadow" v-model="formData.remark" maxlength="7" placeholder="不超过七个字" /></view>
+				</view>
+			</view>
+			<view class="modal-tips">
+				<h4>{{ modalTips.title }}</h4>
+				<p><text v-for="item in modalTips.content" v-html="item"></text></p>
+			</view>
+		</modal>
+		<date-time-picker ref="picker" mode="other" :columnList="columnList" @comfirm="pickerComfirm"></date-time-picker>
+		<checkbox-item ref="checkbox" :columnList="weekArr" @comfirm="checkboxComfirm"></checkbox-item>
 	</view>
 </template>
 <script>
@@ -33,24 +70,37 @@ export default {
 };
 </script>
 <script setup>
-import { computed, ref, watch, isRef } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { dateState, getNowDate, getRepeatDay } from '@/common/util.js';
 import { useStore } from 'vuex';
+const weekArr = [
+	{ title: '周一', id: 1 },
+	{ title: '周二', id: 2 },
+	{ title: '周三', id: 3 },
+	{ title: '周四', id: 4 },
+	{ title: '周五', id: 5 },
+	{ title: '周六', id: 6 },
+	{ title: '周日', id: 0 }
+];
 const store = useStore();
+const modalChild = ref(null);
+const picker = ref(null);
+const checkbox = ref(null);
 // 发工资时间
 const payoffTime = computed(() => store.getters.payoffTime);
-// 是否今天
+// 图片地址
+const { imgUrl } = getApp({ allowDefault: true }).globalData;
+
+// 判断是否今天
 function isToday(day, type) {
 	return getRepeatDay(day, type) === 0;
 }
-// 图片地址
-const { imgUrl } = getApp({ allowDefault: true }).globalData;
 
 /**
  *  纪念日列表 数组对象
  *  alias 只有休息日有 不可删除只能修改
  *  date 日期数据
- *  type 计算类型：1 月重复 2 年重复 3 周重复 4 不重复
+ *  type 重复类型：1 月重复 2 年重复 3 周重复 4 不重复
  */
 let commemorationList = ref([{ alias: 'holiday', type: 3, date: [0, 5, 6], title: '休息日', remark: '谁请我吃肯德基' }]);
 // 获取保存的数据
@@ -70,7 +120,104 @@ function checkHoliday() {
 		store.commit('changeHoliday', false);
 	}
 }
+
 checkHoliday();
+const modalTips = { title: '温馨提示', content: ['1.发工资日只能在填写/修改薪资资料中新增或修改<br>', '2.休息日目前限制为只能每周重复且不能删除，但可以改成你喜欢的名字哦'] };
+
+// type 重复类型：1 月重复 2 年重复 3 周重复 4 不重复
+const typeList = [
+	{
+		id: 1,
+		title: '每月'
+	},
+	{
+		id: 2,
+		title: '每年'
+	},
+	{
+		id: 3,
+		title: '每周'
+	},
+	{
+		id: 4,
+		title: '不重复'
+	}
+];
+// 资料信息
+const formData = ref({});
+
+// 是否编辑状态
+let isEdit = ref(false);
+// 打开填写资料弹窗
+function openModal(isEditValue = false, index) {
+	isEdit.value = isEditValue;
+	if (isEdit.value) {
+		formData.value = commemorationList.value[index];
+	} else {
+		formData.value = {
+			// 日期名称
+			title: '',
+			// 重复类型
+			type: '',
+			// 日期
+			date: [],
+			// 备注
+			remark: ''
+		};
+	}
+	modalChild.value.openModal();
+}
+// 关闭填写资料弹窗
+function closeModal() {
+	modalChild.value.closeModal();
+}
+// 当前日期
+const activeType = computed(() => {
+	return typeList.find(item => item.id === formData.value.type) || { title: '', id: 1 };
+});
+
+// 当前使用选择器的表单
+let activeName = '';
+// 重复类型选择列表
+const columnList = [typeList.map(i => i.title)];
+// 打开重复类型选择器
+function openPicker(string) {
+	if (string === 'type') {
+		picker.value.open([activeType.id - 1]);
+	} else if (string === 'date') {
+		// 周重复
+		if (activeType.value.id === 3) {
+			checkbox.value.open(formData.value.date);
+		}
+	}
+}
+
+// 选择器确认
+function pickerComfirm(data) {
+	formData.value.type = typeList.find(item => item.title === data[0]).id;
+	picker.value.close();
+}
+
+function checkboxComfirm(data) {
+	formData.value.date = data;
+	checkbox.value.close();
+}
+
+const filterDateText = computed(() => {
+	if (activeType.value.id === 3) {
+		let arr = [];
+		formData.value.date.forEach(i => {
+			arr.push(weekArr.find(item => item.id === i).title);
+		});
+		// 把星期日排到最后
+		if (formData.value.date.includes(0)) {
+			// 删除第一个元素
+			arr.shift();
+			arr.push(weekArr.find(item => item.id === 0).title);
+		}
+		return arr.join(',');
+	}
+});
 </script>
 
 <style lang="scss" scoped>

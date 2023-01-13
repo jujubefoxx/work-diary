@@ -72,7 +72,13 @@ const store = createStore({
 	getters: {
 		// 发工资时间
 		payoffTime(state) {
-			if (isNaN(state.profile.payoffTime)) return 0
+			console.log(state.profile.payoffTime)
+			if (isNaN(state.profile.payoffTime)) {
+				if (state.profile.payoffTime && state.profile.payoffTime.indexOf('最后一天') !== -1) {
+					return 99;
+				}
+				return 0
+			}
 			return state.profile.payoffTime
 		}
 	},
