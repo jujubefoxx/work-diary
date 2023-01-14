@@ -7,6 +7,11 @@ view {
 	box-shadow: 4rpx 4rpx black;
 }
 
+/* 黑色边框 */
+.black-border {
+	border: 4rpx solid #2c2c2c;
+}
+
 .dashed {
 	position: relative;
 }
@@ -40,7 +45,7 @@ view {
 	height: 76rpx;
 	view,
 	input {
-		font-size: 14px;
+		font-size: 28rpx;
 		box-sizing: border-box;
 		height: 100%;
 		line-height: 70rpx;
@@ -151,4 +156,72 @@ view {
 		line-height: 34rpx;
 		text-align: center;
 	}
+	.modal {
+		.modal-delete {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 48rpx;
+			height: 48rpx;
+			border-radius: 50%;
+			position: absolute;
+			top: 46rpx;
+			left: 52rpx;
+		}
+	}
+}
+.check-icon {
+	position: absolute;
+	right: 70rpx;
+	top: 50%;
+	transform: translateY(-50%);
+	display: inline-block;
+	width: 40rpx;
+	height: 40rpx;
+	border-radius: 50%;
+	background-color: #fff;
+	border: 4rpx solid #2c2c2c;
+	&::before {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%) scale(0.8);
+		font-size: 24rpx;
+		transform-origin: 25% 60%;
+	}
+}
+.animated {
+	-webkit-animation-duration: 1s;
+	animation-duration: 1s;
+	-webkit-animation-fill-mode: both;
+	animation-fill-mode: both;
+}
+
+@keyframes flip {
+	0% {
+		transform: perspective(2000rpx) rotateY(0);
+		animation-timing-function: ease-out;
+	}
+	40% {
+		transform: perspective(2000rpx) translateZ(300rpx) rotateY(170deg);
+		animation-timing-function: ease-out;
+	}
+	50% {
+		transform: perspective(2000rpx) translateZ(300rpx) rotateY(190deg) scale(1);
+		animation-timing-function: ease-in;
+	}
+	80% {
+		transform: perspective(2000rpx) rotateY(360deg) scale(0.95);
+		animation-timing-function: ease-in;
+	}
+	100% {
+		transform: perspective(2000rpx) scale(1);
+		animation-timing-function: ease-in;
+	}
+}
+.flip {
+	-webkit-backface-visibility: visible !important;
+	-webkit-animation-name: flip;
+	backface-visibility: visible !important;
+	animation-name: flip;
 }

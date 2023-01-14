@@ -1,0 +1,309 @@
+<template>
+	<view class="daily-attendance home-item">
+		<view class="home-item__header">
+			<h4 class="home-item__title">今日打工打卡</h4>
+			<view class="home-item__btn light-shadow" v-if="dailyList.length < 5" @click="openModal()">新增</view>
+		</view>
+		<view class="daily-item">
+			<view
+				class="daily-list"
+				:class="{ 'animated flip': item.hasPunch }"
+				@touchstart="touchS(index, $event)"
+				@touchmove="touchM(index, $event)"
+				@touchend="touchE(index, $event)"
+				@click="punchCard(index)"
+				v-for="(item, index) in dailyList"
+			>
+				<view class="daily-list__mask" v-show="item.hasPunch || deleteIndex === index"></view>
+				<text class="check-icon iconfont icon-dui light-shadow" :style="item.hasPunch && deleteIndex !== index ? 'display:flex' : 'display:none'"></text>
+				<view class="delete-item" @click="handleDelete" :style="`transform:translateX(${Number(deleteIndex) === index ? 56 - touchWidth * 2 : 56}rpx)`">
+					<text class="iconfont icon-shanchu"></text>
+				</view>
+				<view class="daily-list__icon iconfont" :class="`icon-${item.icon || 'daka'}`"></view>
+				<view class="daily-list__content">
+					<view class="daily-list__title">
+						{{ item.title }}
+						<text class="iconfont icon-card"></text>
+					</view>
+					<view class="daily-list__remark">{{ item.remark }}</view>
+				</view>
+			</view>
+		</view>
+		<modal ref="modalChild" @comfirmModal="comfirmModal" title="新增打卡">
+			<view class="form">
+				<view class="form-list">
+					<text class="form-list__title">给日子起个名吧</text>
+					<view class="form-list__content"><input class="form-list__input light-shadow" v-model="formData.title" maxlength="4" placeholder="不超过四个字" /></view>
+				</view>
+				<view class="form-list">
+					<text class="form-list__title">备注</text>
+					<view class="form-list__content"><input class="form-list__input light-shadow" v-model="formData.remark" maxlength="7" placeholder="不超过七个字" /></view>
+				</view>
+			</view>
+			<view class="modal-tips">
+				<h4>{{ modalTips.title }}</h4>
+				<p><view v-for="item in modalTips.content" v-html="item"></view></p>
+			</view>
+		</modal>
+	</view>
+	<modal ref="attention" title="注意" @comfirmModal="attentionComfirm"><p class="t-c" v-html="modalContent"></p></modal>
+</template>
+<script>
+export default {
+	name: 'daily-attendance'
+};
+</script>
+<script setup>
+import { computed, ref, watch } from 'vue';
+import { dateState, getNowDate, getRepeatDay } from '@/common/util.js';
+import { useStore } from 'vuex';
+const weekArr = [
+	{ title: '周一', id: 1 },
+	{ title: '周二', id: 2 },
+	{ title: '周三', id: 3 },
+	{ title: '周四', id: 4 },
+	{ title: '周五', id: 5 },
+	{ title: '周六', id: 6 },
+	{ title: '周日', id: 0 }
+];
+const store = useStore();
+const modalChild = ref(null);
+const attention = ref(null);
+const checkbox = ref(null);
+const deleteIndex = ref(-1);
+let modalContent = ref('');
+
+/**
+ *  纪念日列表 数组对象
+ *  alias 只有休息日有 不可删除只能修改
+ *  date 日期数据
+ *  type 重复类型：1 月重复 2 年重复 3 周重复 4 不重复
+ */
+let dailyList = ref([
+	{ title: '我摸鱼了', remark: '摸鱼咋还扎手', hasPunch: false, icon: 'fish' },
+	{ title: '我发呆了', remark: '地球是我的了', hasPunch: false, icon: 'emm' },
+	{ title: '我拉屎了', remark: '拉屎还通畅吗', hasPunch: false, icon: 'shit' },
+	{ title: '我学习了', remark: '畅游知识海洋', hasPunch: false, icon: 'pen' }
+]);
+// // 获取保存的数据
+// if (uni.getStorageSync('daily-attendance')) {
+// 	dailyList.value = uni.getStorageSync('daily-attendance');
+// } else {
+// 	uni.setStorageSync('daily-attendance', dailyList.value);
+// }
+const modalTips = {
+	title: '温馨提示',
+	content: ['1.发工资日只能在填写/修改薪资资料中新增或修改<br>', '2.休息日目前限制为只能每周重复且不能删除，但可以改成你喜欢的名字哦<br>', '3.最多添加4个自定义的激动时刻']
+};
+
+// 资料信息
+const formData = ref({});
+
+// 打开填写资料弹窗
+function openModal(isEditValue = false, index) {
+	isEdit.value = isEditValue;
+	if (isEdit.value) {
+		activeIndex = index;
+		formData.value = dailyList.value[index];
+	} else {
+		formData.value = {
+			// 日期名称
+			title: '',
+			// 重复类型
+			type: '',
+			// 备注
+			remark: ''
+		};
+	}
+	modalChild.value.openModal();
+}
+// 关闭填写资料弹窗
+function closeModal() {
+	modalChild.value.closeModal();
+}
+
+// 提交表单
+function comfirmModal() {
+	if (isEdit.value) {
+		// 编辑
+		dailyList.value[activeIndex] = formData.value;
+	} else {
+		// 新建
+		dailyList.value.push(formData.value);
+	}
+	uni.showToast({
+		title: '新增成功啦',
+		icon: 'none'
+	});
+	uni.setStorageSync('daily-attendance', dailyList.value);
+	closeModal();
+}
+// 滑动距离
+let touchWidth = ref(0);
+// 临时
+let temWidth = ref(0);
+// 防抖
+let touchHeight = ref(0);
+let touchStart = ref({ height: 0, width: 0 });
+let hasMove = false;
+let attentionType = '';
+let attentionIndex = -1;
+// 打卡
+function punchCard(index) {
+	if (deleteIndex.value === index) return;
+	if (dailyList.value[index].hasPunch) {
+		modalContent.value = '确定取消打卡吗<br />当日打卡数据会在次日重置';
+		attentionType = 'cancel';
+		attentionIndex = index;
+		attention.value.openModal();
+	} else {
+		dailyList.value[index].hasPunch = true;
+		uni.showToast({
+			title: '打卡成功！恭喜恭喜~',
+			icon: 'none'
+		});
+	}
+	// 复位
+	deleteIndex.value = -1;
+	hasMove = false;
+}
+
+// 删除确认
+function handleDelete() {
+	modalContent.value = '确定删除打卡吗';
+	attentionType = 'delete';
+	attentionIndex = index;
+	attention.value.openModal();
+}
+// 注意确认
+function attentionComfirm() {
+	if (attentionType === 'cancel') {
+		dailyList.value[attentionIndex].hasPunch = false;
+	} else if (attentionType === 'delete') {
+		dailyList.value.splice(attentionIndex, 1);
+	}
+	uni.showToast({
+		title: attentionType === 'cancel' ? '取消成功啦' : '删除成功啦',
+		icon: 'none'
+	});
+	attention.value.closeModal();
+}
+
+/**
+ * 触摸开始
+ */
+function touchS(index, e) {
+	touchStart.value.width = e.touches[0].clientX;
+	touchStart.value.height = e.touches[0].clientY;
+}
+/**
+ * 触摸移动
+ */
+function touchM(index, e) {
+	if (e.touches[0].clientX) hasMove = true;
+	if (deleteIndex.value !== index) {
+		touchWidth.value = 0;
+		temWidth.value = 0;
+		touchHeight.value = 0;
+	}
+	temWidth.value = touchStart.value.width - e.touches[0].clientX;
+	touchHeight.value = touchStart.value.height - e.touches[0].clientY;
+	if (temWidth.value >= 15 && touchHeight.value < 2) {
+		deleteIndex.value = index;
+		touchWidth.value = temWidth.value > 28 ? 28 : temWidth.value;
+	}
+}
+/**
+ * 触摸结束
+ */
+function touchE(index, e) {
+	if (!hasMove) return;
+	// 复位
+	// 避免上下滑动导致滑动
+	if (temWidth.value < 24 || Math.abs(touchHeight.value) > 10) {
+		deleteIndex.value = -1;
+	} else {
+		deleteIndex.value = index;
+		touchWidth.value = 28;
+	}
+	hasMove = false;
+}
+
+// // 删除
+// function attentionComfirm() {
+// 	uni.setStorageSync('daily-attendance', dailyList.value);
+
+// 	closeModal();
+// }
+</script>
+
+<style lang="scss" scoped>
+.daily-item {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+.daily-list {
+	display: flex;
+	position: relative;
+	align-items: center;
+	margin-top: 16rpx;
+	font-size: 28rpx;
+	color: #2c2c2c;
+	line-height: 40rpx;
+	width: 302rpx;
+	height: 114rpx;
+	background: #f6f1dc;
+	border-radius: 12rpx;
+	border: 4rpx solid #2c2c2c;
+	padding: 20rpx;
+	overflow: hidden;
+}
+.daily-list__mask {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #000000;
+	opacity: 0.4;
+	transition: all 0.3s;
+}
+.check-icon {
+	right: 14rpx;
+	top: auto;
+	bottom: 12rpx;
+	transform: translateY(0);
+}
+
+.daily-list__title {
+	font-weight: 600;
+	.iconfont {
+		font-weight: 400;
+	}
+}
+.daily-list__remark {
+	font-size: 24rpx;
+	font-weight: 400;
+	color: #a5a296;
+	line-height: 34rpx;
+}
+.daily-list__icon {
+	width: 56rpx;
+	font-size: 56rpx;
+	margin-right: 14rpx;
+}
+.delete-item {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	right: 0;
+	top: 0;
+	width: 56rpx;
+	background: #ffce30;
+	border-left: 4rpx solid #2c2c2c;
+	transition: all 0.3s;
+}
+</style>

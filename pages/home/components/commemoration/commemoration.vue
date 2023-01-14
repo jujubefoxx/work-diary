@@ -31,7 +31,7 @@
 			</view>
 		</view>
 		<modal ref="modalChild" @comfirmModal="comfirmModal" :title="isEdit ? '修改激动时刻' : '新增激动时刻'">
-			<text class="iconfont icon-shanchu" v-if="!formData.alias" @click="handleDelete"></text>
+			<text class="modal-delete black-border light-shadow" v-if="!formData.alias && isEdit" @click="handleDelete"><text class="iconfont icon-shanchu"></text></text>
 			<view class="form">
 				<view class="form-list">
 					<text class="form-list__title">给日子起个名吧</text>
@@ -57,7 +57,7 @@
 			</view>
 			<view class="modal-tips">
 				<h4>{{ modalTips.title }}</h4>
-				<p><text v-for="item in modalTips.content" v-html="item"></text></p>
+				<p><view v-for="item in modalTips.content" v-html="item"></view></p>
 			</view>
 		</modal>
 	</view>
@@ -299,7 +299,7 @@ function comfirmModal() {
 		commemorationList.value.push(formData.value);
 	}
 	uni.showToast({
-		title: isEdit ? '修改' : '新增' + '成功啦',
+		title: isEdit.value ? '修改成功啦' : '新增成功啦',
 		icon: 'none'
 	});
 	uni.setStorageSync('commemoration', commemorationList.value);
@@ -353,15 +353,4 @@ function deleteComfirm() {
 	font-size: 24rpx;
 	line-height: 34rpx;
 }
-.modal {
-	.iconfont {
-		position: absolute;
-		top: 46rpx;
-		left: 52rpx;
-	}
-}
-// .commemoration-list__img {
-// 	width: 126rpx;
-// 	height: 148rpx;
-// }
 </style>

@@ -21,8 +21,8 @@
 			></happy-button>
 		</view>
 		<view class="money-item__right">
-			<view class="money-item__right-list radius50 light-shadow" @click="openModal"><text class="iconfont icon-edit"></text></view>
-			<view class="money-item__right-list radius50 light-shadow"><text class="iconfont icon-a-huanfu2" @click="changeTheme"></text></view>
+			<view class="money-item__right-list black-border radius50 light-shadow" @click="openModal"><text class="iconfont icon-edit"></text></view>
+			<view class="money-item__right-list black-border radius50 light-shadow"><text class="iconfont icon-a-huanfu2" @click="changeTheme"></text></view>
 		</view>
 	</view>
 	<!-- 填写资料表格 -->
@@ -76,7 +76,7 @@
 		</view>
 		<view class="modal-tips">
 			<h4>{{ modalTips.title }}</h4>
-			<p><text v-for="item in modalTips.content" v-html="item"></text></p>
+			<p><view v-for="item in modalTips.content" v-html="item"></view></p>
 		</view>
 	</modal>
 	<date-time-picker ref="picker" :mode="pickerMode" :columnList="columnList" @comfirm="pickerComfirm"></date-time-picker>
@@ -433,7 +433,6 @@ function changeTheme(id) {
 	text-align: center;
 	line-height: 78rpx;
 	background: #ffffff;
-	border: 4rpx solid #2c2c2c;
 	margin-left: 26rpx;
 }
 .modal-tips {

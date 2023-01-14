@@ -9,7 +9,7 @@
 			:class="{ 'checkbox-item__list--checked': checkedValue.includes(item.id) }"
 		>
 			{{ item.title }}
-			<text v-show="checkedValue.includes(item.id)" class="iconfont icon-dui light-shadow"></text>
+			<text v-show="checkedValue.includes(item.id)" class="check-icon iconfont icon-dui light-shadow"></text>
 		</view>
 		<comfirm-button @handleComfirm="handleComfirm" @handleCancel="close"></comfirm-button>
 	</view>
@@ -72,25 +72,5 @@ defineExpose({ open, close });
 }
 .checkbox-item__list--checked {
 	background: rgba(186, 186, 186, 0.2);
-}
-.iconfont {
-	position: absolute;
-	right: 70rpx;
-	top: 50%;
-	transform: translateY(-50%);
-	display: inline-block;
-	width: 40rpx;
-	height: 40rpx;
-	border-radius: 50%;
-	background-color: #fff;
-	border: 4rpx solid #2c2c2c;
-	&::before {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%) scale(0.8);
-		font-size: 24rpx;
-		transform-origin: 25% 60%;
-	}
 }
 </style>

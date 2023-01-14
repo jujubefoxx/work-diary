@@ -162,9 +162,8 @@ function handleComfirm() {
 }
 // 打开
 function open(value) {
-	console.log(value);
 	show.value = true;
-	if (value.length > 0) {
+	if (value && value.length > 0) {
 		pickerValue.value = value;
 	}
 }

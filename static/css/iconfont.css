@@ -1,21 +1,29 @@
 @font-face {
 	font-family: "iconfont";
 	/* Project id 3851310 */
-	src: url('//at.alicdn.com/t/c/font_3851310_ihpfcumzhv.woff2?t=1673692617212') format('woff2'),
-		url('//at.alicdn.com/t/c/font_3851310_ihpfcumzhv.woff?t=1673692617212') format('woff'),
-		url('//at.alicdn.com/t/c/font_3851310_ihpfcumzhv.ttf?t=1673692617212') format('truetype');
+	src: url('//at.alicdn.com/t/c/font_3851310_d7sgpu5u75s.woff2?t=1673696884804') format('woff2'),
+		url('//at.alicdn.com/t/c/font_3851310_d7sgpu5u75s.woff?t=1673696884804') format('woff'),
+		url('//at.alicdn.com/t/c/font_3851310_d7sgpu5u75s.ttf?t=1673696884804') format('truetype');
 }
 
 .iconfont {
 	font-family: "iconfont" !important;
-	font-size: 16px;
+	font-size: 32rpx;
 	font-style: normal;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
 
-.icon-shanchu:before {
+.icon-daka:before {
+	content: "\e611";
+}
+
+.icon-xiugai:before {
 	content: "\e60f";
+}
+
+.icon-shanchu:before {
+	content: "\e610";
 }
 
 .icon-dui:before {
@@ -40,6 +48,7 @@
 
 .icon-card:before {
 	content: "\e609";
+	color: #BF503C;
 }
 
 .icon-pen:before {
