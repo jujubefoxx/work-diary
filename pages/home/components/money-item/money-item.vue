@@ -22,7 +22,7 @@
 		</view>
 		<view class="money-item__right">
 			<view class="money-item__right-list radius50 light-shadow" @click="openModal"><text class="iconfont icon-edit"></text></view>
-			<view class="money-item__right-list radius50 light-shadow"><text class="iconfont icon-night"></text></view>
+			<view class="money-item__right-list radius50 light-shadow"><text class="iconfont icon-a-huanfu2" @click="changeTheme"></text></view>
 		</view>
 	</view>
 	<!-- 填写资料表格 -->
@@ -382,6 +382,14 @@ function comfirmModal() {
 	store.commit('setProfile', profileForm.value);
 	getProfile();
 	closeModal();
+}
+
+// 换肤
+function changeTheme(id) {
+	uni.showToast({
+		title: '换肤功能开发中，莫急',
+		icon: 'none'
+	});
 }
 </script>
 

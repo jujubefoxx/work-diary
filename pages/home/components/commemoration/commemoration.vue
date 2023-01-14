@@ -2,7 +2,7 @@
 	<view class="commemoration home-item">
 		<view class="home-item__header">
 			<h4 class="home-item__title">激动时刻</h4>
-			<view class="home-item__btn light-shadow" @click="openModal()">新增</view>
+			<view class="home-item__btn light-shadow" v-if="commemorationList.length < 5" @click="openModal()">新增</view>
 		</view>
 		<view class="commemoration-item">
 			<!-- 发工资日，需和填写资料配合，不可修改 -->
@@ -31,6 +31,7 @@
 			</view>
 		</view>
 		<modal ref="modalChild" @comfirmModal="comfirmModal" :title="isEdit ? '修改激动时刻' : '新增激动时刻'">
+			<text class="iconfont icon-shanchu" v-if="!formData.alias" @click="handleDelete"></text>
 			<view class="form">
 				<view class="form-list">
 					<text class="form-list__title">给日子起个名吧</text>
@@ -38,7 +39,7 @@
 				</view>
 				<view class="form-list">
 					<text class="form-list__title">重复类型</text>
-					<view class="form-list__content">
+					<view class="form-list__content" :class="{ 'form-list__content--disable': formData.alias }">
 						<input class="form-list__input light-shadow" disabled v-model="activeType.title" placeholder="请选择重复类型" @click="openPicker('type')" />
 						<!-- <view class="form-list__input light-shadow">{{ formData.type ? activeType.title : '请选择重复类型' }}</view> -->
 					</view>
@@ -62,6 +63,13 @@
 	</view>
 	<checkbox-item ref="checkbox" :columnList="weekArr" @comfirm="checkboxComfirm"></checkbox-item>
 	<date-time-picker ref="picker" :showYears="showYears" :showMonths="showMonths" :mode="pickerMode" :columnList="columnList" @comfirm="pickerComfirm"></date-time-picker>
+	<modal ref="attention" title="注意" @comfirmModal="deleteComfirm">
+		<p class="t-c">
+			要删除该激动时刻吗
+			<br />
+			删了就不能恢复了哦
+		</p>
+	</modal>
 </template>
 <script>
 export default {
@@ -85,6 +93,7 @@ const store = useStore();
 const modalChild = ref(null);
 const picker = ref(null);
 const checkbox = ref(null);
+const attention = ref(null);
 // 发工资时间
 const payoffTime = computed(() => store.getters.payoffTime);
 // 图片地址
@@ -101,13 +110,13 @@ function isToday(day, type) {
  *  date 日期数据
  *  type 重复类型：1 月重复 2 年重复 3 周重复 4 不重复
  */
-let commemorationList = ref([{ alias: 'holiday', type: 3, date: [0, 5, 6], title: '休息日', remark: '谁请我吃肯德基' }]);
+let commemorationList = ref([{ alias: 'holiday', type: 3, date: [0, 6], title: '休息日', remark: '谁请我吃肯德基' }]);
 // 获取保存的数据
-// if (uni.getStorageSync('commemoration')) {
-// 	commemorationList.value = uni.getStorageSync('commemoration');
-// } else {
-// 	uni.setStorageSync('commemoration', commemorationList.value);
-// }
+if (uni.getStorageSync('commemoration')) {
+	commemorationList.value = uni.getStorageSync('commemoration');
+} else {
+	uni.setStorageSync('commemoration', commemorationList.value);
+}
 // 如果是休息日 变更打工状态
 function checkHoliday() {
 	const holidayData = commemorationList.value.find(item => item.alias === 'holiday');
@@ -121,7 +130,10 @@ function checkHoliday() {
 }
 
 checkHoliday();
-const modalTips = { title: '温馨提示', content: ['1.发工资日只能在填写/修改薪资资料中新增或修改<br>', '2.休息日目前限制为只能每周重复且不能删除，但可以改成你喜欢的名字哦'] };
+const modalTips = {
+	title: '温馨提示',
+	content: ['1.发工资日只能在填写/修改薪资资料中新增或修改<br>', '2.休息日目前限制为只能每周重复且不能删除，但可以改成你喜欢的名字哦<br>', '3.最多添加4个自定义的激动时刻']
+};
 
 // type 重复类型：1 月重复 2 年重复 3 周重复 4 不重复
 const typeList = [
@@ -148,12 +160,12 @@ const formData = ref({});
 // 是否编辑状态
 let isEdit = ref(false);
 // 编辑状态的表单下标
-let activeIndex = ref(0);
+let activeIndex = 0;
 // 打开填写资料弹窗
 function openModal(isEditValue = false, index) {
 	isEdit.value = isEditValue;
 	if (isEdit.value) {
-		activeIndex.value = index;
+		activeIndex = index;
 		formData.value = commemorationList.value[index];
 	} else {
 		formData.value = {
@@ -171,7 +183,6 @@ function openModal(isEditValue = false, index) {
 }
 // 关闭填写资料弹窗
 function closeModal() {
-	console.log('111111');
 	modalChild.value.closeModal();
 }
 // 当前日期
@@ -194,6 +205,8 @@ const columnList = [typeList.map(i => i.title)];
 function openPicker(string) {
 	activeName = string;
 	if (string === 'type') {
+		// 休息日不允许修改类型
+		if (formData.value.alias) return;
 		pickerValue.value = [activeType.value.id - 1];
 		pickerMode.value = 'other';
 	} else if (string === 'date') {
@@ -202,23 +215,26 @@ function openPicker(string) {
 			checkbox.value.open(formData.value.date);
 			return;
 		} else {
-			pickerValue.value = formData.value.date;
 			pickerMode.value = 'date';
+			const { year, month, day } = getNowDate();
+			const { date } = formData.value;
 			// 月重复
 			if (activeType.value.id === 1) {
+				const [index1] = date.length === 0 ? [day] : date;
+				pickerValue.value = [index1 - 1];
 				showMonths.value = false;
 				showYears.value = false;
 			}
 			// 年重复
 			if (activeType.value.id === 2) {
+				const [index1, index2] = date.length === 0 ? [month, day] : date;
+				pickerValue.value = [index1 - 1, index2 - 1];
 				showMonths.value = true;
 				showYears.value = false;
 			}
 			// 不重复
 			if (activeType.value.id === 4) {
-				const { year, month, day } = getNowDate();
-				const { date } = formData.value;
-				const [index1, index2, index3] = pickerValue.value.length === 0 ? [year, month, day] : date;
+				const [index1, index2, index3] = date.length === 0 ? [year, month, day] : date;
 				pickerValue.value = [index1 - 1990, index2 - 1, index3 - 1];
 				showMonths.value = true;
 				showYears.value = true;
@@ -245,14 +261,22 @@ function checkboxComfirm(data) {
 	checkbox.value.close();
 }
 
+// 文字转换
 const filterDateText = computed(() => {
+	const { date } = formData.value;
+	if (activeType.value.id === 1) {
+		return date.length > 0 ? `${date[0]}日` : '';
+	}
+	if (activeType.value.id === 2) {
+		return date.length > 0 ? `${date[0]}月${date[1]}日` : '';
+	}
 	if (activeType.value.id === 3) {
 		let arr = [];
-		formData.value.date.forEach(i => {
+		date.forEach(i => {
 			arr.push(weekArr.find(item => item.id === i).title);
 		});
 		// 把星期日排到最后
-		if (formData.value.date.includes(0)) {
+		if (date.includes(0)) {
 			// 删除第一个元素
 			arr.shift();
 			arr.push(weekArr.find(item => item.id === 0).title);
@@ -260,14 +284,43 @@ const filterDateText = computed(() => {
 		return arr.join(',');
 	}
 	if (activeType.value.id === 4) {
-		const { date } = formData.value;
 		return date.length > 0 ? `${date[0]}年${date[1]}月${date[2]}日` : '';
 	}
 	return '';
 });
 
 // 提交表单
-function comfirmModal() {}
+function comfirmModal() {
+	if (isEdit.value) {
+		// 编辑
+		commemorationList.value[activeIndex] = formData.value;
+	} else {
+		// 新建
+		commemorationList.value.push(formData.value);
+	}
+	uni.showToast({
+		title: isEdit ? '修改' : '新增' + '成功啦',
+		icon: 'none'
+	});
+	uni.setStorageSync('commemoration', commemorationList.value);
+	closeModal();
+}
+// 删除确认
+function handleDelete() {
+	attention.value.openModal();
+}
+// 删除
+function deleteComfirm() {
+	commemorationList.value.splice(activeIndex, 1);
+	uni.setStorageSync('commemoration', commemorationList.value);
+
+	uni.showToast({
+		title: '删除成功啦',
+		icon: 'none'
+	});
+	attention.value.closeModal();
+	closeModal();
+}
 </script>
 
 <style lang="scss" scoped>
@@ -275,7 +328,6 @@ function comfirmModal() {}
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
-	margin-top: 16rpx;
 }
 .commemoration-list {
 	width: 302rpx;
@@ -288,6 +340,7 @@ function comfirmModal() {}
 	padding: 28rpx 22rpx;
 	color: #2c2c2c;
 	line-height: 44rpx;
+	margin-top: 16rpx;
 }
 .commemoration-list__date {
 	font-size: 60rpx;
@@ -299,6 +352,13 @@ function comfirmModal() {}
 .commemoration-list__remark {
 	font-size: 24rpx;
 	line-height: 34rpx;
+}
+.modal {
+	.iconfont {
+		position: absolute;
+		top: 46rpx;
+		left: 52rpx;
+	}
 }
 // .commemoration-list__img {
 // 	width: 126rpx;

@@ -40,6 +40,7 @@ view {
 	height: 76rpx;
 	view,
 	input {
+		font-size: 14px;
 		box-sizing: border-box;
 		height: 100%;
 		line-height: 70rpx;
@@ -47,6 +48,13 @@ view {
 		border-radius: 12rpx;
 		border: 4rpx solid #2c2c2c;
 		background: #f4f4f6;
+	}
+	&--disable {
+		view,
+		input {
+			background: #cfcfd3;
+			color: #6c6c6e;
+		}
 	}
 }
 

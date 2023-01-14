@@ -11,13 +11,13 @@
 				</picker-view-column>
 			</template>
 			<template v-else-if="mode === 'date'">
-				<picker-view-column>
+				<picker-view-column v-if="showYears">
 					<view class="picker-view__item" v-for="(item, index) in years" :key="index">{{ item }}年</view>
 				</picker-view-column>
-				<picker-view-column>
+				<picker-view-column v-if="showMonths">
 					<view class="picker-view__item" v-for="(item, index) in months" :key="index">{{ item }}月</view>
 				</picker-view-column>
-				<picker-view-column>
+				<picker-view-column v-if="showDays">
 					<view class="picker-view__item" v-for="(item, index) in days" :key="index">{{ item }}日</view>
 				</picker-view-column>
 			</template>
@@ -119,25 +119,26 @@ if (value.value.length > 0) {
 
 function bindChange(e) {
 	const val = e.detail.value;
-	if (mode.value === 'date' && showMonths.value && showYears.value && showDays.value) {
+	if (mode.value === 'date' && showMonths.value && showDays.value) {
 		if ([4, 6, 9, 11].includes(months[val[1]])) {
 			// 设置大小月
-			days = days.slice(0, 30);
+			days = allDay.slice(0, 30);
 		} else if (months[val[1]] == 2) {
-			const year = years[val[0]];
 			//设置二月
-			if ((year % 4 == 0 && !(year % 100 == 0)) || year % 400 == 0) {
-				// 闰年
-				days = days.slice(0, 29);
-			} else {
-				// 平年
-				days = days.slice(0, 28);
+			// 闰年
+			days = allDay.slice(0, 29);
+			if (showYears.value) {
+				const year = years[val[0]];
+				if (!((year % 4 == 0 && !(year % 100 == 0)) || year % 400 == 0)) {
+					// 平年
+					days = allDay.slice(0, 28);
+				}
 			}
 		} else {
 			days = allDay;
 		}
 	}
-	pickerValue.value = e.detail.value;
+	pickerValue.value = val;
 }
 function handleComfirm() {
 	// 传值
@@ -152,13 +153,16 @@ function handleComfirm() {
 		list = columnList.value;
 	}
 	pickerValue.value.forEach((item, index) => {
-		data.push(list[index][pickerValue.value[index]]);
+		if (list[index]) {
+			data.push(list[index][pickerValue.value[index]]);
+		}
 	});
 
 	emit('comfirm', data, pickerValue.value);
 }
 // 打开
 function open(value) {
+	console.log(value);
 	show.value = true;
 	if (value.length > 0) {
 		pickerValue.value = value;
