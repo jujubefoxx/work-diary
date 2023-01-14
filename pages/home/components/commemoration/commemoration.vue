@@ -291,6 +291,15 @@ const filterDateText = computed(() => {
 
 // 提交表单
 function comfirmModal() {
+	const { title } = formData.value;
+	// 名称未填
+	if (!title) {
+		uni.showToast({
+			title: '不能没有名字！',
+			icon: 'none'
+		});
+		return;
+	}
 	if (isEdit.value) {
 		// 编辑
 		commemorationList.value[activeIndex] = formData.value;
@@ -299,7 +308,7 @@ function comfirmModal() {
 		commemorationList.value.push(formData.value);
 	}
 	uni.showToast({
-		title: isEdit.value ? '修改成功啦' : '新增成功啦',
+		title: isEdit.value ? '修改这个激动时刻成功啦~' : '新增了一个激动时刻！',
 		icon: 'none'
 	});
 	uni.setStorageSync('commemoration', commemorationList.value);
@@ -311,11 +320,12 @@ function handleDelete() {
 }
 // 删除
 function deleteComfirm() {
+	const { title } = commemorationList.value[activeIndex];
 	commemorationList.value.splice(activeIndex, 1);
 	uni.setStorageSync('commemoration', commemorationList.value);
 
 	uni.showToast({
-		title: '删除成功啦',
+		title: '再见！' + title,
 		icon: 'none'
 	});
 	attention.value.closeModal();

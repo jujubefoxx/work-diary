@@ -9,7 +9,7 @@
 			:class="{ 'checkbox-item__list--checked': checkedValue.includes(item.id) }"
 		>
 			{{ item.title }}
-			<text v-show="checkedValue.includes(item.id)" class="check-icon iconfont icon-dui light-shadow"></text>
+			<text v-if="checkedValue.includes(item.id)" class="check-icon iconfont icon-dui light-shadow"></text>
 		</view>
 		<comfirm-button @handleComfirm="handleComfirm" @handleCancel="close"></comfirm-button>
 	</view>

@@ -355,7 +355,7 @@ function handleChoose(id) {
 }
 // 提交表单
 function comfirmModal() {
-	const { workingTime, breakStart, breakMinutes, workMinutes, closingTime, breakEnd } = profileForm.value;
+	const { money, workingTime, breakStart, breakMinutes, workMinutes, closingTime, breakEnd } = profileForm.value;
 	// 异常处理
 	if (compareTime(workingTime, breakStart) <= 0) {
 		uni.showToast({
@@ -375,6 +375,14 @@ function comfirmModal() {
 	if (breakMinutes >= workMinutes) {
 		uni.showToast({
 			title: '你不会上班的时候一直在午休吧',
+			icon: 'none'
+		});
+		return;
+	}
+	// 月薪未填
+	if (!money || money <= 0) {
+		uni.showToast({
+			title: '不能没有钱钱！',
 			icon: 'none'
 		});
 		return;
