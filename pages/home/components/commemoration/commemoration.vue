@@ -165,7 +165,7 @@ function openModal(isEditValue = false, index) {
 	isEdit.value = isEditValue;
 	if (isEdit.value) {
 		activeIndex = index;
-		formData.value = commemorationList.value[index];
+		formData.value = { ...commemorationList.value[index] };
 	} else {
 		formData.value = {
 			// 日期名称

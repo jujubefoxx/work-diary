@@ -129,32 +129,33 @@ function getRepeatDay(date, type = 1) {
 		week,
 		day
 	} = getNowDate();
-	let nowDate = year + '-' + month + '-' + day
+	let nowDate = getDateString(year, month, day)
 	let newDate = ''
 	let isFuture = false; // 是否未来的日期
 	// 当月的最后一天
 	const lastDay = new Date(year, month, 0).getDate()
-
+	// 获取年月日字符串
+	function getDateString(yearNum, monthNum, dayNum) {
+		return `${yearNum}-${monthNum<10?`0${monthNum}`:monthNum}-${dayNum<10?`0${dayNum}`:dayNum}`
+	}
 	// 计算相差的天
 	function compareDay(nowDay, newDay, future) {
 		if (future) {
 			// 异常判断（当月没有该日期）
 			if (newDay > lastDay) {
-				newDate = year + '-' + (month + 1) + '-' + date[0]
+				newDate = getDateString(year, month + 1, date[0])
 				return getDaysBetween(nowDate, newDate)
 			} else {
 				return newDay - nowDay
 			}
 		} else {
-			console.log('进入异常判断',
-				nowDate, newDate)
 			// 异常判断（下月没有该日期）
 			const nextLastDay = new Date(year, month + 1, 0).getDate()
 			// 传入为某个日期，格式转换
-			newDate = year + '-' + (month + 1) + '-' + newDay
+			newDate = getDateString(year, month + 1, newDay)
 
 			if (newDay > nextLastDay) {
-				newDate = year + '-' + (month + 2) + '-' + newDay
+				newDate = getDateString(year, month + 2, newDay)
 			}
 			return getDaysBetween(nowDate, newDate)
 		}
@@ -187,7 +188,7 @@ function getRepeatDay(date, type = 1) {
 			return compareDay(day, date[1], isFuture)
 		} else {
 			// 不同月不同日
-			newDate = (isFuture ? year : year + 1) + '-' + date[0] + '-' + date[1]
+			newDate = getDateString(isFuture ? year : year + 1, date[0], date[1])
 			return getDaysBetween(nowDate, newDate)
 		}
 	}
@@ -214,7 +215,7 @@ function getRepeatDay(date, type = 1) {
 	// 不重复
 	// date格式为[year,month,day] 如[2022,1,4]代表今天距离该天的日期
 	if (type === 4) {
-		newDate = date[0] + '-' + date[1] + '-' + date[2]
+		newDate = getDateString(date[0], date[1], date[2])
 		return getDaysBetween(nowDate, newDate)
 	}
 }
@@ -228,6 +229,7 @@ function getDaysBetween(date1, date2) {
 	var startDate = Date.parse(date1);
 	var endDate = Date.parse(date2);
 	var days = (endDate - startDate) / (1 * 24 * 60 * 60 * 1000);
+	console.log(startDate, endDate, date1, date2)
 	return days;
 }
 
