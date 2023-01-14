@@ -26,7 +26,7 @@
 					<text v-if="!isToday(item.date, item.type)" class="f-12 f-w-400">天</text>
 				</view>
 				<view v-if="getRepeatDay(item.date, item.type) >= 0" class="f-16">{{ isToday(item.date, item.type) ? `就是${item.title}` : `离${item.title}还有` }}</view>
-				<view v-else class="f-16">{{ item.title }}已经过去了</view>
+				<view v-else class="f-16">{{ item.title }}已过去了</view>
 				<view class="commemoration-list__remark">{{ item.remark }}</view>
 			</view>
 		</view>
@@ -41,7 +41,6 @@
 					<text class="form-list__title">重复类型</text>
 					<view class="form-list__content" :class="{ 'form-list__content--disable': formData.alias }">
 						<input class="form-list__input light-shadow" disabled v-model="activeType.title" placeholder="请选择重复类型" @click="openPicker('type')" />
-						<!-- <view class="form-list__input light-shadow">{{ formData.type ? activeType.title : '请选择重复类型' }}</view> -->
 					</view>
 				</view>
 				<view class="form-list" v-if="activeType.title">
@@ -301,16 +300,25 @@ function comfirmModal() {
 		return;
 	}
 	if (isEdit.value) {
-		// 编辑
-		commemorationList.value[activeIndex] = formData.value;
+		if (commemorationList.value[activeIndex] === formData.value) {
+			uni.showToast({
+				title: '内容没有变化哦',
+				icon: 'none'
+			});
+			return;
+		} else {
+			// 编辑
+			commemorationList.value[activeIndex] = formData.value;
+		}
 	} else {
 		// 新建
 		commemorationList.value.push(formData.value);
 	}
-	uni.showToast({
-		title: isEdit.value ? '修改这个激动时刻成功啦~' : '新增了一个激动时刻！',
-		icon: 'none'
-	});
+	console.log('111111');
+	// uni.showToast({
+	// 	title: isEdit.value ? '修改这个激动时刻成功啦~' : '新增了一个激动时刻！',
+	// 	icon: 'none'
+	// });
 	uni.setStorageSync('commemoration', commemorationList.value);
 	closeModal();
 }

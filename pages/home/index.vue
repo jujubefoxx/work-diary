@@ -1,4 +1,5 @@
 <template>
+	<page-meta :page-style="'overflow:' + ($store.state.metaShow ? 'hidden' : 'visible')"></page-meta>
 	<view class="home" :id="$store.state.theme">
 		<home-header></home-header>
 		<notebook>

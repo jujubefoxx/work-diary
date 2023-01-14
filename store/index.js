@@ -5,6 +5,7 @@ const store = createStore({
 	state: {
 		theme: 'default-skin',
 		isHoliday: false,
+		metaShow: false, // 滚动穿透
 		currentDayDate: uni.getStorageSync('currentDayDate'),
 		profile: uni.getStorageSync('profile'),
 		loginProvider: "",
@@ -22,6 +23,9 @@ const store = createStore({
 	mutations: {
 		changeTheme(state, themeName) {
 			state.theme = themeName;
+		},
+		changeMeta(state, data) {
+			state.metaShow = data;
 		},
 		changeHoliday(state, data) {
 			if (data) {

@@ -146,6 +146,8 @@ function getRepeatDay(date, type = 1) {
 				return newDay - nowDay
 			}
 		} else {
+			console.log('进入异常判断',
+				nowDate, newDate)
 			// 异常判断（下月没有该日期）
 			const nextLastDay = new Date(year, month + 1, 0).getDate()
 			// 传入为某个日期，格式转换
@@ -154,7 +156,6 @@ function getRepeatDay(date, type = 1) {
 			if (newDay > nextLastDay) {
 				newDate = year + '-' + (month + 2) + '-' + newDay
 			}
-
 			return getDaysBetween(nowDate, newDate)
 		}
 	}

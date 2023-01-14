@@ -16,6 +16,8 @@ export default {
 </script>
 <script setup>
 import { ref, toRefs, nextTick } from 'vue';
+import { useStore } from 'vuex';
+const store = useStore();
 const popup = ref(null);
 const emit = defineEmits(['comfirmModal']);
 const props = defineProps({
@@ -41,9 +43,11 @@ const props = defineProps({
 	}
 });
 function openModal() {
+	store.commit('changeMeta', true);
 	popup.value.open('center');
 }
 function closeModal() {
+	store.commit('changeMeta', false);
 	popup.value.close();
 }
 function handleComfirm() {
