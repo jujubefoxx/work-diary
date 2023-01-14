@@ -19,9 +19,9 @@ export default {
 
 <style lang="scss" scoped>
 .notebook {
-	padding:74rpx  32rpx 84rpx;
+	padding: 74rpx 32rpx 20rpx;
+	padding-bottom: calc(env(safe-area-inset-bottom) + 20rpx);
 	position: relative;
-	height: 100vh;
 	background-color: #fff;
 	width: 100%;
 	border-radius: 48rpx 48rpx 0rpx 0rpx;
@@ -30,7 +30,9 @@ export default {
 	background-image: linear-gradient(90deg, rgba(60, 10, 30, 0.04) 3%, transparent 0), linear-gradient(1turn, rgba(60, 10, 30, 0.04) 3%, transparent 0);
 	background-size: 40rpx 40rpx;
 	background-repeat: repeat;
+	min-height: calc(100vh - 112rpx);
 }
+
 .notebook-buckle {
 	position: absolute;
 	display: flex;

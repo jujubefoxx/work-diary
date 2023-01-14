@@ -57,15 +57,6 @@ export default {
 import { computed, ref, watch } from 'vue';
 import { dateState, getNowDate, getRepeatDay } from '@/common/util.js';
 import { useStore } from 'vuex';
-const weekArr = [
-	{ title: '周一', id: 1 },
-	{ title: '周二', id: 2 },
-	{ title: '周三', id: 3 },
-	{ title: '周四', id: 4 },
-	{ title: '周五', id: 5 },
-	{ title: '周六', id: 6 },
-	{ title: '周日', id: 0 }
-];
 const store = useStore();
 const modalChild = ref(null);
 const attention = ref(null);
