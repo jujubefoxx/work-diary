@@ -45,6 +45,9 @@ view {
 	height: 76rpx;
 	view,
 	input {
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		font-size: 28rpx;
 		box-sizing: border-box;
 		width: 300rpx;
@@ -74,10 +77,6 @@ view {
 	&:last-child {
 		margin-right: 0;
 	}
-}
-
-.form-list__input {
-	// width: 100%;
 }
 
 .picker-template {

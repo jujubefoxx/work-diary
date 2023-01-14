@@ -1,5 +1,5 @@
 <template>
-	<uni-popup ref="popup" :mask-click="false">
+	<uni-popup ref="popup" :mask-click="false" :animation="showAnimation">
 		<view class="modal theme-bg">
 			<view class="modal-title t-c" v-if="showTitle">{{ title }}</view>
 			<view class="modal-content"><slot></slot></view>
@@ -38,6 +38,10 @@ const props = defineProps({
 		default: () => true
 	},
 	showBtn: {
+		type: Boolean,
+		default: () => true
+	},
+	showAnimation: {
 		type: Boolean,
 		default: () => true
 	}

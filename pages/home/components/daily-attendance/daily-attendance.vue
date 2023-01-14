@@ -29,7 +29,7 @@
 				</view>
 			</view>
 		</view>
-		<modal ref="modalChild" @comfirmModal="comfirmModal" title="新增打卡">
+		<modal ref="modalChild" :showAnimation="false" @comfirmModal="comfirmModal" title="新增打卡">
 			<view class="form">
 				<view class="form-list">
 					<text class="form-list__title">给打卡起个名吧</text>

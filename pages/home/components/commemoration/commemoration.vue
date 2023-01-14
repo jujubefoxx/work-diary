@@ -30,7 +30,7 @@
 				<view class="commemoration-list__remark">{{ item.remark }}</view>
 			</view>
 		</view>
-		<modal ref="modalChild" @comfirmModal="comfirmModal" :title="isEdit ? '修改激动时刻' : '新增激动时刻'">
+		<modal ref="modalChild" :showAnimation="false" @comfirmModal="comfirmModal" :title="isEdit ? '修改激动时刻' : '新增激动时刻'">
 			<text class="modal-delete black-border light-shadow" v-if="!formData.alias && isEdit" @click="handleDelete"><text class="iconfont icon-shanchu"></text></text>
 			<view class="form">
 				<view class="form-list">

@@ -26,7 +26,7 @@
 		</view>
 	</view>
 	<!-- 填写资料表格 -->
-	<modal ref="modalChild" @comfirmModal="comfirmModal">
+	<modal ref="modalChild" :showAnimation="false" @comfirmModal="comfirmModal">
 		<view class="form">
 			<view class="form-list">
 				<text class="form-list__title">上下班时间</text>

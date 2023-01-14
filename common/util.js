@@ -229,7 +229,6 @@ function getDaysBetween(date1, date2) {
 	var startDate = Date.parse(date1);
 	var endDate = Date.parse(date2);
 	var days = (endDate - startDate) / (1 * 24 * 60 * 60 * 1000);
-	console.log(startDate, endDate, date1, date2)
 	return days;
 }
 
