@@ -26,7 +26,7 @@
 					<text v-if="!isToday(item.date, item.type)" class="f-12 f-w-400">天</text>
 				</view>
 				<view v-if="getRepeatDay(item.date, item.type) >= 0" class="f-16">{{ isToday(item.date, item.type) ? `就是${item.title}` : `离${item.title}还有` }}</view>
-				<view v-else class="f-16">{{ item.title }}已过去了</view>
+				<view v-else class="f-16">{{ item.title }}已过去</view>
 				<view class="commemoration-list__remark">{{ item.remark }}</view>
 			</view>
 		</view>

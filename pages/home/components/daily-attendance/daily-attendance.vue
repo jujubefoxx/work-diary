@@ -73,24 +73,17 @@ const checkbox = ref(null);
 const deleteIndex = ref(-1);
 let modalContent = ref('');
 
-/**
- *  纪念日列表 数组对象
- *  alias 只有休息日有 不可删除只能修改
- *  date 日期数据
- *  type 重复类型：1 月重复 2 年重复 3 周重复 4 不重复
- */
-let dailyList = ref([
+const dailyList = computed(() => store.state.dailyList);
+const defaultDailyList = [
 	{ title: '我摸鱼了', remark: '摸鱼咋还扎手', hasPunch: false, icon: 'fish' },
 	{ title: '我发呆了', remark: '地球是我的了', hasPunch: false, icon: 'emm' },
 	{ title: '我拉屎了', remark: '拉屎还通畅吗', hasPunch: false, icon: 'shit' },
 	{ title: '我学习了', remark: '畅游知识海洋', hasPunch: false, icon: 'pen' }
-]);
-// // 获取保存的数据
-// if (uni.getStorageSync('daily-attendance')) {
-// 	dailyList.value = uni.getStorageSync('daily-attendance');
-// } else {
-// 	uni.setStorageSync('daily-attendance', dailyList.value);
-// }
+];
+// 获取保存的数据
+if (!dailyList.value || dailyList.value.length < 4) {
+	store.commit('setDailyList', { data: defaultDailyList, type: '' });
+}
 const modalTips = {
 	title: '温馨提示',
 	content: ['1.新增的打卡只能右滑删除，不能修改<br>', '2.每日已打卡的数据会在次日0点重置未未打卡<br>', '3.最多添加4个自定义的打卡<br>', '4.默认的四个打卡无法删除或修改哦']
@@ -125,12 +118,11 @@ function comfirmModal() {
 		return;
 	}
 	// 新建
-	dailyList.value.push(formData.value);
+	store.commit('setDailyList', { data: { ...formData.value, hasPunch: false }, type: 'push' });
 	uni.showToast({
 		title: '成功新增了一个打卡耶，加油加油！',
 		icon: 'none'
 	});
-	// uni.setStorageSync('daily-attendance', dailyList.value);
 	closeModal();
 }
 // 滑动距离
@@ -153,7 +145,7 @@ function punchCard(index) {
 		attentionIndex = index;
 		attention.value.openModal();
 	} else {
-		dailyList.value[index].hasPunch = true;
+		store.commit('setDailyList', { data: index, type: 'punch' });
 		uni.showToast({
 			title: '哦耶！' + dailyList.value[index].title + '！',
 			icon: 'none'
@@ -175,9 +167,9 @@ function handleDelete(index) {
 function attentionComfirm() {
 	const { title } = dailyList.value[attentionIndex];
 	if (attentionType === 'cancel') {
-		dailyList.value[attentionIndex].hasPunch = false;
+		store.commit('setDailyList', { data: attentionIndex, type: 'cencel' });
 	} else if (attentionType === 'delete') {
-		dailyList.value.splice(attentionIndex, 1);
+		store.commit('setDailyList', { data: attentionIndex, type: 'splice' });
 	}
 	uni.showToast({
 		title: attentionType === 'cancel' ? '原来没完成T^T' : '再见！' + title,

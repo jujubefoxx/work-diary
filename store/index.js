@@ -3,22 +3,18 @@ import {
 } from 'vuex'
 const store = createStore({
 	state: {
+		// 皮肤
 		theme: 'default-skin',
+		// 是否休息日
 		isHoliday: false,
-		metaShow: false, // 滚动穿透
+		// 滚动穿透
+		metaShow: false,
+		// 今日数据
 		currentDayDate: uni.getStorageSync('currentDayDate'),
+		// 个人资料
 		profile: uni.getStorageSync('profile'),
-		loginProvider: "",
-		openid: null,
-		testvuex: false,
-		colorIndex: 0,
-		colorList: ['#FF0000', '#00FF00', '#0000FF'],
-		noMatchLeftWindow: true,
-		active: 'componentPage',
-		leftWinActive: '/pages/component/view/view',
-		activeOpen: '',
-		menu: [],
-		univerifyErrorMsg: ''
+		// 打卡列表
+		dailyList: uni.getStorageSync('dailyList'),
 	},
 	mutations: {
 		changeTheme(state, themeName) {
@@ -39,38 +35,29 @@ const store = createStore({
 			uni.setStorageSync('currentDayDate', data);
 			state.currentDayDate = data
 		},
+		setDailyList(state, {
+			data,
+			type = ''
+		}) {
+			if (type === 'push') {
+				state.dailyList.push(data)
+			} else if (type === 'splice') {
+				state.dailyList.splice(data, 1);
+			} else if (type === 'punch') {
+				state.dailyList[data].hasPunch = true;
+			} else if (type === 'cencel') {
+				state.dailyList[data].hasPunch = false;
+			} else {
+				state.dailyList = data
+			}
+			// 更新当天的信息
+			uni.setStorageSync('dailyList', state.dailyList);
+			console.log(uni.getStorageSync('dailyList'))
+		},
 		setProfile(state, data) {
 			// 保存资料信息
 			uni.setStorageSync('profile', data);
 			state.profile = data
-		},
-		setTestFalse(state) {
-			state.testvuex = false
-		},
-		setColorIndex(state, index) {
-			state.colorIndex = index
-		},
-		setMatchLeftWindow(state, matchLeftWindow) {
-			state.noMatchLeftWindow = !matchLeftWindow
-		},
-		setActive(state, tabPage) {
-			state.active = tabPage
-		},
-		setLeftWinActive(state, leftWinActive) {
-			state.leftWinActive = leftWinActive
-		},
-		setActiveOpen(state, activeOpen) {
-			state.activeOpen = activeOpen
-		},
-		setMenu(state, menu) {
-			state.menu = menu
-		},
-		setUniverifyLogin(state, payload) {
-			typeof payload !== 'boolean' ? payload = !!payload : '';
-			state.isUniverifyLogin = payload;
-		},
-		setUniverifyErrorMsg(state, payload = '') {
-			state.univerifyErrorMsg = payload
 		}
 	},
 	getters: {
@@ -86,59 +73,7 @@ const store = createStore({
 			return state.profile.payoffTime
 		}
 	},
-	actions: {
-		// lazy loading openid
-		getUserOpenId: async function({
-			commit,
-			state
-		}) {
-			return await new Promise((resolve, reject) => {
-				if (state.openid) {
-					resolve(state.openid)
-				} else {
-					uni.login({
-						success: (data) => {
-							commit('login')
-							setTimeout(function() { //模拟异步请求服务器获取 openid
-								const openid = '123456789'
-								console.log('uni.request mock openid[' +
-									openid + ']');
-								commit('setOpenid', openid)
-								resolve(openid)
-							}, 1000)
-						},
-						fail: (err) => {
-							console.log('uni.login 接口调用失败，将无法正常使用开放接口等服务', err)
-							reject(err)
-						}
-					})
-				}
-			})
-		},
-		getPhoneNumber: function({
-			commit
-		}, univerifyInfo) {
-			return new Promise((resolve, reject) => {
-				uni.request({
-					url: 'https://97fca9f2-41f6-449f-a35e-3f135d4c3875.bspapp.com/http/univerify-login',
-					method: 'POST',
-					data: univerifyInfo,
-					success: (res) => {
-						const data = res.data
-						if (data.success) {
-							resolve(data.phoneNumber)
-						} else {
-							reject(res)
-						}
-
-					},
-					fail: (err) => {
-						reject(res)
-					}
-				})
-			})
-		}
-	}
+	actions: {}
 })
 
 export default store

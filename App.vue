@@ -22,9 +22,17 @@ export default {
 			weather: ''
 		};
 		const storeData = uni.getStorageSync('currentDayDate');
+		// 是否新的一天
 		if (!storeData || (storeData && currentDayDate.dateStr !== storeData.dateStr)) {
 			this.$store.commit('setCurrentDayDate', currentDayDate);
+			const dailyList = uni.getStorageSync('dailyList');
+			if (dailyList) {
+				const newDailyList = dailyList.map(item => ({ ...item, hasPunch: false }));
+				this.$store.commit('setDailyList', newDailyList);
+			}
 		}
+
+		uni.getStorageSync('dailyList');
 	},
 	onHide: function() {
 		console.log('App Hide');
