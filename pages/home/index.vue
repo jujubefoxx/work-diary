@@ -11,13 +11,16 @@
 		</notebook>
 	</view>
 </template>
-
 <script setup>
 import HomeHeader from './components/home-header/home-header.vue';
 import MoneyItem from './components/money-item/money-item.vue';
 import DateItem from './components/date-item/date-item.vue';
 import Commemoration from './components/commemoration/commemoration.vue';
 import DailyAttendance from './components/daily-attendance/daily-attendance.vue';
+import { useShare } from '@/common/useShare.js';
+const { onShareAppMessage, onShareTimeline } = useShare();
+onShareAppMessage();
+onShareTimeline();
 </script>
 
 <style lang="scss" scoped></style>

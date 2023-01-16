@@ -42,6 +42,10 @@
 import { computed, ref, watch } from 'vue';
 import { dateState, getNowDate } from '@/common/util.js';
 import { useStore } from 'vuex';
+import { useShare } from '@/common/useShare.js';
+const { onShareAppMessage, onShareTimeline } = useShare();
+onShareAppMessage();
+onShareTimeline();
 // 图片地址
 const { imgUrl } = getApp({ allowDefault: true }).globalData;
 const store = useStore();
