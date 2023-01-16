@@ -2,10 +2,10 @@
 	<view class="date-item">
 		<!-- 左侧信息 -->
 		<view class="date-item__left">
-			<view class="note-btn light-shadow flex flex-y-center flex-x-center">
+			<navigator url="/pages/note/index" class="note-btn light-shadow flex flex-y-center flex-x-center">
 				<view class="note-btn__icon"><text class="iconfont icon-notebook"></text></view>
 				打工人记事本
-			</view>
+			</navigator>
 			<!-- <view class="money-item__title dashed line1"></view> -->
 			<!-- <view class="money-item__btn"></view> -->
 			<!-- 右侧按钮 -->
