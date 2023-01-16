@@ -174,6 +174,8 @@ function attentionComfirm() {
 		title: attentionType === 'cancel' ? '原来没完成T^T' : '再见！' + title,
 		icon: 'none'
 	});
+	// 复位
+	deleteIndex.value = -1;
 	attention.value.closeModal();
 }
 

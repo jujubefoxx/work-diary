@@ -32,6 +32,7 @@
 				placeholder="请输入内容"
 				:focus="!isCheck && modalShow"
 				v-model="inputContent"
+				@input="inputText"
 				maxlength="70"
 			></textarea>
 			<view class="modal-tips">
@@ -133,6 +134,7 @@ const modalShow = computed(() => {
 	}
 });
 let inputContent = '';
+
 function openModal(edit = false, check = false, index) {
 	if (modalShow.value) return;
 	isEdit.value = edit;
