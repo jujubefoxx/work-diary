@@ -57,7 +57,16 @@ const inputWid = computed(() => {
 	if (rightSaying.value == '' || rightSaying.value == 0) {
 		return '314rpx';
 	} else {
-		return String(rightSaying.value).length * 28 + 'rpx';
+		const str = String(rightSaying.value);
+		let len = 0;
+		// 正则表达式，判断是否为汉字
+		const re = /[\u4e00-\u9fa5]/;
+		for (let i = 0; i < str.length; i++) {
+			if (re.test(str.charAt(i))) {
+				len++;
+			}
+		}
+		return (len + str.length) * 14 + 'rpx';
 	}
 });
 </script>

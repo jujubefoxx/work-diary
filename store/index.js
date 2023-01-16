@@ -7,6 +7,8 @@ const store = createStore({
 		theme: 'default-skin',
 		// 是否休息日
 		isHoliday: false,
+		// 是否加载中
+		loading: true,
 		// 滚动穿透
 		metaShow: false,
 		// 今日数据
@@ -22,11 +24,14 @@ const store = createStore({
 		changeTheme(state, themeName) {
 			state.theme = themeName;
 		},
+		changeLoading(state, data) {
+			state.loading = data;
+		},
 		changeMeta(state, data) {
 			state.metaShow = data;
 		},
 		changeHoliday(state, data) {
-			if (data) {
+			if (data !== undefined) {
 				state.isHoliday = data
 			} else {
 				state.isHoliday = !state.isHoliday

@@ -102,7 +102,7 @@ let realWorkTimes = 0;
 // 定时器
 let timer = null;
 // 今日已赚
-let computedMoney = ref(0);
+let computedMoney = ref('？');
 // 资料
 const profile = computed(() => store.state.profile);
 // 获取资料
@@ -386,6 +386,7 @@ function comfirmModal() {
 		return;
 	}
 	store.commit('setProfile', profileForm.value);
+	getProfile();
 	closeModal();
 }
 
