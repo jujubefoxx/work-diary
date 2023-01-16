@@ -6,6 +6,7 @@
 			<view class="flex flex-x-center" v-if="showBtn">
 				<comfirm-button @handleCancel="closeModal" @handleComfirm="handleComfirm" :showCancel="showCancel" :showComfirm="showComfirm"></comfirm-button>
 			</view>
+			<view v-else><comfirm-button @handleCancel="closeModal" :showComfirm="false" cancelText="关闭"></comfirm-button></view>
 		</view>
 	</uni-popup>
 </template>

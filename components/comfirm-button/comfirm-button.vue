@@ -1,6 +1,6 @@
 <template>
 	<view class="comfirm-button light-shadow">
-		<view class="comfirm-button__list" :class="{ 'comfirm-button__list--border': showComfirm }" v-if="showCancel" @click="$emit('handleCancel')">取消</view>
+		<view class="comfirm-button__list" :class="{ 'comfirm-button__list--border': showComfirm }" v-if="showCancel" @click="$emit('handleCancel')">{{ cancelText }}</view>
 		<view class="comfirm-button__list active-btn" v-if="showComfirm" @click="$emit('handleComfirm')">确定</view>
 	</view>
 </template>
@@ -17,6 +17,10 @@ const props = defineProps({
 	showCancel: {
 		type: Boolean,
 		default: () => true
+	},
+	cancelText: {
+		type: String,
+		default: () => '取消'
 	},
 	showComfirm: {
 		type: Boolean,

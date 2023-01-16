@@ -73,7 +73,7 @@ const defaultDailyList = [
 ];
 // 获取保存的数据
 if (!dailyList.value || dailyList.value.length < 4) {
-	store.commit('setDailyList', { data: defaultDailyList, type: '' });
+	store.commit('setArrList', { data: defaultDailyList, type: '' });
 }
 const modalTips = {
 	title: '温馨提示',
@@ -109,7 +109,7 @@ function comfirmModal() {
 		return;
 	}
 	// 新建
-	store.commit('setDailyList', { data: { ...formData.value, hasPunch: false }, type: 'push' });
+	store.commit('setArrList', { data: { ...formData.value, hasPunch: false }, type: 'push' });
 	uni.showToast({
 		title: '成功新增了一个打卡耶，加油加油！',
 		icon: 'none'
@@ -136,7 +136,8 @@ function punchCard(index) {
 		attentionIndex = index;
 		attention.value.openModal();
 	} else {
-		store.commit('setDailyList', { data: index, type: 'punch' });
+		const newData = { ...dailyList.value[index], hasPunch: true };
+		store.commit('setArrList', { data: newData, index, type: 'edit' });
 		uni.showToast({
 			title: '哦耶！' + dailyList.value[index].title + '！',
 			icon: 'none'
@@ -158,9 +159,10 @@ function handleDelete(index) {
 function attentionComfirm() {
 	const { title } = dailyList.value[attentionIndex];
 	if (attentionType === 'cancel') {
-		store.commit('setDailyList', { data: attentionIndex, type: 'cencel' });
+		const newData = { ...dailyList.value[attentionIndex], hasPunch: false };
+		store.commit('setArrList', { data: newData, index: attentionIndex, type: 'edit' });
 	} else if (attentionType === 'delete') {
-		store.commit('setDailyList', { data: attentionIndex, type: 'splice' });
+		store.commit('setArrList', { data: attentionIndex, type: 'splice' });
 	}
 	uni.showToast({
 		title: attentionType === 'cancel' ? '原来没完成T^T' : '再见！' + title,

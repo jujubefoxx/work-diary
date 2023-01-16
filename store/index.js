@@ -10,13 +10,13 @@ const store = createStore({
 		// 滚动穿透
 		metaShow: false,
 		// 今日数据
-		currentDayDate: uni.getStorageSync('currentDayDate'),
+		currentDayDate: uni.getStorageSync('currentDayDate') || {},
 		// 个人资料
-		profile: uni.getStorageSync('profile'),
+		profile: uni.getStorageSync('profile') || {},
 		// 打卡列表
-		dailyList: uni.getStorageSync('dailyList'),
+		dailyList: uni.getStorageSync('dailyList') || [],
 		// 记事本列表
-		noteList: uni.getStorageSync('noteList'),
+		noteList: uni.getStorageSync('noteList') || [],
 	},
 	mutations: {
 		changeTheme(state, themeName) {
@@ -39,22 +39,21 @@ const store = createStore({
 		},
 		setArrList(state, {
 			arr = 'dailyList',
+			type = '',
 			data,
-			type = ''
+			index
 		}) {
 			if (type === 'push') {
 				state[arr].push(data)
 			} else if (type === 'splice') {
 				state[arr].splice(data, 1);
-			} else if (type === 'punch') {
-				state[arr][data].hasPunch = true;
-			} else if (type === 'cencel') {
-				state[arr][data].hasPunch = false;
+			} else if (type === 'edit') {
+				state[arr][index] = data;
 			} else {
 				state[arr] = data
 			}
 			// 更新当天的信息
-			uni.setStorageSync('dailyList', state[arr]);
+			uni.setStorageSync(arr, state[arr]);
 		},
 		setProfile(state, data) {
 			// 保存资料信息
