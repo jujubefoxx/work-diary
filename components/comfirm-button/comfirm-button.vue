@@ -39,6 +39,7 @@ const { buttonList, activeId } = toRefs(props);
 	overflow: hidden;
 	width: fit-content;
 	margin: 44rpx auto;
+	font-size: 28rpx;
 }
 .comfirm-button__list {
 	display: flex;

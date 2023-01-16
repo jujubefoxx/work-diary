@@ -5,15 +5,18 @@
 			<image v-if="noteList <= 0" class="note-nodata" :src="imgUrl.noteCat"></image>
 			<view v-else class="note-content" :class="{ 'note-content--nopd': noteList.length < 10 }">
 				<view class="note-content__column" v-for="(column, index) in renderList.columnList">
-					<view class="note-list" @click="openModal(false, true, item.index)" v-for="(item, key) in column" :class="{ 'note-list--complete': item.isComplete }">
-						<view class="note-list__text">{{ item.content }}</view>
-						<view class="note-list__date">{{ item.date }}</view>
+					<view class="note-list" v-for="(item, key) in column" :class="{ 'note-list--complete': item.isComplete }">
+						<view @click="openModal(false, true, item.index)">
+							<view class="note-list__text">{{ item.content }}</view>
+							<view class="note-list__date">{{ item.date }}</view>
+						</view>
+
 						<view class="note-list__btn">
-							<view class="note-list__btn-list light-shadow" @click.stop="handleDelete(item.index)"><text class=" iconfont icon-shanchu"></text></view>
-							<view class="note-list__btn-list light-shadow" v-if="!item.isComplete" @click.stop="openModal(true, false, item.index)">
-								<text class=" iconfont icon-xiugai"></text>
+							<view class="note-list__btn-list light-shadow" @click="handleDelete(item.index)"><text class=" iconfont icon-shanchu"></text></view>
+							<view class="note-list__btn-list light-shadow" v-if="!item.isComplete">
+								<text class=" iconfont icon-xiugai" @click="openModal(true, false, item.index)"></text>
 							</view>
-							<view class="note-list__btn-list light-shadow" :class="{ 'active-btn check-icon--animate': item.isComplete }" @click.stop="handleComplete(item.index)">
+							<view class="note-list__btn-list light-shadow" :class="{ 'active-btn check-icon--animate': item.isComplete }" @click="handleComplete(item.index)">
 								<text class=" iconfont icon-dui"></text>
 							</view>
 						</view>
@@ -113,11 +116,8 @@ let formData = ref({});
 function openModal(edit = false, check = false, index) {
 	isEdit.value = edit;
 	isCheck.value = check;
-	if (check) {
-		modalTitle.value = '查看内容';
-		formData.value = { ...noteList.value[index] };
-	} else if (edit) {
-		modalTitle.value = '编辑';
+	if (edit || check) {
+		modalTitle.value = edit ? '编辑' : '查看内容';
 		activeIndex = index;
 		formData.value = { ...noteList.value[index] };
 	} else {
@@ -250,7 +250,7 @@ function attentionComfirm() {
 	width: 330rpx;
 	background: #ffffff;
 	border-radius: 12rpx;
-	padding: 28rpx 36rpx 86rpx;
+	padding: 28rpx 36rpx 22rpx;
 	border: 4rpx solid #2c2c2c;
 	font-size: 28rpx;
 	color: #2c2c2c;
@@ -278,10 +278,10 @@ function attentionComfirm() {
 	line-height: 34rpx;
 }
 .note-list__btn {
-	position: absolute;
 	display: flex;
-	right: 22rpx;
-	bottom: 22rpx;
+	justify-content: flex-end;
+	margin-right: -14rpx;
+	margin-top: 16rpx;
 }
 .note-list__btn-list {
 	display: flex;
