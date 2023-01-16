@@ -93,8 +93,6 @@ import { useStore } from 'vuex';
 const store = useStore();
 // 是否填写信息
 let hasProfileData = ref(false);
-// 资料内容
-const moneyProfile = ref({});
 // 模态框
 const modalChild = ref(null);
 // 选择器
@@ -105,17 +103,17 @@ let realWorkTimes = 0;
 let timer = null;
 // 今日已赚
 let computedMoney = ref(0);
+// 资料
+const profile = computed(() => store.state.profile);
 // 获取资料
 function getProfile() {
-	const { profile } = store.state;
-	if (profile) {
-		moneyProfile.value = profile;
+	if (Object.keys(profile.value).length !== 0) {
 		hasProfileData.value = true;
 		timer = setInterval(() => {
 			const date = new Date();
 			// 当前时间
 			const now = [date.getHours(), date.getMinutes(), date.getSeconds()];
-			const { workingTime, closingTime } = moneyProfile.value;
+			const { workingTime, closingTime } = profile.value;
 			// 开始工作时长/秒
 			const realWorkingTime = compareTime(workingTime, now, 's');
 			// 开始工作
@@ -130,27 +128,26 @@ function getProfile() {
 			if (workingEnd) {
 				clearInterval(timer);
 			}
-			console.log('定时器运作中');
 		}, 1000);
 	}
 }
+getProfile();
 // 秒薪
 const secordMoney = computed(() => {
-	const type = Number(moneyProfile.value.moneyType);
+	const type = Number(profile.value.moneyType);
 	// 上班工时/分
-	const workMinute = moneyProfile.value.workMinutes - moneyProfile.value.breakMinutes;
+	const workMinute = profile.value.workMinutes - profile.value.breakMinutes;
 	// 日薪
-	let dayMoney = type === 2 ? moneyProfile.value.money : 0;
+	let dayMoney = type === 2 ? profile.value.money : 0;
 	if (type === 1) {
-		dayMoney = moneyProfile.value.money / moneyProfile.value.workDays;
+		dayMoney = profile.value.money / profile.value.workDays;
 	}
 	// 时薪
-	let hourMoney = type === 3 ? moneyProfile.value.money : dayMoney / (workMinute / 60);
+	let hourMoney = type === 3 ? profile.value.money : dayMoney / (workMinute / 60);
 	// 秒薪
 	return hourMoney / 60 / 60;
 });
 
-getProfile();
 // 按钮
 const buttonList = {
 	noData: {
@@ -221,8 +218,8 @@ const profileForm = ref({
 // 打开填写资料弹窗
 function openModal() {
 	if (hasProfileData.value) {
-		moneyTypeList.find(item => item.id === moneyProfile.value.moneyType).default = moneyProfile.value.money;
-		profileForm.value = moneyProfile.value;
+		moneyTypeList.find(item => item.id === profile.value.moneyType).default = profile.value.money;
+		profileForm.value = { ...profile.value };
 	}
 	modalChild.value.openModal();
 }
@@ -288,6 +285,7 @@ function openPicker(name, mode = 'time') {
 
 // 计算时间差
 function compareTime(st, et, mode = 'm') {
+	console.log(st, et, mode);
 	// 开始时间 st 结束时间 et
 	let s = st[0] * 60 + Number(st[1]);
 	let e = et[0] * 60 + Number(et[1]);
@@ -388,7 +386,6 @@ function comfirmModal() {
 		return;
 	}
 	store.commit('setProfile', profileForm.value);
-	getProfile();
 	closeModal();
 }
 
