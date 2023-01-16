@@ -23,13 +23,13 @@ export default {
 };
 </script>
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { dateState, getNowDate } from '@/common/util.js';
 import { useStore } from 'vuex';
 const store = useStore();
 const picker = ref(null);
 const { year, month, day } = store.state.currentDayDate;
-let weather = ref(store.state.currentDayDate.weather);
+const weather = computed(() => store.state.currentDayDate.weather);
 const columnList = [['出太阳', '大阴天', '下雨啦', '刮大风', '下雪咯', '不知道']];
 // 点击选择天气
 function handleClick() {
@@ -37,7 +37,7 @@ function handleClick() {
 }
 function pickerComfirm(data) {
 	const obj = store.state.currentDayDate;
-	obj.weather = weather.value = data[0];
+	obj.weather = data[0];
 	store.commit('setCurrentDayDate', obj);
 	picker.value.close();
 }

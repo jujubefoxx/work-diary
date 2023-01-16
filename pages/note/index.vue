@@ -26,7 +26,14 @@
 			<view class="note-bottom"><button class="bottom-btn light-shadow black-border" v-if="noteList.length < 10" @click="openModal(false, false)">新建</button></view>
 		</notebook>
 		<modal ref="modalChild" :title="modalTitle" @comfirmModal="modalComfirm" :showAnimation="isCheck" :showBtn="!isCheck">
-			<textarea :disabled="isCheck" class="modal-content black-border light-shadow" placeholder="请输入内容" v-model="inputContent" maxlength="70"></textarea>
+			<textarea
+				:disabled="isCheck"
+				class="modal-content black-border light-shadow"
+				placeholder="请输入内容"
+				:focus="!isCheck && modalShow"
+				v-model="inputContent"
+				maxlength="70"
+			></textarea>
 			<view class="modal-tips">
 				<h4>{{ modalTips.title }}</h4>
 				<p>
@@ -111,16 +118,21 @@ const renderList = computed(() => {
 });
 
 // 是否编辑
-let isEdit = ref(false);
+const isEdit = ref(false);
 // 是否查看
-let isCheck = ref(false);
+const isCheck = ref(false);
 // 是否编辑
-let modalTitle = ref('');
+const modalTitle = ref('');
 // 表单数据
-let formData = ref({});
-let modalShow = computed(() => {
-	return modalChild.value.show;
+const formData = ref({});
+const modalShow = computed(() => {
+	if (modalChild.value) {
+		return modalChild.value.show;
+	} else {
+		return '';
+	}
 });
+let inputContent = '';
 function openModal(edit = false, check = false, index) {
 	if (modalShow.value) return;
 	isEdit.value = edit;
@@ -129,20 +141,18 @@ function openModal(edit = false, check = false, index) {
 		modalTitle.value = edit ? '编辑' : '查看内容';
 		activeIndex = index;
 		formData.value = { ...noteList.value[index] };
-		inputContent.value = formData.value.content;
 	} else {
 		modalTitle.value = '新建';
-		inputContent.value = '';
 		formData.value = { content: '', date: '', isComplete: false, index: undefined };
 	}
+	inputContent = formData.value.content;
 	modalChild.value.openModal();
 }
-const inputContent = ref('');
 // 提交表单
 function modalComfirm() {
-	console.log(inputContent.value);
+	console.log('1111111111', inputContent);
 	// 名称未填
-	if (!inputContent.value) {
+	if (!inputContent) {
 		uni.showToast({
 			title: '内容不能为空哇！',
 			icon: 'none'
@@ -152,7 +162,7 @@ function modalComfirm() {
 	const { length } = noteList.value;
 	const { year, month, day } = getNowDate();
 	formData.value.date = `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`;
-	formData.value.content = inputContent.value;
+	formData.value.content = inputContent;
 	if (isEdit.value) {
 		store.commit('setArrList', { arr: 'noteList', data: formData.value, index: activeIndex, type: 'edit' });
 

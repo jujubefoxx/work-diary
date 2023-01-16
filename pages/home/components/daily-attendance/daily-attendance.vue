@@ -67,7 +67,7 @@ const modalChild = ref(null);
 const attention = ref(null);
 const checkbox = ref(null);
 const deleteIndex = ref(-1);
-let modalContent = ref('');
+const modalContent = ref('');
 
 const dailyList = computed(() => store.state.dailyList);
 const defaultDailyList = [
@@ -122,12 +122,13 @@ function comfirmModal() {
 	closeModal();
 }
 // 滑动距离
-let touchWidth = ref(0);
-// 临时
-let temWidth = ref(0);
+const touchWidth = ref(0);
+
 // 防抖
-let touchHeight = ref(0);
-let touchStart = ref({ height: 0, width: 0 });
+let touchStart = { height: 0, width: 0 };
+let touchHeight = 0;
+// 临时
+let temWidth = 0;
 let hasMove = false;
 let attentionType = '';
 let attentionIndex = -1;
@@ -180,8 +181,8 @@ function attentionComfirm() {
  * 触摸开始
  */
 function touchS(index, e) {
-	touchStart.value.width = e.touches[0].clientX;
-	touchStart.value.height = e.touches[0].clientY;
+	touchStart.width = e.touches[0].clientX;
+	touchStart.height = e.touches[0].clientY;
 }
 /**
  * 触摸移动
@@ -192,14 +193,14 @@ function touchM(index, e) {
 	if (e.touches[0].clientX) hasMove = true;
 	if (deleteIndex.value !== index) {
 		touchWidth.value = 0;
-		temWidth.value = 0;
-		touchHeight.value = 0;
+		temWidth = 0;
+		touchHeight = 0;
 	}
-	temWidth.value = touchStart.value.width - e.touches[0].clientX;
-	touchHeight.value = touchStart.value.height - e.touches[0].clientY;
-	if (temWidth.value >= 15 && touchHeight.value < 2) {
+	temWidth = touchStart.width - e.touches[0].clientX;
+	touchHeight = touchStart.height - e.touches[0].clientY;
+	if (temWidth >= 15 && touchHeight < 2) {
 		deleteIndex.value = index;
-		touchWidth.value = temWidth.value > 28 ? 28 : temWidth.value;
+		touchWidth.value = temWidth > 28 ? 28 : temWidth;
 	}
 }
 /**
@@ -209,7 +210,7 @@ function touchE(index, e) {
 	if (!hasMove) return;
 	// 复位
 	// 避免上下滑动导致滑动
-	if (temWidth.value < 24 || Math.abs(touchHeight.value) > 10) {
+	if (temWidth < 24 || Math.abs(touchHeight) > 10) {
 		deleteIndex.value = -1;
 	} else {
 		deleteIndex.value = index;

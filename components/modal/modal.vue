@@ -47,7 +47,7 @@ const props = defineProps({
 		default: () => true
 	}
 });
-let show = ref(false);
+const show = ref(false);
 function openModal() {
 	store.commit('changeMeta', true);
 	show.value = true;

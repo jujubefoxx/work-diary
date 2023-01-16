@@ -72,7 +72,7 @@ const props = defineProps({
 const { mode, value, showYears, showMonths, showDays, columnList } = toRefs(props);
 const emit = defineEmits(['comfirm']);
 // 展示开关
-let show = ref(false);
+const show = ref(false);
 
 // 时间选择器
 const hours = [];

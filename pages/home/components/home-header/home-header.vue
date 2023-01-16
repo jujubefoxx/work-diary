@@ -47,7 +47,7 @@ const leftSaying = computed(() => {
 	return dateWord[dateState()] + helloWord[dateState()];
 });
 // 自己说的话
-let rightSaying = ref('');
+const rightSaying = ref('');
 // 获取输入内容
 function onKeyInput(e) {
 	rightSaying.value = e.detail.value;

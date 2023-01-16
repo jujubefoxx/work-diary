@@ -114,7 +114,7 @@ function isToday(day, type) {
  *  date 日期数据
  *  type 重复类型：1 月重复 2 年重复 3 周重复 4 不重复
  */
-let commemorationList = ref([{ alias: 'holiday', type: 3, date: [0, 6], title: '休息日', remark: '谁请我吃肯德基' }]);
+const commemorationList = ref([{ alias: 'holiday', type: 3, date: [0, 6], title: '休息日', remark: '谁请我吃肯德基' }]);
 // 获取保存的数据
 if (uni.getStorageSync('commemoration')) {
 	commemorationList.value = uni.getStorageSync('commemoration');

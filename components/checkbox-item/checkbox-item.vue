@@ -31,9 +31,9 @@ const props = defineProps({
 const { columnList, defaultChecked } = toRefs(props);
 const emit = defineEmits(['comfirm']);
 // 展示开关
-let show = ref(false);
+const show = ref(false);
 // 选择的值
-let checkedValue = ref([]);
+const checkedValue = ref([]);
 
 function handleCheck(id) {
 	if (checkedValue.value.includes(id)) {

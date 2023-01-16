@@ -92,7 +92,7 @@ import { dateState, getNowDate } from '@/common/util.js';
 import { useStore } from 'vuex';
 const store = useStore();
 // 是否填写信息
-let hasProfileData = ref(false);
+const hasProfileData = ref(false);
 // 模态框
 const modalChild = ref(null);
 // 选择器
@@ -102,7 +102,7 @@ let realWorkTimes = 0;
 // 定时器
 let timer = null;
 // 今日已赚
-let computedMoney = ref('？');
+const computedMoney = ref('？');
 // 资料
 const profile = computed(() => store.state.profile);
 // 获取资料
