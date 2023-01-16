@@ -109,6 +109,7 @@ const profile = computed(() => store.state.profile);
 function getProfile() {
 	if (Object.keys(profile.value).length !== 0) {
 		hasProfileData.value = true;
+		computedMoney.value = 0;
 		timer = setInterval(() => {
 			const date = new Date();
 			// 当前时间
@@ -285,7 +286,6 @@ function openPicker(name, mode = 'time') {
 
 // 计算时间差
 function compareTime(st, et, mode = 'm') {
-	console.log(st, et, mode);
 	// 开始时间 st 结束时间 et
 	let s = st[0] * 60 + Number(st[1]);
 	let e = et[0] * 60 + Number(et[1]);

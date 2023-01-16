@@ -6,17 +6,17 @@
 			<view v-else class="note-content" :class="{ 'note-content--nopd': noteList.length < 10 }">
 				<view class="note-content__column" v-for="(column, index) in renderList.columnList">
 					<view class="note-list" v-for="(item, key) in column" :class="{ 'note-list--complete': item.isComplete }">
-						<view @click="openModal(false, true, item.index)">
+						<view @click="openModal(false, true, item.id)">
 							<view class="note-list__text">{{ item.content }}</view>
 							<view class="note-list__date">{{ item.date }}</view>
 						</view>
 
 						<view class="note-list__btn">
-							<view class="note-list__btn-list light-shadow" @click="handleDelete(item.index)"><text class=" iconfont icon-shanchu"></text></view>
+							<view class="note-list__btn-list light-shadow" @click="handleDelete(item.id)"><text class=" iconfont icon-shanchu"></text></view>
 							<view class="note-list__btn-list light-shadow" v-if="!item.isComplete">
-								<text class=" iconfont icon-xiugai" @click="openModal(true, false, item.index)"></text>
+								<text class=" iconfont icon-xiugai" @click="openModal(true, false, item.id)"></text>
 							</view>
-							<view class="note-list__btn-list light-shadow" :class="{ 'active-btn check-icon--animate': item.isComplete }" @click="handleComplete(item.index)">
+							<view class="note-list__btn-list light-shadow" :class="{ 'active-btn check-icon--animate': item.isComplete }" @click="handleComplete(item.id)">
 								<text class=" iconfont icon-dui"></text>
 							</view>
 						</view>
@@ -26,7 +26,7 @@
 			<view class="note-bottom"><button class="bottom-btn light-shadow black-border" v-if="noteList.length < 10" @click="openModal(false, false)">新建</button></view>
 		</notebook>
 		<modal ref="modalChild" :title="modalTitle" @comfirmModal="modalComfirm" :showAnimation="isCheck" :showBtn="!isCheck">
-			<textarea :disabled="isCheck" class="modal-content black-border light-shadow" placeholder="请输入内容" v-model="formData.content" maxlength="70"></textarea>
+			<textarea :disabled="isCheck" class="modal-content black-border light-shadow" placeholder="请输入内容" v-model="inputContent" maxlength="70"></textarea>
 			<view class="modal-tips">
 				<h4>{{ modalTips.title }}</h4>
 				<p>
@@ -40,7 +40,11 @@
 		<modal ref="attention" title="注意" @comfirmModal="attentionComfirm"><p class="t-c" v-html="modalContent"></p></modal>
 	</view>
 </template>
-
+<script>
+export default {
+	name: 'note'
+};
+</script>
 <script setup>
 import { computed, ref, watch } from 'vue';
 import { dateState, getNowDate } from '@/common/util.js';
@@ -68,11 +72,12 @@ const modalTips = {
  *  isComplete 是否完成
  *  index 下标
  */
-const noteList = computed(() => store.state.noteList.map((i, index) => ({ ...i, index })));
+const noteList = computed(() => store.state.noteList.map((i, index) => ({ ...i, id: index })));
 // 渲染排序
 const renderList = computed(() => {
-	const arr = noteList.value;
+	const arr = [...noteList.value];
 	// 按时间排序 降序
+
 	arr.sort((a, b) => b.date.localeCompare(a.date));
 	const leftList = [],
 		rightList = [];
@@ -113,23 +118,31 @@ let isCheck = ref(false);
 let modalTitle = ref('');
 // 表单数据
 let formData = ref({});
+let modalShow = computed(() => {
+	return modalChild.value.show;
+});
 function openModal(edit = false, check = false, index) {
+	if (modalShow.value) return;
 	isEdit.value = edit;
 	isCheck.value = check;
 	if (edit || check) {
 		modalTitle.value = edit ? '编辑' : '查看内容';
 		activeIndex = index;
 		formData.value = { ...noteList.value[index] };
+		inputContent.value = formData.value.content;
 	} else {
 		modalTitle.value = '新建';
+		inputContent.value = '';
 		formData.value = { content: '', date: '', isComplete: false, index: undefined };
 	}
 	modalChild.value.openModal();
 }
+const inputContent = ref('');
 // 提交表单
 function modalComfirm() {
+	console.log(inputContent.value);
 	// 名称未填
-	if (!formData.value.content) {
+	if (!inputContent.value) {
 		uni.showToast({
 			title: '内容不能为空哇！',
 			icon: 'none'
@@ -139,8 +152,9 @@ function modalComfirm() {
 	const { length } = noteList.value;
 	const { year, month, day } = getNowDate();
 	formData.value.date = `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`;
+	formData.value.content = inputContent.value;
 	if (isEdit.value) {
-		store.commit('setArrList', { arr: 'noteList', data: formData.value, index: formData.value.index, type: 'edit' });
+		store.commit('setArrList', { arr: 'noteList', data: formData.value, index: activeIndex, type: 'edit' });
 
 		uni.showToast({
 			title: '成功修改了这件事情，加油完成哦~',
@@ -164,6 +178,7 @@ let activeIndex = -1;
 let attentionType = '';
 // 完成/取消完成
 function handleComplete(index) {
+	if (modalShow.value) return;
 	const { isComplete } = noteList.value[index];
 	activeIndex = index;
 	attentionType = 'complete';
@@ -177,6 +192,7 @@ function handleComplete(index) {
 	attention.value.openModal();
 }
 function handleDelete(index) {
+	if (modalShow.value) return;
 	const { isComplete } = noteList.value[index];
 	activeIndex = index;
 	attentionType = 'delete';
@@ -186,7 +202,6 @@ function handleDelete(index) {
 // 注意确认
 function attentionComfirm() {
 	const { isComplete } = noteList.value[activeIndex];
-
 	if (attentionType === 'delete') {
 		store.commit('setArrList', { arr: 'noteList', data: activeIndex, type: 'splice' });
 		uni.showToast({
@@ -240,6 +255,7 @@ function attentionComfirm() {
 .note-content {
 	display: flex;
 	justify-content: space-between;
+	word-break: break-all;
 	&--nopd {
 		padding-bottom: 180rpx;
 	}
@@ -250,7 +266,7 @@ function attentionComfirm() {
 	width: 330rpx;
 	background: #ffffff;
 	border-radius: 12rpx;
-	padding: 28rpx 36rpx 22rpx;
+	padding: 28rpx 36rpx 86rpx;
 	border: 4rpx solid #2c2c2c;
 	font-size: 28rpx;
 	color: #2c2c2c;
@@ -278,10 +294,10 @@ function attentionComfirm() {
 	line-height: 34rpx;
 }
 .note-list__btn {
+	position: absolute;
 	display: flex;
-	justify-content: flex-end;
-	margin-right: -14rpx;
-	margin-top: 16rpx;
+	right: 22rpx;
+	bottom: 22rpx;
 }
 .note-list__btn-list {
 	display: flex;
@@ -311,5 +327,7 @@ function attentionComfirm() {
 	padding: 28rpx;
 	margin-bottom: 40rpx;
 	font-size: 28rpx;
+}
+.note-list__text {
 }
 </style>

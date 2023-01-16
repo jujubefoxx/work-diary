@@ -47,18 +47,21 @@ const props = defineProps({
 		default: () => true
 	}
 });
+let show = ref(false);
 function openModal() {
 	store.commit('changeMeta', true);
+	show.value = true;
 	popup.value.open('center');
 }
 function closeModal() {
 	store.commit('changeMeta', false);
+	show.value = false;
 	popup.value.close();
 }
 function handleComfirm() {
 	emit('comfirmModal');
 }
-defineExpose({ openModal, closeModal });
+defineExpose({ show, openModal, closeModal });
 </script>
 
 <style lang="scss" scoped>
