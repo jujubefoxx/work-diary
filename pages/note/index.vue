@@ -141,11 +141,12 @@ function openModal(edit = false, check = false, index) {
 		modalTitle.value = edit ? '编辑' : '查看内容';
 		activeIndex = index;
 		formData.value = { ...noteList.value[index] };
+		inputContent = formData.value.content;
 	} else {
 		modalTitle.value = '新建';
 		formData.value = { content: '', date: '', isComplete: false, index: undefined };
+		inputContent = '';
 	}
-	inputContent = formData.value.content;
 	modalChild.value.openModal();
 }
 // 提交表单

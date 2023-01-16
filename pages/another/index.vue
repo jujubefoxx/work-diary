@@ -43,7 +43,7 @@ const modalInfo = reactive({
 // 图片地址
 const { imgUrl } = getApp({ allowDefault: true }).globalData;
 const letter = `
-    <p style="text-align:center"><image style="width:145Px" src="${imgUrl.sbCat}"></image></p>
+    <p style="text-align:center"><img style="width:145Px" src="${imgUrl.sbCat}"></img></p>
     <p>感谢你能够看到这里！因为一时心血来潮想用Vue3写个小程序，就抓着UI两个人一起搞了个以日记/手账为风格主题的可可爱爱的小程序，快乐打工日记就这么诞生啦~
     <br>当然这里也要感谢灵感来源：摸鱼侠，还有我们都非常喜欢的Bearis表情包，打工猫猫就是从这个风格里诞生出来的~</p>
 	<p style="margin-top:20Px">其中涉及到的算法都是作者用js自己想出来和纯手敲的，如果有需要提供算法的话可以联系作者，因为没有看过其他相关类型应用的代码（百度的不算)，所以可能并不是最好的写法，有需要改进的地方都可以点击下方意见建议提供哦
