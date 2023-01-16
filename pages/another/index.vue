@@ -10,7 +10,6 @@
 		<modal ref="modalChild" :title="modalInfo.title" :showBtn="false">
 			<scroll-view class="scroll-view" scroll-y>
 				<template v-if="modalInfo.alias === 'letter'">
-					<view class="modal-img"><image class="modal-img" src="@/static/images/loading.png"></image></view>
 					<rich-text v-html="modalInfo.content"></rich-text>
 				</template>
 				<template v-if="modalInfo.alias === 'log'">
@@ -44,7 +43,8 @@ const modalInfo = reactive({
 // 图片地址
 const { imgUrl } = getApp({ allowDefault: true }).globalData;
 const letter = `
-    <p >感谢你能够看到这里！因为一时心血来潮想用Vue3写个小程序，就抓着UI两个人一起搞了个以日记/手账为风格主题的可可爱爱的小程序，快乐打工日记就这么诞生啦~
+    <p style="text-align:center"><image style="width:145Px" src="${imgUrl.sbCat}"></image></p>
+    <p>感谢你能够看到这里！因为一时心血来潮想用Vue3写个小程序，就抓着UI两个人一起搞了个以日记/手账为风格主题的可可爱爱的小程序，快乐打工日记就这么诞生啦~
     <br>当然这里也要感谢灵感来源：摸鱼侠，还有我们都非常喜欢的Bearis表情包，打工猫猫就是从这个风格里诞生出来的~</p>
 	<p style="margin-top:20Px">其中涉及到的算法都是作者用js自己想出来和纯手敲的，如果有需要提供算法的话可以联系作者，因为没有看过其他相关类型应用的代码（百度的不算)，所以可能并不是最好的写法，有需要改进的地方都可以点击下方意见建议提供哦
 	<br>因为目前还在初步开发阶段，暂时还没有开放源码的打算，等完善后就会把源码地址整理好放出来啦，后续会根据用户量接入云开发，把小程序做的更好，希望大家多多支持！</p>

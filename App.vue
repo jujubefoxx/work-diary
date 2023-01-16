@@ -8,7 +8,7 @@ export default {
 			foodCat: 'https://s1.ax1x.com/2023/01/06/pSAXlKP.png',
 			noteCat: 'https://s1.ax1x.com/2023/01/05/pSAEql8.png',
 			loveCat: 'https://s1.ax1x.com/2023/01/06/pSAX1Df.png',
-			sbCat: 'https://s1.ax1x.com/2023/01/16/pS1KYqS.jpg'
+			sbCat: 'https://s1.ax1x.com/2023/01/16/pS1Kqde.png'
 		}
 		//  V3模式，可以通过getApp({allowDefault: true}).globalData获取
 	},
