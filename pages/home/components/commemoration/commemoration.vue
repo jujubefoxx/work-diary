@@ -56,7 +56,12 @@
 			</view>
 			<view class="modal-tips">
 				<h4>{{ modalTips.title }}</h4>
-				<p><view v-for="item in modalTips.content" v-html="item"></view></p>
+				<p>
+					<view v-for="(item, index) in modalTips.content">
+						<text>{{ index + 1 }}.</text>
+						{{ item }}
+					</view>
+				</p>
 			</view>
 		</modal>
 	</view>
@@ -131,7 +136,7 @@ function checkHoliday() {
 checkHoliday();
 const modalTips = {
 	title: '温馨提示',
-	content: ['1.发工资日只能在填写/修改薪资资料中新增或修改<br>', '2.休息日目前限制为只能每周重复且不能删除，但可以改成你喜欢的名字哦<br>', '3.最多添加4个自定义的激动时刻']
+	content: ['发工资日只能在填写/修改薪资资料中新增或修改', '休息日目前限制为只能每周重复且不能删除，但可以改成你喜欢的名字哦', '最多添加4个自定义的激动时刻']
 };
 
 // type 重复类型：1 月重复 2 年重复 3 周重复 4 不重复

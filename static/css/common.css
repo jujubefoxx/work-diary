@@ -2,6 +2,10 @@ view {
 	box-sizing: border-box;
 }
 
+ol {
+	padding-inline-start: 20rpx;
+	margin-top: 10rpx;
+}
 
 .pub-gray {
 	color: #b4b3b3

@@ -27,7 +27,15 @@ view {
 	background-size: 48rpx 4rpx;
 	background-repeat: repeat-x;
 }
-
+/* 底部按钮 */
+.bottom-btn {
+	text-align: center;
+	height: 88rpx;
+	line-height: 88rpx;
+	background: #ffffff;
+	border-radius: 44rpx;
+	font-size: 28rpx;
+}
 /* 表单 */
 .form-list {
 	display: flex;

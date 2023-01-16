@@ -76,7 +76,7 @@
 		</view>
 		<view class="modal-tips">
 			<h4>{{ modalTips.title }}</h4>
-			<p><view v-for="item in modalTips.content" v-html="item"></view></p>
+			<p><view class="modal-tips__list" v-for="item in modalTips.content" v-html="item"></view></p>
 		</view>
 	</modal>
 	<date-time-picker ref="picker" :mode="pickerMode" :columnList="columnList" @comfirm="pickerComfirm"></date-time-picker>
@@ -431,6 +431,9 @@ function changeTheme(id) {
 	.iconfont {
 		font-size: 36rpx;
 	}
+	.icon-a-huanfu2 {
+		font-size: 42rpx;
+	}
 }
 .money-item__right-list {
 	box-sizing: content-box;
@@ -442,7 +445,10 @@ function changeTheme(id) {
 	margin-left: 26rpx;
 }
 .modal-tips {
-	text:nth-child(2) {
+	.modal-tips__list {
+		display: inline-block;
+	}
+	.modal-tips__list:nth-child(2) {
 		margin-left: 48rpx;
 	}
 }

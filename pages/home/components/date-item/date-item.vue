@@ -6,9 +6,6 @@
 				<view class="note-btn__icon"><text class="iconfont icon-notebook"></text></view>
 				打工人记事本
 			</navigator>
-			<!-- <view class="money-item__title dashed line1"></view> -->
-			<!-- <view class="money-item__btn"></view> -->
-			<!-- 右侧按钮 -->
 		</view>
 		<view class="date-item__right">
 			<view class="date-item__date flex flex-x-center dashed">
@@ -69,6 +66,7 @@ function pickerComfirm(data) {
 	font-weight: 600;
 	color: #ffffff;
 	line-height: 64rpx;
+	margin-bottom: 2rpx;
 }
 .date-item__weather {
 	margin-left: 8rpx;

@@ -7,6 +7,7 @@
 			<date-item></date-item>
 			<commemoration></commemoration>
 			<daily-attendance></daily-attendance>
+			<navigator url="/pages/another/index" class="bottom-btn light-shadow black-border">异次元通道</navigator>
 		</notebook>
 	</view>
 </template>

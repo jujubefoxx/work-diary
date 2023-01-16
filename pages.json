@@ -5,7 +5,15 @@
 			"style": {}
 		}, {
 			"path": "pages/note/index",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "打工人记事本"
+			}
+		},
+		{
+			"path": "pages/another/index",
+			"style": {
+				"navigationBarTitleText": "异次元通道"
+			}
 		}
 	],
 	"globalStyle": {

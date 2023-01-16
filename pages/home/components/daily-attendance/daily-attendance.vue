@@ -42,7 +42,12 @@
 			</view>
 			<view class="modal-tips">
 				<h4>{{ modalTips.title }}</h4>
-				<p><view v-for="item in modalTips.content" v-html="item"></view></p>
+				<p>
+					<view v-for="(item, index) in modalTips.content">
+						<text>{{ index + 1 }}.</text>
+						{{ item }}
+					</view>
+				</p>
 			</view>
 		</modal>
 	</view>
@@ -77,7 +82,7 @@ if (!dailyList.value || dailyList.value.length < 4) {
 }
 const modalTips = {
 	title: '温馨提示',
-	content: ['1.新增的打卡只能右滑删除，不能修改<br>', '2.每日已打卡的数据会在次日0点重置未未打卡<br>', '3.最多添加4个自定义的打卡<br>', '4.默认的四个打卡无法删除或修改哦']
+	content: ['新增的打卡只能右滑删除，不能修改', '每日已打卡的数据会在次日0点重置未未打卡', '最多添加4个自定义的打卡', '默认的四个打卡无法删除或修改哦']
 };
 
 // 资料信息
