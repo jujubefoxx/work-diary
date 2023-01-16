@@ -27,11 +27,12 @@
 		</notebook>
 		<modal ref="modalChild" :title="modalTitle" @comfirmModal="modalComfirm" :showAnimation="isCheck" :showBtn="!isCheck">
 			<textarea
+				v-if="modalShow"
 				:disabled="isCheck"
 				class="modal-content black-border light-shadow"
 				placeholder="请输入内容"
 				:focus="!isCheck && modalShow"
-				v-model="inputContent"
+				v-model="formData.content"
 				maxlength="70"
 			></textarea>
 			<view class="modal-tips">
@@ -132,8 +133,6 @@ const modalShow = computed(() => {
 		return '';
 	}
 });
-// TODO 修复IOS兼容性问题
-let inputContent = '';
 
 function openModal(edit = false, check = false, index) {
 	if (modalShow.value) return;
@@ -147,13 +146,12 @@ function openModal(edit = false, check = false, index) {
 		modalTitle.value = '新建';
 		formData.value = { content: '', date: '', isComplete: false, index: undefined };
 	}
-	inputContent = formData.value.content;
 	modalChild.value.openModal();
 }
 // 提交表单
 function modalComfirm() {
 	// 名称未填
-	if (!inputContent) {
+	if (!formData.value.content) {
 		uni.showToast({
 			title: '内容不能为空哇！',
 			icon: 'none'
@@ -163,7 +161,6 @@ function modalComfirm() {
 	const { length } = noteList.value;
 	const { year, month, day } = getNowDate();
 	formData.value.date = `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`;
-	formData.value.content = inputContent;
 	if (isEdit.value) {
 		store.commit('setArrList', { arr: 'noteList', data: formData.value, index: activeIndex, type: 'edit' });
 

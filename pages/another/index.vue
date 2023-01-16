@@ -66,8 +66,7 @@ const logList = [
 	{
 		version: '1.0.0',
 		date: '2023-1-16',
-		des:
-			'上线今天已赚、每日打卡、倒数日、记事本功能，已知记事本模块iOS端存在兼容性问题，连续新增/修改事件时会失败，需要退出页面后再返回记事本页重新操作，已将该问题整理反馈至社区，待后续进行优化。'
+		des: '上线今天已赚、每日打卡、倒数日、记事本功能，已知部分安卓手机的图标会有偏移，后续进行优化。'
 	}
 ];
 const btnList = [{ alias: 'letter', title: '作者的信', content: letter }, { alias: 'log', title: '开发日志', content: logList }];
