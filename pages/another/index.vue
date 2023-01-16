@@ -62,7 +62,14 @@ const letter = `
 	</ul>
 	</p>`;
 
-const logList = [{ version: '1.0.0', date: '2023-1-16', des: '上线今天已赚、每日打卡、倒数日、记事本功能' }];
+const logList = [
+	{
+		version: '1.0.0',
+		date: '2023-1-16',
+		des:
+			'上线今天已赚、每日打卡、倒数日、记事本功能，已知记事本模块IOS端存在兼容性问题，连续新增事件时会偶现提示新增内容为空的情况导致无法新增，需要退出页面后再返回记事本页重新添加，已将该问题整理反馈至社区，待后续进行优化。'
+	}
+];
 const btnList = [{ alias: 'letter', title: '作者的信', content: letter }, { alias: 'log', title: '开发日志', content: logList }];
 
 function openModal(item) {

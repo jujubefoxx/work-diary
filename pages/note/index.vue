@@ -32,7 +32,6 @@
 				placeholder="请输入内容"
 				:focus="!isCheck && modalShow"
 				v-model="inputContent"
-				@input="inputText"
 				maxlength="70"
 			></textarea>
 			<view class="modal-tips">
@@ -133,6 +132,7 @@ const modalShow = computed(() => {
 		return '';
 	}
 });
+// TODO 修复IOS兼容性问题
 let inputContent = '';
 
 function openModal(edit = false, check = false, index) {
@@ -143,17 +143,15 @@ function openModal(edit = false, check = false, index) {
 		modalTitle.value = edit ? '编辑' : '查看内容';
 		activeIndex = index;
 		formData.value = { ...noteList.value[index] };
-		inputContent = formData.value.content;
 	} else {
 		modalTitle.value = '新建';
 		formData.value = { content: '', date: '', isComplete: false, index: undefined };
-		inputContent = '';
 	}
+	inputContent = formData.value.content;
 	modalChild.value.openModal();
 }
 // 提交表单
 function modalComfirm() {
-	console.log('1111111111', inputContent);
 	// 名称未填
 	if (!inputContent) {
 		uni.showToast({
