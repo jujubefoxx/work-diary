@@ -122,7 +122,17 @@ if (uni.getStorageSync('commemoration')) {
 } else {
 	uni.setStorageSync('commemoration', commemorationList.value);
 }
-
+// 如果是休息日 变更打工状态
+function checkHoliday(item) {
+	if (item.alias !== 'holiday') return;
+	const holidayData = item;
+	if (getRepeatDay(holidayData.date, holidayData.type) === 0) {
+		// 变更状态
+		store.commit('changeHoliday', true);
+	} else {
+		store.commit('changeHoliday', false);
+	}
+}
 const modalTips = {
 	title: '温馨提示',
 	content: ['发工资日只能在填写/修改薪资资料中新增或修改', '休息日目前限制为只能每周重复且不能删除，但可以改成你喜欢的名字哦', '最多添加4个自定义的激动时刻']
@@ -308,11 +318,11 @@ function comfirmModal() {
 		// 新建
 		commemorationList.value.push(formData.value);
 	}
-	console.log('111111');
-	// uni.showToast({
-	// 	title: isEdit.value ? '修改这个激动时刻成功啦~' : '新增了一个激动时刻！',
-	// 	icon: 'none'
-	// });
+	uni.showToast({
+		title: isEdit.value ? '修改这个激动时刻成功啦~' : '新增了一个激动时刻！',
+		icon: 'none'
+	});
+	checkHoliday(formData.value);
 	uni.setStorageSync('commemoration', commemorationList.value);
 	closeModal();
 }
