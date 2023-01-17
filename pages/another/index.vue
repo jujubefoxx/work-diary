@@ -67,6 +67,11 @@ const logList = [
 		version: '1.0.0',
 		date: '2023-1-16',
 		des: '上线今天已赚、每日打卡、倒数日、记事本功能，已知部分安卓手机的图标大小会有偏移，后续进行优化。'
+	},
+	{
+		version: '1.1.0',
+		date: '2023-1-18',
+		des: '上线换肤，打工人休息室：今天吃啥、扫雷功能，新增当天是否在打工选项的记录，如果当天选择了休息，会在次日根据是否休息日重置打工状态；修复打卡记录次日不重置的问题。'
 	}
 ];
 const btnList = [{ alias: 'letter', title: '作者的信', content: letter }, { alias: 'log', title: '开发日志', content: logList }];

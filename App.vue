@@ -1,5 +1,5 @@
 <script>
-import { getNowDate } from '@/common/util.js';
+import { getNowDate, getRepeatDay } from '@/common/util.js';
 export default {
 	globalData: {
 		imgUrl: {
@@ -22,14 +22,25 @@ export default {
 			dateStr: `${year}-${month}-${day}`,
 			weather: ''
 		};
-		const storeData = uni.getStorageSync('currentDayDate');
 
+		// 如果是休息日 变更打工状态
+		function checkHoliday() {
+			const commemorationList = uni.getStorageSync('commemoration');
+			if (commemorationList) {
+				const holidayData = commemorationList.find(item => item.alias === 'holiday');
+				return getRepeatDay(holidayData.date, holidayData.type) === 0;
+			} else {
+				return false;
+			}
+		}
+
+		const storeData = uni.getStorageSync('currentDayDate');
 		// 是否新的一天
 		if (!storeData || (storeData && currentDayDate.dateStr !== storeData.dateStr)) {
 			// 更新当天数据
 			this.$store.commit('setCurrentDayDate', currentDayDate);
 			// 更新休息状态
-			this.$store.commit('changeHoliday', false);
+			this.$store.commit('changeHoliday', checkHoliday());
 			// 更新打卡数据
 			const dailyList = uni.getStorageSync('dailyList');
 			if (dailyList) {

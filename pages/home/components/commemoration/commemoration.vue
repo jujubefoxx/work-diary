@@ -82,6 +82,7 @@ export default {
 </script>
 <script setup>
 import { computed, ref, watch } from 'vue';
+import { onShow } from '@dcloudio/uni-app';
 import { dateState, getNowDate, getRepeatDay } from '@/common/util.js';
 import { useStore } from 'vuex';
 const weekArr = [
@@ -121,16 +122,7 @@ if (uni.getStorageSync('commemoration')) {
 } else {
 	uni.setStorageSync('commemoration', commemorationList.value);
 }
-// 如果是休息日 变更打工状态
-function checkHoliday() {
-	const holidayData = commemorationList.value.find(item => item.alias === 'holiday');
-	if (isToday(holidayData.date, holidayData.type)) {
-		// 变更状态
-		store.commit('changeHoliday', true);
-	}
-}
 
-checkHoliday();
 const modalTips = {
 	title: '温馨提示',
 	content: ['发工资日只能在填写/修改薪资资料中新增或修改', '休息日目前限制为只能每周重复且不能删除，但可以改成你喜欢的名字哦', '最多添加4个自定义的激动时刻']
