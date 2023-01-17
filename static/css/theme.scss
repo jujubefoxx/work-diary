@@ -36,10 +36,12 @@
 	.date-item__date {
 		background: #668a8a;
 	}
-	.commemoration-list {
+	.commemoration-list,
+	.note-nodata {
 		background-color: $light-yellow;
 	}
-	.commemoration-list__remark {
+	.commemoration-list,
+	.note-nodata__remark {
 		color: #aa9613;
 	}
 	.lounge-item__list-icon,
@@ -92,14 +94,17 @@
 		background: #4fc9e8;
 		color: #fff;
 	}
-	.commemoration-list__remark {
+	.commemoration-list,
+	.note-nodata__remark {
 		color: #fac3db;
 	}
-	.commemoration-list {
+	.commemoration-list,
+	.note-nodata {
 		background-color: $light-pink;
 		color: #fff;
 	}
-	.commemoration-list__date {
+	.commemoration-list,
+	.note-nodata__date {
 		color: #fff;
 	}
 	.lounge-item__list-icon,
@@ -154,14 +159,17 @@
 		background: #fce4c2;
 		color: #2c2c2c;
 	}
-	.commemoration-list__remark {
+	.commemoration-list,
+	.note-nodata__remark {
 		color: #d1e1ef;
 	}
-	.commemoration-list {
+	.commemoration-list,
+	.note-nodata {
 		background-color: $light-blue;
 		color: #fff;
 	}
-	.commemoration-list__date {
+	.commemoration-list,
+	.note-nodata__date {
 		color: #fff;
 	}
 	.lounge-item__list-icon,
@@ -217,14 +225,17 @@
 		background: #668a8a;
 		color: #fff;
 	}
-	.commemoration-list__remark {
+	.commemoration-list,
+	.note-nodata__remark {
 		color: #d9d9e9;
 	}
-	.commemoration-list {
+	.commemoration-list,
+	.note-nodata {
 		background-color: $light-purple;
 		color: #fff;
 	}
-	.commemoration-list__date {
+	.commemoration-list,
+	.note-nodata__date {
 		color: #fff;
 	}
 	.lounge-item__list-icon,
@@ -280,14 +291,17 @@
 		background: #668a8a;
 		color: #fff;
 	}
-	.commemoration-list__remark {
+	.commemoration-list,
+	.note-nodata__remark {
 		color: #fcd6bc;
 	}
-	.commemoration-list {
+	.commemoration-list,
+	.note-nodata {
 		background-color: $light-orange;
 		color: #fff;
 	}
-	.commemoration-list__date {
+	.commemoration-list,
+	.note-nodata__date {
 		color: #fff;
 	}
 	.lounge-item__list-icon,

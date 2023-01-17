@@ -2,7 +2,7 @@
 	<page-meta :page-style="'overflow:' + ($store.state.metaShow ? 'hidden' : 'visible')"></page-meta>
 	<view class="note" :id="$store.state.theme">
 		<notebook>
-			<image v-if="noteList <= 0" class="note-nodata" :src="imgUrl.noteCat"></image>
+			<view v-if="noteList <= 0" class="note-nodata  black-border light-shadow"><image class="note-nodata__img" :src="imgUrl.noteCat"></image></view>
 			<view v-else class="note-content" :class="{ 'note-content--nopd': noteList.length < 10 }">
 				<view class="note-content__column" v-for="(column, index) in renderList.columnList">
 					<view class="note-list" v-for="(item, key) in column" :class="{ 'note-list--complete': item.isComplete }">
@@ -243,11 +243,17 @@ function attentionComfirm() {
 }
 .note-nodata {
 	display: flex;
-	width: 566rpx;
-	height: 524rpx;
+	width: 400rpx;
+	height: 400rpx;
 	justify-content: center;
 	align-items: center;
 	margin: 190rpx auto;
+	border-radius: 50%;
+	&__img {
+		width: 364rpx;
+		height: 392rpx;
+		margin-top: 20rpx;
+	}
 }
 .note-bottom {
 	position: fixed;
