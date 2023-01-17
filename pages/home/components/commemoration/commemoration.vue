@@ -127,9 +127,6 @@ function checkHoliday() {
 	if (isToday(holidayData.date, holidayData.type)) {
 		// 变更状态
 		store.commit('changeHoliday', true);
-	} else {
-		// 变更状态
-		store.commit('changeHoliday', false);
 	}
 }
 

@@ -23,15 +23,18 @@ export default {
 			weather: ''
 		};
 		const storeData = uni.getStorageSync('currentDayDate');
+
 		// 是否新的一天
 		if (!storeData || (storeData && currentDayDate.dateStr !== storeData.dateStr)) {
 			// 更新当天数据
 			this.$store.commit('setCurrentDayDate', currentDayDate);
+			// 更新休息状态
+			this.$store.commit('changeHoliday', false);
 			// 更新打卡数据
 			const dailyList = uni.getStorageSync('dailyList');
 			if (dailyList) {
 				const newDailyList = dailyList.map(item => ({ ...item, hasPunch: false }));
-				this.$store.commit('setDailyList', newDailyList);
+				this.$store.commit('setArrList', { data: newDailyList });
 			}
 			// 更新记事本数据
 			const noteList = uni.getStorageSync('noteList');

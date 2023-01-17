@@ -26,11 +26,12 @@ const store = createStore({
 			},
 			{
 				color: '#F77821',
+				font: '#ffffff',
 				name: 'orange-skin'
 			}
 		],
 		// 是否休息日
-		isHoliday: false,
+		isHoliday: uni.getStorageSync('isHoliday') || false,
 		// 是否加载中
 		loading: true,
 		// 滚动穿透
@@ -61,6 +62,7 @@ const store = createStore({
 			} else {
 				state.isHoliday = !state.isHoliday
 			}
+			uni.setStorageSync('isHoliday', state.isHoliday)
 		},
 		setCurrentDayDate(state, data) {
 			// 更新当天的信息

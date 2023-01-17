@@ -177,7 +177,7 @@ const buttonList = {
 };
 
 // 黄色按钮的Id
-let activeId = ref([0, 1]);
+let activeId = ref(store.state.isHoliday ? [0, 2] : [0, 1]);
 watch(
 	() => store.state.isHoliday,
 	() => {
