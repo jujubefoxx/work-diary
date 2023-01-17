@@ -131,7 +131,11 @@ view {
 	color: #565656;
 	line-height: 34rpx;
 }
-
+.picker-indicator {
+	height: 80rpx;
+	border-top: 4rpx solid #2c2c2c;
+	border-bottom: 4rpx solid #2c2c2c;
+}
 // 首页主模块
 .home-item {
 	width: 100%;

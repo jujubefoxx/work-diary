@@ -6,7 +6,7 @@ export default {
 			moneyCat: 'https://s1.ax1x.com/2023/01/06/pSAX3b8.png',
 			diaryCat: 'https://s1.ax1x.com/2023/01/05/pSAE5TA.png',
 			foodCat: 'https://s1.ax1x.com/2023/01/06/pSAXlKP.png',
-			noteCat: 'https://s1.ax1x.com/2023/01/05/pSAEql8.png',
+			noteCat: 'https://s1.ax1x.com/2023/01/18/pS3mPWq.png',
 			loveCat: 'https://s1.ax1x.com/2023/01/06/pSAX1Df.png',
 			sbCat: 'https://s1.ax1x.com/2023/01/16/pS1Kqde.png'
 		}

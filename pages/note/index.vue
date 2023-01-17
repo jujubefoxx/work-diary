@@ -57,13 +57,14 @@ export default {
 import { computed, ref, watch } from 'vue';
 import { dateState, getNowDate } from '@/common/util.js';
 import { useStore } from 'vuex';
-import { useShare } from '@/common/useShare.js';
-const { onShareAppMessage, onShareTimeline } = useShare();
+import { usePage } from '@/common/usePage.js';
+const { onShareAppMessage, onShareTimeline, onReady } = usePage();
 onShareAppMessage();
 onShareTimeline();
+onReady();
+const store = useStore();
 // 图片地址
 const { imgUrl } = getApp({ allowDefault: true }).globalData;
-const store = useStore();
 const modalChild = ref(null);
 const attention = ref(null);
 const checkbox = ref(null);

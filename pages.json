@@ -19,7 +19,6 @@
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "快乐打工日记",
-		"navigationBarBackgroundColor": "#ffce30",
 		"backgroundColor": "#F8F8F8"
 	},
 	"uniIdRouter": {}

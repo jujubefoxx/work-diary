@@ -1,23 +1,16 @@
 @import '@/uni.scss';
-
+// 主题背景色
+.theme-bg {
+	background-color: #fff;
+}
 /* 默认黄色 */
 #default-skin {
 	color: #2c2c2c;
 	background-color: $light-yellow;
-	// 主题背景色
-	.theme-bg {
-		background-color: #fff;
-	}
 	/* 亮色投影 */
 	.light-shadow {
 		box-shadow: 4rpx 4rpx $theme-red;
 	}
-	.picker-indicator {
-		height: 80rpx;
-		border-top: 4rpx solid #2c2c2c;
-		border-bottom: 4rpx solid #2c2c2c;
-	}
-
 	.home-header {
 		background: linear-gradient(180deg, $light-yellow 0%, $light-yellow 100%);
 	}
@@ -37,10 +30,6 @@
 			background: $dark-yellow;
 		}
 	}
-	.active-btn {
-		background: $light-yellow;
-		color: #2c2c2c;
-	}
 	.note-btn__icon::before {
 		background: $dark-yellow;
 	}
@@ -54,41 +43,259 @@
 		color: #aa9613;
 	}
 	.lounge-item__list-icon,
+	.active-btn,
 	.delete-item {
 		background: $light-yellow;
+		color: #2c2c2c;
 	}
 }
-/* 深黑 */
-#dark-skin {
-	background: #000;
+/* 粉红色 */
+#pink-skin {
+	color: #2c2c2c;
+	background-color: $light-pink;
+	.money-item__num {
+		color: $dark-pink;
+	}
+	/* 亮色投影 */
+	.light-shadow {
+		box-shadow: 4rpx 4rpx #febcde;
+	}
+	.home-header {
+		background: linear-gradient(180deg, $dark-pink 0%, $light-pink 100%);
+	}
+	.icon-banzhuan {
+		font-size: 100rpx;
+		color: #e85b98;
+	}
+	.icon-hudong {
+		font-size: 72rpx;
+		color: #ec639f;
+	}
+	.notebook {
+		.notebook-buckle__top {
+			background: #febcde;
+		}
+		.notebook-buckle__bottom {
+			background: $dark-pink;
+			color: #fff;
+		}
+	}
+	.active-btn {
+		background: $light-pink;
+		color: #fff;
+	}
+	.note-btn__icon::before {
+		background: $dark-pink;
+		color: #fff;
+	}
+	.date-item__date {
+		background: #4fc9e8;
+		color: #fff;
+	}
+	.commemoration-list__remark {
+		color: #fac3db;
+	}
+	.commemoration-list {
+		background-color: $light-pink;
+		color: #fff;
+	}
+	.commemoration-list__date {
+		color: #fff;
+	}
+	.lounge-item__list-icon,
+	.delete-item {
+		background: $light-pink;
+		color: #fff;
+	}
+	.icon-card:before {
+		color: $light-pink;
+	}
 }
-#dark-skin .bColor {
-	background: #333;
-	color: #999;
-}
-#dark-skin .borderColor {
-	border-color: #999;
-}
-/* 粉红 */
-#red-skin {
-	background: #f9e5ee;
+/* 蓝色 */
+#blue-skin {
+	color: #2c2c2c;
+	background-color: $light-blue;
+	.money-item__num {
+		color: $dark-blue;
+	}
+	/* 亮色投影 */
+	.light-shadow {
+		box-shadow: 4rpx 4rpx $theme-red;
+	}
+	.home-header {
+		background: linear-gradient(180deg, $light-blue 0%, $dark-blue 100%);
+	}
+	.icon-banzhuan {
+		font-size: 100rpx;
+		color: #115697;
+	}
+	.icon-hudong {
+		font-size: 72rpx;
+		color: #135b9d;
+	}
+	.notebook {
+		.notebook-buckle__top {
+			background: #9b1f25;
+		}
+		.notebook-buckle__bottom {
+			background: $dark-blue;
+			color: #fff;
+		}
+	}
+	.active-btn {
+		background: $light-blue;
+		color: #fff;
+	}
+	.note-btn__icon::before {
+		background: $dark-blue;
+		color: #fff;
+	}
+	.date-item__date {
+		background: #fce4c2;
+		color: #2c2c2c;
+	}
+	.commemoration-list__remark {
+		color: #d1e1ef;
+	}
+	.commemoration-list {
+		background-color: $light-blue;
+		color: #fff;
+	}
+	.commemoration-list__date {
+		color: #fff;
+	}
+	.lounge-item__list-icon,
+	.delete-item {
+		background: $light-blue;
+		color: #fff;
+	}
+	.icon-card:before {
+		color: $light-blue;
+	}
 }
 
-#red-skin .bColor {
-	background: #f9e5ee;
-	color: #8e5a54;
+/* 紫色 */
+#purple-skin {
+	color: #2c2c2c;
+	background-color: $light-purple;
+	.money-item__num {
+		color: #668a8a;
+	}
+	/* 亮色投影 */
+	.light-shadow {
+		box-shadow: 4rpx 4rpx #668a8a;
+	}
+	.home-header {
+		background: linear-gradient(180deg, $light-purple 0%, $dark-purple 100%);
+	}
+	.icon-banzhuan {
+		font-size: 100rpx;
+		color: #7373b6;
+	}
+	.icon-hudong {
+		font-size: 72rpx;
+		color: #7b7bba;
+	}
+	.notebook {
+		.notebook-buckle__top {
+			background: #ffe292;
+		}
+		.notebook-buckle__bottom {
+			background: $dark-purple;
+			color: #fff;
+		}
+	}
+	.active-btn {
+		background: $light-purple;
+		color: #fff;
+	}
+	.note-btn__icon::before {
+		background: $dark-purple;
+		color: #fff;
+	}
+	.date-item__date {
+		background: #668a8a;
+		color: #fff;
+	}
+	.commemoration-list__remark {
+		color: #d9d9e9;
+	}
+	.commemoration-list {
+		background-color: $light-purple;
+		color: #fff;
+	}
+	.commemoration-list__date {
+		color: #fff;
+	}
+	.lounge-item__list-icon,
+	.delete-item {
+		background: $light-purple;
+		color: #fff;
+	}
+	.icon-card:before {
+		color: $light-purple;
+	}
 }
-#red-skin .borderColor {
-	border-color: #8e5a54;
-}
-/* 橘黄 */
-#yellow-skin {
-	background: #f6e1c9;
-}
-#yellow-skin .bColor {
-	background: #f6e1c9;
-	color: #8c6031;
-}
-#yellow-skin .borderColor {
-	border-color: #8c6031;
+
+/* 橙色 */
+#orange-skin {
+	color: #2c2c2c;
+	background-color: $light-orange;
+	.money-item__num {
+		color: #668a8a;
+	}
+	/* 亮色投影 */
+	.light-shadow {
+		box-shadow: 4rpx 4rpx #668a8a;
+	}
+	.home-header {
+		background: linear-gradient(180deg, $light-orange 0%, $dark-orange 100%);
+	}
+	.icon-banzhuan {
+		font-size: 100rpx;
+		color: #e26b00;
+	}
+	.icon-hudong {
+		font-size: 72rpx;
+		color: #eb7306;
+	}
+	.notebook {
+		.notebook-buckle__top {
+			background: #ffe292;
+		}
+		.notebook-buckle__bottom {
+			background: $dark-orange;
+			color: #fff;
+		}
+	}
+	.active-btn {
+		background: $light-orange;
+		color: #fff;
+	}
+	.note-btn__icon::before {
+		background: $dark-orange;
+		color: #fff;
+	}
+	.date-item__date {
+		background: #668a8a;
+		color: #fff;
+	}
+	.commemoration-list__remark {
+		color: #fcd6bc;
+	}
+	.commemoration-list {
+		background-color: $light-orange;
+		color: #fff;
+	}
+	.commemoration-list__date {
+		color: #fff;
+	}
+	.lounge-item__list-icon,
+	.delete-item {
+		background: $light-orange;
+		color: #fff;
+	}
+	.icon-card:before {
+		color: $light-orange;
+	}
 }

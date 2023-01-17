@@ -79,6 +79,16 @@
 			<p><view class="modal-tips__list" v-for="item in modalTips.content" v-html="item"></view></p>
 		</view>
 	</modal>
+	<modal ref="themeModal" @comfirmModal="cofirmTheme">
+		<view class="flex flex-wrap">
+			<view class="theme-item" v-for="item in themeList">
+				<view class="theme-list black-border" :style="'background:' + item.color" @click="handleChangeTheme(item.name)">
+					<!-- <view v-if="" class="iconfont icon-dui"></view> -->
+					<text class="check-icon iconfont icon-dui light-shadow" :style="theme === item.name ? 'display:flex' : 'display:none'"></text>
+				</view>
+			</view>
+		</view>
+	</modal>
 	<date-time-picker ref="picker" :mode="pickerMode" :columnList="columnList" @comfirm="pickerComfirm"></date-time-picker>
 </template>
 <script>
@@ -95,6 +105,7 @@ const store = useStore();
 const hasProfileData = ref(false);
 // 模态框
 const modalChild = ref(null);
+const themeModal = ref(null);
 // 选择器
 const picker = ref(null);
 // 今日工作时长/秒
@@ -389,13 +400,32 @@ function comfirmModal() {
 	getProfile();
 	closeModal();
 }
-
+const themeList = computed(() => store.state.themeList);
+const theme = ref('');
 // 换肤
-function changeTheme(id) {
-	uni.showToast({
-		title: '换肤功能开发中，莫急',
-		icon: 'none'
+function changeTheme() {
+	// 主题变量
+	theme.value = store.state.theme;
+	themeModal.value.openModal();
+}
+
+// 点击皮肤
+function handleChangeTheme(name) {
+	theme.value = name;
+}
+// 换肤确认
+function cofirmTheme() {
+	const item = themeList.value.find(i => i.name === theme.value);
+	uni.setNavigationBarColor({
+		frontColor: item.font || '#000000',
+		backgroundColor: item.color,
+		animation: {
+			duration: 400,
+			timingFunc: 'easeIn'
+		}
 	});
+	store.commit('changeTheme', theme.value);
+	themeModal.value.closeModal();
 }
 </script>
 
@@ -450,6 +480,30 @@ function changeTheme(id) {
 	}
 	.modal-tips__list:nth-child(2) {
 		margin-left: 48rpx;
+	}
+}
+.theme-item {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: calc(100% / 3);
+}
+.theme-list {
+	position: relative;
+	width: 146rpx;
+	height: 146rpx;
+	background: #ffce30;
+	border-radius: 50%;
+	margin: 20rpx 0;
+}
+.check-icon {
+	width: 56rpx;
+	height: 56rpx;
+	border: 4rpx solid #2c2c2c;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	&::before {
 	}
 }
 </style>

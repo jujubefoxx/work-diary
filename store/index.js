@@ -4,7 +4,31 @@ import {
 const store = createStore({
 	state: {
 		// 皮肤
-		theme: 'default-skin',
+		theme: uni.getStorageSync('theme') || 'default-skin',
+		themeList: [{
+				color: '#ffce30',
+				name: 'default-skin'
+			},
+			{
+				color: '#F36AA5',
+				font: '#ffffff',
+				name: 'pink-skin'
+			},
+			{
+				color: '#1A69B2',
+				font: '#ffffff',
+				name: 'blue-skin'
+			},
+			{
+				color: '#8181B7',
+				font: '#ffffff',
+				name: 'purple-skin'
+			},
+			{
+				color: '#F77821',
+				name: 'orange-skin'
+			}
+		],
 		// 是否休息日
 		isHoliday: false,
 		// 是否加载中
@@ -23,6 +47,7 @@ const store = createStore({
 	mutations: {
 		changeTheme(state, themeName) {
 			state.theme = themeName;
+			uni.setStorageSync('theme', themeName);
 		},
 		changeLoading(state, data) {
 			state.loading = data;

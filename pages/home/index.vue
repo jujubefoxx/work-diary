@@ -19,10 +19,11 @@ import DateItem from './components/date-item/date-item.vue';
 import Commemoration from './components/commemoration/commemoration.vue';
 import DailyAttendance from './components/daily-attendance/daily-attendance.vue';
 import Lounge from './components/lounge/lounge.vue';
-import { useShare } from '@/common/useShare.js';
-const { onShareAppMessage, onShareTimeline } = useShare();
+import { usePage } from '@/common/usePage.js';
+const { onShareAppMessage, onShareTimeline, onReady } = usePage();
 onShareAppMessage();
 onShareTimeline();
+onReady();
 </script>
 
 <style lang="scss" scoped></style>

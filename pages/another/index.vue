@@ -30,10 +30,11 @@
 <script setup>
 import { computed, ref, watch, reactive } from 'vue';
 import { version } from '@/package.json';
-import { useShare } from '@/common/useShare.js';
-const { onShareAppMessage, onShareTimeline } = useShare();
+import { usePage } from '@/common/usePage.js';
+const { onShareAppMessage, onShareTimeline, onReady } = usePage();
 onShareAppMessage();
 onShareTimeline();
+onReady();
 const modalChild = ref(null);
 const modalInfo = reactive({
 	title: '',
