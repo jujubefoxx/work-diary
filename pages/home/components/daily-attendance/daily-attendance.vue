@@ -287,7 +287,6 @@ function touchE(index, e) {
 	right: 0;
 	top: 0;
 	width: 56rpx;
-	background: #ffce30;
 	border-left: 4rpx solid #2c2c2c;
 	transition: all 0.3s;
 }

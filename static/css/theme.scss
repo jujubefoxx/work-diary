@@ -13,12 +13,9 @@
 		box-shadow: 4rpx 4rpx $theme-red;
 	}
 	.picker-indicator {
-		// width: 454rpx;
 		height: 80rpx;
-		// border-radius: 12rpx;
 		border-top: 4rpx solid #2c2c2c;
 		border-bottom: 4rpx solid #2c2c2c;
-		// box-shadow: 4rpx 4rpx $theme-red;
 	}
 
 	.home-header {
@@ -55,6 +52,10 @@
 	}
 	.commemoration-list__remark {
 		color: #aa9613;
+	}
+	.lounge-item__list-icon,
+	.delete-item {
+		background: $light-yellow;
 	}
 }
 /* 深黑 */
