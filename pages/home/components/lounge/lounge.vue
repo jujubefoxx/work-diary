@@ -19,7 +19,8 @@ import { computed, ref, watch } from 'vue';
 
 const lougeList = [
 	{ title: '今天吃啥', shortTitle: '吃啥', path: 'pages/index/index', appid: 'wx18508a564e357535' },
-	{ title: '扫雷', shortTitle: '扫雷', path: '/pages/note/index' },
+	// { title: '扫雷', shortTitle: '扫雷', path: '/pages/note/index' },
+	{ title: '广告招租', shortTitle: '广告' },
 	{ title: '广告招租', shortTitle: '广告' },
 	{ title: '广告招租', shortTitle: '广告' }
 ];
