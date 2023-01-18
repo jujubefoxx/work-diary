@@ -1,7 +1,7 @@
 <template>
-	<view class="comfirm-button light-shadow">
-		<view class="comfirm-button__list" :class="{ 'comfirm-button__list--border': showComfirm }" v-if="showCancel" @click="$emit('handleCancel')">{{ cancelText }}</view>
-		<view class="comfirm-button__list active-btn" v-if="showComfirm" @click="$emit('handleComfirm')">{{ confirmText }}</view>
+	<view class="confirm-button light-shadow">
+		<view class="confirm-button__list" :class="{ 'confirm-button__list--border': showconfirm }" v-if="showCancel" @click="$emit('handleCancel')">{{ cancelText }}</view>
+		<view class="confirm-button__list active-btn" v-if="showconfirm" @click="$emit('handleConfirm')">{{ confirmText }}</view>
 	</view>
 </template>
 <script>
@@ -26,7 +26,7 @@ const props = defineProps({
 		type: String,
 		default: () => '确定'
 	},
-	showComfirm: {
+	showconfirm: {
 		type: Boolean,
 		default: () => true
 	}
@@ -35,7 +35,7 @@ const { buttonList, activeId } = toRefs(props);
 </script>
 
 <style lang="scss" scoped>
-.comfirm-button {
+.confirm-button {
 	display: flex;
 	justify-content: center;
 	border-radius: 200rpx;
@@ -45,7 +45,7 @@ const { buttonList, activeId } = toRefs(props);
 	margin: 44rpx auto;
 	font-size: 28rpx;
 }
-.comfirm-button__list {
+.confirm-button__list {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -54,7 +54,7 @@ const { buttonList, activeId } = toRefs(props);
 	background: #f4f4f6;
 	color: #535354;
 }
-.comfirm-button__list--border {
+.confirm-button__list--border {
 	border-right: 4rpx solid #2c2c2c;
 }
 </style>

@@ -25,7 +25,7 @@
 			</view>
 			<view class="note-bottom"><button class="bottom-btn light-shadow black-border" v-if="noteList.length < 10" @click="openModal(false, false)">新建</button></view>
 		</notebook>
-		<modal ref="modalChild" :title="modalTitle" @comfirmModal="modalComfirm" :showAnimation="isCheck" :showBtn="!isCheck" cancelText="关闭">
+		<modal ref="modalChild" :title="modalTitle" @confirmModal="modalconfirm" :showAnimation="isCheck" :showBtn="!isCheck" cancelText="关闭">
 			<textarea
 				v-if="modalShow"
 				:disabled="isCheck"
@@ -45,7 +45,7 @@
 				</p>
 			</view>
 		</modal>
-		<modal ref="attention" title="注意" @comfirmModal="attentionComfirm"><p class="t-c" v-html="modalContent"></p></modal>
+		<modal ref="attention" title="注意" @confirmModal="attentionconfirm"><p class="t-c" v-html="modalContent"></p></modal>
 	</view>
 </template>
 <script>
@@ -150,7 +150,7 @@ function openModal(edit = false, check = false, index) {
 	modalChild.value.openModal();
 }
 // 提交表单
-function modalComfirm() {
+function modalconfirm() {
 	// 名称未填
 	if (!formData.value.content) {
 		uni.showToast({
@@ -209,7 +209,7 @@ function handleDelete(index) {
 	attention.value.openModal();
 }
 // 注意确认
-function attentionComfirm() {
+function attentionconfirm() {
 	const { isComplete } = noteList.value[activeIndex];
 	if (attentionType === 'delete') {
 		store.commit('setArrList', { arr: 'noteList', data: activeIndex, type: 'splice' });

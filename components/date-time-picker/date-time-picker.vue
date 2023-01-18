@@ -27,7 +27,7 @@
 				</picker-view-column>
 			</template>
 		</picker-view>
-		<comfirm-button @handleComfirm="handleComfirm" @handleCancel="close"></comfirm-button>
+		<confirm-button @handleConfirm="handleConfirm" @handleCancel="close"></confirm-button>
 	</view>
 </template>
 <script>
@@ -70,7 +70,7 @@ const props = defineProps({
 	}
 });
 const { mode, value, showYears, showMonths, showDays, columnList } = toRefs(props);
-const emit = defineEmits(['comfirm']);
+const emit = defineEmits(['confirm']);
 // 展示开关
 const show = ref(false);
 
@@ -140,7 +140,7 @@ function bindChange(e) {
 	}
 	pickerValue.value = val;
 }
-function handleComfirm() {
+function handleConfirm() {
 	// 传值
 	let data = [];
 	// 列表
@@ -158,7 +158,7 @@ function handleComfirm() {
 		}
 	});
 
-	emit('comfirm', data, pickerValue.value);
+	emit('confirm', data, pickerValue.value);
 }
 // 打开
 function open(value) {

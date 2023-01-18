@@ -30,7 +30,7 @@
 				<view class="commemoration-list__remark">{{ item.remark }}</view>
 			</view>
 		</view>
-		<modal ref="modalChild" :showAnimation="false" @comfirmModal="comfirmModal" :title="isEdit ? '修改激动时刻' : '新增激动时刻'">
+		<modal ref="modalChild" :showAnimation="false" @confirmModal="confirmModal" :title="isEdit ? '修改激动时刻' : '新增激动时刻'">
 			<text class="modal-delete black-border light-shadow" v-if="!formData.alias && isEdit" @click="handleDelete"><text class="iconfont icon-shanchu"></text></text>
 			<view class="form">
 				<view class="form-list">
@@ -65,9 +65,9 @@
 			</view>
 		</modal>
 	</view>
-	<checkbox-item ref="checkbox" :columnList="weekArr" @comfirm="checkboxComfirm"></checkbox-item>
-	<date-time-picker ref="picker" :showYears="showYears" :showMonths="showMonths" :mode="pickerMode" :columnList="columnList" @comfirm="pickerComfirm"></date-time-picker>
-	<modal ref="attention" title="注意" @comfirmModal="deleteComfirm">
+	<checkbox-item ref="checkbox" :columnList="weekArr" @confirm="checkboxconfirm"></checkbox-item>
+	<date-time-picker ref="picker" :showYears="showYears" :showMonths="showMonths" :mode="pickerMode" :columnList="columnList" @confirm="pickerconfirm"></date-time-picker>
+	<modal ref="attention" title="注意" @confirmModal="deleteconfirm">
 		<p class="t-c">
 			要删除该激动时刻吗
 			<br />
@@ -248,7 +248,7 @@ function openPicker(string) {
 }
 
 // 选择器确认
-function pickerComfirm(data) {
+function pickerconfirm(data) {
 	if (activeName === 'type') {
 		formData.value.type = typeList.find(item => item.title === data[0]).id;
 		formData.value.date = [];
@@ -259,7 +259,7 @@ function pickerComfirm(data) {
 	picker.value.close();
 }
 
-function checkboxComfirm(data) {
+function checkboxconfirm(data) {
 	formData.value.date = data;
 	checkbox.value.close();
 }
@@ -293,7 +293,7 @@ const filterDateText = computed(() => {
 });
 
 // 提交表单
-function comfirmModal() {
+function confirmModal() {
 	const { title } = formData.value;
 	// 名称未填
 	if (!title) {
@@ -331,7 +331,7 @@ function handleDelete() {
 	attention.value.openModal();
 }
 // 删除
-function deleteComfirm() {
+function deleteconfirm() {
 	const { title } = commemorationList.value[activeIndex];
 	commemorationList.value.splice(activeIndex, 1);
 	uni.setStorageSync('commemoration', commemorationList.value);

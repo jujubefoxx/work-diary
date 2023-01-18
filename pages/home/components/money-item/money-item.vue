@@ -26,7 +26,7 @@
 		</view>
 	</view>
 	<!-- 填写资料表格 -->
-	<modal ref="modalChild" :showAnimation="false" @comfirmModal="comfirmModal">
+	<modal ref="modalChild" :showAnimation="false" @confirmModal="confirmModal">
 		<view class="form">
 			<view class="form-list">
 				<text class="form-list__title">上下班时间</text>
@@ -79,7 +79,7 @@
 			<p><view class="modal-tips__list" v-for="item in modalTips.content" v-html="item"></view></p>
 		</view>
 	</modal>
-	<modal ref="themeModal" @comfirmModal="cofirmTheme" title="更换皮肤">
+	<modal ref="themeModal" @confirmModal="cofirmTheme" title="更换皮肤">
 		<view class="flex flex-wrap">
 			<view class="theme-item" v-for="item in themeList">
 				<view class="theme-list black-border" :style="'background:' + item.color" @click="handleChangeTheme(item.name)">
@@ -89,7 +89,7 @@
 			</view>
 		</view>
 	</modal>
-	<date-time-picker ref="picker" :mode="pickerMode" :columnList="columnList" @comfirm="pickerComfirm"></date-time-picker>
+	<date-time-picker ref="picker" :mode="pickerMode" :columnList="columnList" @confirm="pickerconfirm"></date-time-picker>
 </template>
 <script>
 export default {
@@ -318,7 +318,7 @@ function compareTime(st, et, mode = 'm') {
 	return e - s;
 }
 // 确认选择
-function pickerComfirm(data, index) {
+function pickerconfirm(data, index) {
 	// 时间范围判断
 	const rangeTime = ['closingTime', 'workingTime', 'breakStart', 'breakEnd'];
 	if (rangeTime.includes(activeName)) {
@@ -363,7 +363,7 @@ function handleChoose(id) {
 	profileForm.value.moneyType = id;
 }
 // 提交表单
-function comfirmModal() {
+function confirmModal() {
 	const { money, workingTime, breakStart, breakMinutes, workMinutes, closingTime, breakEnd } = profileForm.value;
 	// 异常处理
 	if (compareTime(workingTime, breakStart) <= 0) {

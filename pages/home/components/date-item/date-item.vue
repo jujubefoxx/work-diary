@@ -15,7 +15,7 @@
 			<happy-button :button-list="[{ title: weather ? '修改天气' : '新增天气', id: 0 }]" @handleClick="handleClick"></happy-button>
 		</view>
 	</view>
-	<date-time-picker ref="picker" mode="other" :columnList="columnList" @comfirm="pickerComfirm"></date-time-picker>
+	<date-time-picker ref="picker" mode="other" :columnList="columnList" @confirm="pickerconfirm"></date-time-picker>
 </template>
 <script>
 export default {
@@ -35,7 +35,7 @@ const columnList = [['出太阳', '大阴天', '下雨啦', '刮大风', '下雪
 function handleClick() {
 	picker.value.open();
 }
-function pickerComfirm(data) {
+function pickerconfirm(data) {
 	const obj = store.state.currentDayDate;
 	obj.weather = data[0];
 	store.commit('setCurrentDayDate', obj);

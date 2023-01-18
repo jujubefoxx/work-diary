@@ -11,7 +11,7 @@
 			{{ item.title }}
 			<text v-if="checkedValue.includes(item.id)" class="check-icon iconfont icon-dui light-shadow"></text>
 		</view>
-		<comfirm-button @handleComfirm="handleComfirm" @handleCancel="close"></comfirm-button>
+		<confirm-button @handleConfirm="handleConfirm" @handleCancel="close"></confirm-button>
 	</view>
 </template>
 <script>
@@ -29,7 +29,7 @@ const props = defineProps({
 	}
 });
 const { columnList, defaultChecked } = toRefs(props);
-const emit = defineEmits(['comfirm']);
+const emit = defineEmits(['confirm']);
 // 展示开关
 const show = ref(false);
 // 选择的值
@@ -42,8 +42,8 @@ function handleCheck(id) {
 		checkedValue.value.push(id);
 	}
 }
-function handleComfirm() {
-	emit('comfirm', checkedValue.value.sort());
+function handleConfirm() {
+	emit('confirm', checkedValue.value.sort());
 }
 // 打开
 function open(value) {

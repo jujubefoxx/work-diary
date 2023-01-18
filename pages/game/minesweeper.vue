@@ -86,7 +86,9 @@
 				</view>
 			</scroll-view>
 		</modal>
-		<modal ref="attention" title="注意" @handleCancel="closeModal" @comfirmModal="attentionComfirm"><p class="t-c" v-html="modalContent"></p></modal>
+		<modal ref="attention" title="注意" @handleCancel="closeModal" :cancelText="modalInfo.cancelText" :confirmText="modalInfo.confirmText" @confirmModal="attentionconfirm">
+			<p class="t-c" v-html="modalInfo.content"></p>
+		</modal>
 	</view>
 </template>
 
@@ -103,7 +105,7 @@ onReady();
 const { imgUrl } = getApp({ allowDefault: true }).globalData;
 const modalChild = ref(null);
 const attention = ref(null);
-const modalContent = ref('');
+const modalInfo = reactive({ content: '', cancelText: '', confirmText: '' });
 function openRule() {
 	modalChild.value.openModal();
 }
@@ -367,19 +369,25 @@ function handleRestart(isRestart = true) {
 		}
 	} else {
 		attentionType = isRestart ? 'restart' : 'level';
-		modalContent.value = `确认要重新${isRestart ? '开始' : '选择难度'}吗?`;
+		modalInfo.content = `确认要重新${isRestart ? '开始' : '选择难度'}吗?`;
+		modalInfo.confirmText = '确定';
+		modalInfo.cancelText = '取消';
 		attention.value.openModal();
 	}
 }
 //
 function closeModal() {
+	if (attentionType === 'over') {
+		// 返回主页
+		setLevelPage();
+	}
 	if (attentionType === 'restart' || attentionType === 'level') {
 		setTimer();
 	}
 	attentionType = '';
 }
-function attentionComfirm() {
-	if (attentionType === 'restart') {
+function attentionconfirm() {
+	if (attentionType === 'restart' || attentionType === 'over') {
 		// 重新开始
 		restart();
 	}
@@ -388,6 +396,7 @@ function attentionComfirm() {
 		setLevelPage();
 	}
 	attention.value.closeModal();
+	attentionType = '';
 }
 // 打开难度选择页面
 function setLevelPage() {
@@ -473,24 +482,11 @@ watch(showCount, () => {
 			uni.setStorageSync(`${alias}_record`, time);
 			gameInfo.value.record = time;
 		}
-		modalContent.value = `恭喜用时${time}秒挑战成功！\n击败了${percent}%的玩家！\n您的最高纪录：${gameInfo.value.record}秒`;
+		modalInfo.content = `恭喜用时${time}秒挑战成功！\n击败了${percent}%的玩家！\n您的最高纪录：${gameInfo.value.record}秒`;
 		attentionType = 'over';
-		// 弹出对话框
-		// vant.showDialog({
-		// 	message: `恭喜用时${time}秒挑战成功！\n击败了${percent}%的玩家！\n您的最高纪录：${gameInfo.value.record}秒`,
-		// 	confirmButtonColor: '#409eff',
-		// 	confirmButtonText: '重新开始',
-		// 	showCancelButton: true,
-		// 	cancelButtonText: '返回主页'
-		// })
-		// 	.then(() => {
-		// 		// 重新开始
-		// 		restart();
-		// 	})
-		// 	.catch(() => {
-		// 		// 返回主页
-		// 		setLevelPage();
-		// 	});
+		modalInfo.confirmText = '重新开始';
+		modalInfo.cancelText = '返回主页';
+		attention.value.openModal();
 	}
 });
 // 游戏结束 END

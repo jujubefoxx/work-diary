@@ -4,16 +4,16 @@
 			<view class="modal-title t-c" v-if="showTitle">{{ title }}</view>
 			<view class="modal-content"><slot></slot></view>
 			<view class="flex flex-x-center" v-if="showBtn">
-				<comfirm-button
+				<confirm-button
 					@handleCancel="closeModal"
 					:cancelText="cancelText"
 					:confirmText="confirmText"
-					@handleComfirm="handleComfirm"
+					@handleConfirm="handleConfirm"
 					:showCancel="showCancel"
-					:showComfirm="showComfirm"
-				></comfirm-button>
+					:showconfirm="showconfirm"
+				></confirm-button>
 			</view>
-			<view v-else><comfirm-button @handleCancel="closeModal" :cancelText="cancelText" :showComfirm="false"></comfirm-button></view>
+			<view v-else><confirm-button @handleCancel="closeModal" :cancelText="cancelText" :showconfirm="false"></confirm-button></view>
 		</view>
 	</uni-popup>
 </template>
@@ -27,7 +27,7 @@ import { ref, toRefs, nextTick } from 'vue';
 import { useStore } from 'vuex';
 const store = useStore();
 const popup = ref(null);
-const emit = defineEmits(['comfirmModal', 'handleCancel']);
+const emit = defineEmits(['confirmModal', 'handleCancel']);
 const props = defineProps({
 	showTitle: {
 		type: Boolean,
@@ -49,7 +49,7 @@ const props = defineProps({
 		type: String,
 		default: () => '确定'
 	},
-	showComfirm: {
+	showconfirm: {
 		type: Boolean,
 		default: () => true
 	},
@@ -74,8 +74,8 @@ function closeModal() {
 	popup.value.close();
 	emit('handleCancel');
 }
-function handleComfirm() {
-	emit('comfirmModal');
+function handleConfirm() {
+	emit('confirmModal');
 }
 defineExpose({ show, openModal, closeModal });
 </script>

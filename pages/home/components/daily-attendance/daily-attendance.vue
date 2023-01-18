@@ -29,7 +29,7 @@
 				</view>
 			</view>
 		</view>
-		<modal ref="modalChild" :showAnimation="false" @comfirmModal="comfirmModal" title="新增打卡">
+		<modal ref="modalChild" :showAnimation="false" @confirmModal="confirmModal" title="新增打卡">
 			<view class="form">
 				<view class="form-list">
 					<text class="form-list__title">给打卡起个名吧</text>
@@ -51,7 +51,7 @@
 			</view>
 		</modal>
 	</view>
-	<modal ref="attention" title="注意" @comfirmModal="attentionComfirm"><p class="t-c" v-html="modalContent"></p></modal>
+	<modal ref="attention" title="注意" @confirmModal="attentionconfirm"><p class="t-c" v-html="modalContent"></p></modal>
 </template>
 <script>
 export default {
@@ -104,7 +104,7 @@ function closeModal() {
 }
 
 // 提交表单
-function comfirmModal() {
+function confirmModal() {
 	// 名称未填
 	if (!formData.value.title) {
 		uni.showToast({
@@ -162,7 +162,7 @@ function handleDelete(index) {
 	attention.value.openModal();
 }
 // 注意确认
-function attentionComfirm() {
+function attentionconfirm() {
 	const { title } = dailyList.value[attentionIndex];
 	if (attentionType === 'cancel') {
 		const newData = { ...dailyList.value[attentionIndex], hasPunch: false };
