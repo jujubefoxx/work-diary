@@ -21,22 +21,6 @@ const getNowDate = () => {
 	var minutes = date.getMinutes(); // 分
 	var seconds = date.getSeconds() //秒
 	var week = weekArr[date.getDay()];
-	// // 给一位数的数据前面加 “0”
-	// if (month >= 1 && month <= 9) {
-	//   monthStr = "0" + month;
-	// }
-	// if (day >= 0 && day <= 9) {
-	//   dayStr = "0" + day;
-	// }
-	// if (hour >= 0 && hour <= 9) {
-	//   hourStr = "0" + hour;
-	// }
-	// if (minutes >= 0 && minutes <= 9) {
-	//   minutesStr = "0" + minutes;
-	// }
-	// if (seconds >= 0 && seconds <= 9) {
-	//   secondsStr = "0" + seconds;
-	// }
 	return {
 		year,
 		month,

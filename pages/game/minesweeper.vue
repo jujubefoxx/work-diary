@@ -98,8 +98,14 @@ import GameHeader from './components/game-header/game-header.vue';
 import { useStore } from 'vuex';
 import { usePage } from '@/common/usePage.js';
 const { onShareAppMessage, onShareTimeline, onReady } = usePage();
-onShareAppMessage();
-onShareTimeline();
+onShareAppMessage({
+	title: '要来一场紧张又刺激的扫雷吗？',
+	path: '/pages/game/minesweeper'
+});
+onShareTimeline({
+	title: '要来一场紧张又刺激的扫雷吗？',
+	path: '/pages/game/minesweeper'
+});
 onReady();
 // 图片地址
 const { imgUrl } = getApp({ allowDefault: true }).globalData;

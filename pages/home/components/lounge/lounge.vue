@@ -15,15 +15,24 @@ export default {
 };
 </script>
 <script setup>
-import { computed, ref, watch } from 'vue';
-
-const lougeList = [
+import { computed, reactive, ref, watch } from 'vue';
+import { dateState, getNowDate } from '@/common/util.js';
+import { onShow } from '@dcloudio/uni-app';
+let lougeList = reactive([
 	{ title: '今天吃啥', shortTitle: '吃啥', path: 'pages/index/index', appid: 'wx18508a564e357535' },
-	{ title: '扫雷', shortTitle: '扫雷', path: '/pages/game/minesweeper' },
-	// { title: '广告招租', shortTitle: '广告' },
+	{ title: '广告招租', shortTitle: '广告' },
 	{ title: '广告招租', shortTitle: '广告' },
 	{ title: '广告招租', shortTitle: '广告' }
-];
+]);
+onShow(() => {
+	const { hour } = getNowDate();
+	if (hour >= 23 || hour < 8) {
+		lougeList[1] = { title: '扫雷', shortTitle: '扫雷', path: '/pages/game/minesweeper' };
+	} else {
+		lougeList[1] = { title: '广告招租', shortTitle: '广告' };
+	}
+});
+
 function openLounge(item) {
 	if (!item.path) return;
 	if (item.appid) {
