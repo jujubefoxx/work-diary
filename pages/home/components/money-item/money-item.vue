@@ -111,7 +111,9 @@ const picker = ref(null);
 // 今日工作时长/秒
 let realWorkTimes = 0;
 // 定时器
-let timer = null;
+let timer = 0;
+// 定时器数组
+let timerList = [];
 // 今日已赚
 const computedMoney = ref('？');
 // 资料
@@ -120,7 +122,6 @@ const profile = computed(() => store.state.profile);
 function getProfile() {
 	if (Object.keys(profile.value).length !== 0) {
 		hasProfileData.value = true;
-		computedMoney.value = 0;
 		timer = setInterval(() => {
 			const date = new Date();
 			// 当前时间
@@ -135,12 +136,25 @@ function getProfile() {
 			// 上班中
 			if (workingStart) {
 				computedMoney.value = (secordMoney.value * realWorkingTime).toFixed(2);
+			} else {
+				computedMoney.value = 0;
 			}
 			// 下班了
 			if (workingEnd) {
-				clearInterval(timer);
+				intervalEnd();
 			}
 		}, 1000);
+		timerList.push(timer);
+	}
+}
+// 清除定时器
+function intervalEnd() {
+	if (timer) {
+		timerList.forEach((item, index) => {
+			clearInterval(item);
+		});
+		timerList = [];
+		timer = 0;
 	}
 }
 getProfile();
