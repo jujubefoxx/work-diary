@@ -26,7 +26,7 @@ let lougeList = reactive([
 ]);
 onShow(() => {
 	const { hour } = getNowDate();
-	if (hour >= 23 || hour < 8) {
+	if (hour < 23 && hour >= 8) {
 		lougeList[1] = { title: '扫雷', shortTitle: '扫雷', path: '/pages/game/minesweeper' };
 	} else {
 		lougeList[1] = { title: '广告招租', shortTitle: '广告' };

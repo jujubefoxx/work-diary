@@ -76,7 +76,7 @@ const logList = [
 	{
 		version: '1.1.1',
 		date: '2023-1-19',
-		des: '新增打工人休息室：扫雷小游戏，优化秒薪计算的算法，修复换肤弹窗标题显示错误的问题，提前祝大家新春快乐。'
+		des: '新增一项打工人休息室，优化秒薪计算的算法，修复换肤弹窗标题显示错误的问题，提前祝大家新春快乐。'
 	}
 ];
 const btnList = [{ alias: 'letter', title: '作者的信', content: letter }, { alias: 'log', title: '开发日志', content: logList }];
