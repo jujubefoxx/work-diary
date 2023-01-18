@@ -79,7 +79,7 @@
 			<p><view class="modal-tips__list" v-for="item in modalTips.content" v-html="item"></view></p>
 		</view>
 	</modal>
-	<modal ref="themeModal" @comfirmModal="cofirmTheme">
+	<modal ref="themeModal" @comfirmModal="cofirmTheme" title="更换皮肤">
 		<view class="flex flex-wrap">
 			<view class="theme-item" v-for="item in themeList">
 				<view class="theme-list black-border" :style="'background:' + item.color" @click="handleChangeTheme(item.name)">

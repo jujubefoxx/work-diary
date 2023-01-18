@@ -4,9 +4,16 @@
 			<view class="modal-title t-c" v-if="showTitle">{{ title }}</view>
 			<view class="modal-content"><slot></slot></view>
 			<view class="flex flex-x-center" v-if="showBtn">
-				<comfirm-button @handleCancel="closeModal" @handleComfirm="handleComfirm" :showCancel="showCancel" :showComfirm="showComfirm"></comfirm-button>
+				<comfirm-button
+					@handleCancel="closeModal"
+					:cancelText="cancelText"
+					:confirmText="confirmText"
+					@handleComfirm="handleComfirm"
+					:showCancel="showCancel"
+					:showComfirm="showComfirm"
+				></comfirm-button>
 			</view>
-			<view v-else><comfirm-button @handleCancel="closeModal" :showComfirm="false" cancelText="关闭"></comfirm-button></view>
+			<view v-else><comfirm-button @handleCancel="closeModal" :cancelText="cancelText" :showComfirm="false"></comfirm-button></view>
 		</view>
 	</uni-popup>
 </template>
@@ -20,7 +27,7 @@ import { ref, toRefs, nextTick } from 'vue';
 import { useStore } from 'vuex';
 const store = useStore();
 const popup = ref(null);
-const emit = defineEmits(['comfirmModal']);
+const emit = defineEmits(['comfirmModal', 'handleCancel']);
 const props = defineProps({
 	showTitle: {
 		type: Boolean,
@@ -33,6 +40,14 @@ const props = defineProps({
 	showCancel: {
 		type: Boolean,
 		default: () => true
+	},
+	cancelText: {
+		type: String,
+		default: () => '取消'
+	},
+	confirmText: {
+		type: String,
+		default: () => '确定'
 	},
 	showComfirm: {
 		type: Boolean,
@@ -57,6 +72,7 @@ function closeModal() {
 	store.commit('changeMeta', false);
 	show.value = false;
 	popup.value.close();
+	emit('handleCancel');
 }
 function handleComfirm() {
 	emit('comfirmModal');

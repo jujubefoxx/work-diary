@@ -25,7 +25,7 @@
 			</view>
 			<view class="note-bottom"><button class="bottom-btn light-shadow black-border" v-if="noteList.length < 10" @click="openModal(false, false)">新建</button></view>
 		</notebook>
-		<modal ref="modalChild" :title="modalTitle" @comfirmModal="modalComfirm" :showAnimation="isCheck" :showBtn="!isCheck">
+		<modal ref="modalChild" :title="modalTitle" @comfirmModal="modalComfirm" :showAnimation="isCheck" :showBtn="!isCheck" cancelText="关闭">
 			<textarea
 				v-if="modalShow"
 				:disabled="isCheck"

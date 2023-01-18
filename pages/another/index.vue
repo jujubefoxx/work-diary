@@ -7,7 +7,7 @@
 				<button class="another-btn black-border light-shadow" open-type="contact">意见建议</button>
 			</view>
 		</notebook>
-		<modal ref="modalChild" :title="modalInfo.title" :showBtn="false">
+		<modal ref="modalChild" :title="modalInfo.title" :showBtn="false" cancelText="关闭">
 			<scroll-view class="scroll-view" scroll-y>
 				<template v-if="modalInfo.alias === 'letter'">
 					<rich-text v-html="modalInfo.content"></rich-text>
@@ -85,10 +85,6 @@ function openModal(item) {
 </script>
 
 <style lang="scss" scoped>
-.scroll-view {
-	height: 620rpx;
-	font-size: 28rpx;
-}
 .modal-img {
 	display: flex;
 	justify-content: center;

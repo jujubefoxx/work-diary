@@ -1,7 +1,10 @@
 view {
 	box-sizing: border-box;
 }
-
+.scroll-view {
+	height: 620rpx;
+	font-size: 28rpx;
+}
 /* 黑色投影 */
 .black-shadow {
 	box-shadow: 4rpx 4rpx black;

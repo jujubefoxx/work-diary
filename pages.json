@@ -16,6 +16,15 @@
 			}
 		}
 	],
+	"subPackages": [{
+		"root": "pages/game",
+		"pages": [{
+			"path": "minesweeper",
+			"style": {
+				"navigationBarTitleText": "扫雷"
+			}
+		}]
+	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "快乐打工日记",

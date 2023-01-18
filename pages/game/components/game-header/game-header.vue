@@ -1,21 +1,12 @@
 <template>
-	<view class="home-header">
-		<text class="iconfont icon-hudong"></text>
-		<text class="iconfont icon-banzhuan"></text>
-		<image class="home-header__cat" :src="imgUrl.diaryCat"></image>
-		<view class="flex flex-dir-column f-14">
-			<view class="home-header__left">
-				<text>{{ leftSaying }}</text>
-			</view>
-			<view class="flex flex-x-end">
-				<input class="home-header__right f-13" @input="onKeyInput" :style="{ width: inputWid }" maxlength="12" placeholder="请输入文字和猫猫交流吧～" />
-			</view>
-		</view>
+	<view class="game-header">
+		<text class="iconfont icon-saolei"></text>
+		<image class="game-header__cat" :src="imgUrl.boomCat"></image>
 	</view>
 </template>
 <script>
 export default {
-	name: 'home-header'
+	name: 'game-header'
 };
 </script>
 <script setup>
@@ -72,59 +63,22 @@ const inputWid = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-.home-header {
+.game-header {
 	position: relative;
 	width: 100%;
-	height: 392rpx;
+	height: 258rpx;
 }
-.home-header__cat {
+.game-header__cat {
 	position: absolute;
 	left: 18rpx;
 	bottom: 32rpx;
 	width: 342rpx;
 	height: 208rpx;
 }
-.icon-banzhuan {
+.icon-saolei {
 	position: absolute;
-	bottom: 154rpx;
-	font-size: 100rpx;
-	left: 34rpx;
-}
-.icon-hudong {
-	position: absolute;
-	font-size: 72rpx;
-	right: 46rpx;
-	top: 84rpx;
-}
-.home-header__right,
-.home-header__left {
-	position: relative;
-	width: fit-content;
-	line-height: 40rpx;
-	background: #ffffff;
-	border: 4rpx solid #2c2c2c;
-	border-radius: 24rpx;
-	z-index: 2;
-}
-.home-header__left {
-	padding: 24rpx 20rpx;
-	margin-top: 12rpx;
-	margin-left: 32rpx;
-	&::before {
-		position: absolute;
-		bottom: -40rpx;
-		content: '';
-		width: 20rpx;
-		height: 20rpx;
-		background: #ffffff;
-		border-radius: 50%;
-		border: 4rpx solid #2c2c2c;
-	}
-}
-.home-header__right {
-	padding: 20rpx;
-	max-width: 394rpx;
-	margin-top: 38rpx;
-	margin-right: 30rpx;
+	right: 80rpx;
+	bottom: 84rpx;
+	font-size: 140rpx;
 }
 </style>
