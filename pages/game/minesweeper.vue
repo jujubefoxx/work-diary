@@ -86,7 +86,7 @@
 				</view>
 			</scroll-view>
 		</modal>
-		<modal ref="attention" title="注意" @handleCancel="closeModal" :cancelText="modalInfo.cancelText" :confirmText="modalInfo.confirmText" @confirmModal="attentionconfirm">
+		<modal ref="attention" title="注意" @handleCancel="closeModal" :cancelText="modalInfo.cancelText" :confirmText="modalInfo.confirmText" @confirmModal="attentionConfirm">
 			<p class="t-c" v-html="modalInfo.content"></p>
 		</modal>
 	</view>
@@ -386,7 +386,7 @@ function closeModal() {
 	}
 	attentionType = '';
 }
-function attentionconfirm() {
+function attentionConfirm() {
 	if (attentionType === 'restart' || attentionType === 'over') {
 		// 重新开始
 		restart();
@@ -395,8 +395,8 @@ function attentionconfirm() {
 		// 返回主页
 		setLevelPage();
 	}
-	attention.value.closeModal();
 	attentionType = '';
+	attention.value.closeModal();
 }
 // 打开难度选择页面
 function setLevelPage() {
@@ -648,5 +648,8 @@ watch(showCount, () => {
 		background: #f4f4f6;
 		color: #606060;
 	}
+}
+.icon-boom {
+	color: #414141;
 }
 </style>
