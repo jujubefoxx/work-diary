@@ -101,7 +101,7 @@ var dateUtils = {
 };
 
 /**
- * 计算距离该日期的天数
+ *  计算距离该日期的天数
  *  date 格式月重复[day] 年重复[month,day] 周重复[weekArr] 不重复[year,month,day]
  *  type 计算类型：1 月重复 2 年重复 3 周重复 4 不重复
  *  如果为当天 返回0

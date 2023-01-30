@@ -77,6 +77,11 @@ const logList = [
 		version: '1.1.1',
 		date: '2023-1-19',
 		des: '新增一项打工人休息室，优化秒薪计算的算法，修复换肤弹窗标题显示错误的问题，提前祝大家新春快乐。'
+	},
+	{
+		version: '1.1.2',
+		date: '2023-1-30',
+		des: '新年好，优化了换肤主题色的表现。'
 	}
 ];
 const btnList = [{ alias: 'letter', title: '作者的信', content: letter }, { alias: 'log', title: '开发日志', content: logList }];
