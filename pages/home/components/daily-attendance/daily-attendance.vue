@@ -71,10 +71,10 @@ const modalContent = ref('');
 
 const dailyList = computed(() => store.state.dailyList);
 const defaultDailyList = [
-	{ title: '我摸鱼了', remark: '摸鱼咋还扎手', hasPunch: false, icon: 'fish' },
-	{ title: '我发呆了', remark: '地球是我的了', hasPunch: false, icon: 'emm' },
-	{ title: '我拉屎了', remark: '拉屎还通畅吗', hasPunch: false, icon: 'shit' },
-	{ title: '我学习了', remark: '畅游知识海洋', hasPunch: false, icon: 'pen' }
+	{ title: '我摸鱼了', remark: '摸鱼咋还扎手', total: 0, hasPunch: false, icon: 'fish' },
+	{ title: '我发呆了', remark: '地球是我的了', total: 0, hasPunch: false, icon: 'emm' },
+	{ title: '我拉屎了', remark: '拉屎还通畅吗', total: 0, hasPunch: false, icon: 'shit' },
+	{ title: '我学习了', remark: '畅游知识海洋', total: 0, hasPunch: false, icon: 'pen' }
 ];
 // 获取保存的数据
 if (!dailyList.value || dailyList.value.length < 4) {
@@ -143,9 +143,15 @@ function punchCard(index) {
 		attention.value.openModal();
 	} else {
 		const newData = { ...dailyList.value[index], hasPunch: true };
+		// 计算打卡次数
+		if (newData.icon) {
+			newData.total = newData.total > 0 ? Number(newData.total) + 1 : 1;
+		}
 		store.commit('setArrList', { data: newData, index, type: 'edit' });
+		const title = newData.title;
+		const shortTitle = title.replace('我', '').replace('了', '');
 		uni.showToast({
-			title: '哦耶！' + dailyList.value[index].title + '！',
+			title: `哦耶！${newData.icon ? `我已经${shortTitle}${newData.total}天了` : title}!`,
 			icon: 'none'
 		});
 	}
@@ -166,6 +172,10 @@ function attentionconfirm() {
 	const { title } = dailyList.value[attentionIndex];
 	if (attentionType === 'cancel') {
 		const newData = { ...dailyList.value[attentionIndex], hasPunch: false };
+		// 计算打卡次数
+		if (newData.icon) {
+			newData.total = newData.total > 0 ? Number(newData.total) - 1 : 0;
+		}
 		store.commit('setArrList', { data: newData, index: attentionIndex, type: 'edit' });
 	} else if (attentionType === 'delete') {
 		store.commit('setArrList', { data: attentionIndex, type: 'splice' });
