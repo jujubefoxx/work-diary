@@ -338,7 +338,6 @@ function compareTime(st, et, mode = 'm') {
 
 	// 秒
 	if (mode === 's') {
-		console.log(et, st);
 		// 开始时间 st 结束时间 et
 		if (!st[2]) {
 			st[2] = 0;

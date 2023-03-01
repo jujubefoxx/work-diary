@@ -86,6 +86,11 @@ const logList = [
 		version: '1.1.3',
 		date: '2023-2-23',
 		des: '新增默认四项打卡的次数的统计，自更新日开始计算。'
+	},
+	{
+		version: '1.1.4',
+		date: '2023-3-1',
+		des: '修复薪资计算的问题。'
 	}
 ];
 const btnList = [{ alias: 'letter', title: '作者的信', content: letter }, { alias: 'log', title: '开发日志', content: logList }];
