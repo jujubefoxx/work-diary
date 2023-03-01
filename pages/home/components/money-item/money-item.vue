@@ -126,13 +126,34 @@ function getProfile() {
 			const date = new Date();
 			// 当前时间
 			const now = [date.getHours(), date.getMinutes(), date.getSeconds()];
-			const { workingTime, closingTime } = profile.value;
-			// 开始工作时长/秒
-			const realWorkingTime = compareTime(workingTime, now, 's');
+			const { workingTime, closingTime, breakStart, breakEnd } = profile.value;
 			// 开始工作
-			const workingStart = realWorkingTime >= 0;
+			const workingStart = compareTime(workingTime, now) >= 0;
 			// 结束工作
 			const workingEnd = compareTime(closingTime, now) >= 0;
+			// 开始休息
+			const isBreakStart = compareTime(breakStart, now) >= 0;
+			// 结束休息
+			const isBreakEnd = compareTime(breakEnd, now) >= 0;
+			// 工作时长/秒
+			let realWorkingTime = 0;
+			const amWorkTime = compareTime(workingTime, breakStart, 's');
+			const pmWorkTime = compareTime(breakEnd, closingTime, 's');
+			// 分情况判断
+			if (isBreakStart && !isBreakEnd) {
+				// 午休中
+				realWorkingTime = amWorkTime;
+			} else if (isBreakStart && isBreakEnd && !workingEnd) {
+				// 午休结束且未下班
+				realWorkingTime = amWorkTime + compareTime(breakEnd, now, 's');
+			} else if (workingEnd) {
+				// 下班了
+				realWorkingTime = amWorkTime + pmWorkTime;
+			} else {
+				// 上午上班
+				realWorkingTime = compareTime(workingTime, now, 's');
+			}
+
 			// 上班中
 			if (workingStart) {
 				computedMoney.value = (secordMoney.value * realWorkingTime).toFixed(2);
@@ -317,12 +338,13 @@ function compareTime(st, et, mode = 'm') {
 
 	// 秒
 	if (mode === 's') {
+		console.log(et, st);
 		// 开始时间 st 结束时间 et
 		if (!st[2]) {
 			st[2] = 0;
 		}
 		if (!et[2]) {
-			st[2] = 0;
+			et[2] = 0;
 		}
 		s = st[0] * 60 * 60 + st[1] * 60 + Number(st[2]);
 		e = et[0] * 60 * 60 + et[1] * 60 + Number(et[2]);
