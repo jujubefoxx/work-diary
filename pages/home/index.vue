@@ -19,7 +19,7 @@ import DateItem from './components/date-item/date-item.vue';
 import Commemoration from './components/commemoration/commemoration.vue';
 import DailyAttendance from './components/daily-attendance/daily-attendance.vue';
 import Lounge from './components/lounge/lounge.vue';
-import { usePage } from '@/common/usePage.js';
+import { usePage } from '@/common/usePage.ts';
 const { onShareAppMessage, onShareTimeline, onReady } = usePage();
 onShareAppMessage();
 onShareTimeline();

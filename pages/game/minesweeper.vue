@@ -96,7 +96,7 @@
 import { computed, ref, watch, reactive, onBeforeUnmount, onUnmounted } from 'vue';
 import GameHeader from './components/game-header/game-header.vue';
 import { useStore } from 'vuex';
-import { usePage } from '@/common/usePage.js';
+import { usePage } from '@/common/usePage.ts';
 const { onShareAppMessage, onShareTimeline, onReady } = usePage();
 onShareAppMessage({
 	title: '要来一场紧张又刺激的扫雷吗？',

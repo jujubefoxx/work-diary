@@ -30,7 +30,7 @@
 <script setup>
 import { computed, ref, watch, reactive } from 'vue';
 import { version } from '@/package.json';
-import { usePage } from '@/common/usePage.js';
+import { usePage } from '@/common/usePage.ts';
 const { onShareAppMessage, onShareTimeline, onReady } = usePage();
 onShareAppMessage();
 onShareTimeline();

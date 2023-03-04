@@ -31,7 +31,7 @@
 	</view>
 </template>
 <script setup lang="ts">
-import { ref, toRefs } from 'vue';
+import { Ref, ref, toRefs } from 'vue';
 interface Props {
 	mode?: string;
 	showYears?: boolean;
@@ -51,11 +51,11 @@ const props = withDefaults(defineProps<Props>(), {
 const { mode, value, showYears, showMonths, showDays, columnList } = toRefs(props);
 const emit = defineEmits(['confirm']);
 // 展示开关
-const show = ref(false);
+const show: Ref = ref(false);
 
 // 时间选择器
-const hours = [];
-const minutes = [];
+const hours: number[] = [];
+const minutes: number[] = [];
 for (let i = 0; i <= 23; i++) {
 	hours.push(i);
 }
@@ -64,14 +64,14 @@ for (let i = 0; i <= 59; i++) {
 }
 
 // 年月日选择器
-const date = new Date();
-const years = [];
-const year = date.getFullYear();
-const months = [];
-const month = date.getMonth() + 1;
-let days = [];
-const day = date.getDate();
-const allDay = [];
+const date: Date = new Date();
+const years: number[] = [];
+const year: number = date.getFullYear();
+const months: number[] = [];
+const month: number = date.getMonth() + 1;
+let days: number[] = [];
+const day: number = date.getDate();
+const allDay: number[] = [];
 // 所有日期
 for (let i = 1990; i <= 2030; i++) {
 	years.push(i);
@@ -85,7 +85,7 @@ for (let i = 1; i <= 31; i++) {
 }
 
 // 选择的值
-let pickerValue = ref([]);
+let pickerValue: Ref = ref([]);
 if (value.value.length > 0) {
 	pickerValue.value = value.value;
 } else if (mode.value === 'date') {
@@ -96,8 +96,8 @@ if (value.value.length > 0) {
 	pickerValue.value = [0];
 }
 
-function bindChange(e) {
-	const val = e.detail.value;
+function bindChange(e: any) {
+	const val: number[] = e.detail.value;
 	if (mode.value === 'date' && showMonths.value && showDays.value) {
 		if ([4, 6, 9, 11].includes(months[val[1]])) {
 			// 设置大小月
@@ -121,9 +121,9 @@ function bindChange(e) {
 }
 function handleConfirm() {
 	// 传值
-	let data = [];
+	let data: number[] = [];
 	// 列表
-	let list = [];
+	let list: number[][] = [];
 	if (mode.value === 'date') {
 		list = [showYears.value ? years : [], showMonths.value ? months : [], showDays.value ? days : []].filter(item => item.length > 0);
 	} else if (mode.value === 'time') {
@@ -131,7 +131,7 @@ function handleConfirm() {
 	} else {
 		list = columnList.value;
 	}
-	pickerValue.value.forEach((item, index) => {
+	pickerValue.value.forEach((item, index: number) => {
 		if (list[index]) {
 			data.push(list[index][pickerValue.value[index]]);
 		}
@@ -140,7 +140,7 @@ function handleConfirm() {
 	emit('confirm', data, pickerValue.value);
 }
 // 打开
-function open(value) {
+function open(value: number[]) {
 	show.value = true;
 	if (value && value.length > 0) {
 		pickerValue.value = value;

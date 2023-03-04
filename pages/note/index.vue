@@ -58,7 +58,7 @@ import { computed, ComputedRef, Ref, ref } from 'vue';
 import { getNowDate } from '@/common/util.js';
 import { useStore } from 'vuex';
 import { key, Note } from '@/store';
-import { usePage } from '@/common/usePage.js';
+import { usePage } from '@/common/usePage.ts';
 const { onShareAppMessage, onShareTimeline, onReady } = usePage();
 onShareAppMessage();
 onShareTimeline();
