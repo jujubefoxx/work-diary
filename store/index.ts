@@ -1,34 +1,73 @@
-import {
-	createStore
-} from 'vuex'
-const store = createStore({
+// store.ts
+import { InjectionKey } from 'vue'
+import { createStore, Store } from 'vuex'
+
+// 为 store state 声明类型
+export interface State {
+	theme: string
+	themeList: { color: string, name: string, font?: string }[]
+	isHoliday: boolean
+	loading: boolean
+	metaShow: boolean
+	currentDayDate: object
+	profile: Profile
+	dailyList: []
+	noteList: Note
+}
+/**
+ *  笔记列表 数组对象
+ *  content 内容
+ *  date 创建/修改日期
+ *  isComplete 是否完成
+ *  index 下标
+ */
+export interface Note {
+	content: string;
+	date: string;
+	isComplete: boolean;
+	index?: string | number;
+}
+/**
+ *  笔记列表 数组对象
+ *  content 内容
+ *  date 创建/修改日期
+ *  isComplete 是否完成
+ *  index 下标
+ */
+export interface Profile {
+	payoffTime: string | number;
+}
+// 定义 injection key
+export const key: InjectionKey<Store<State>> = Symbol()
+
+export const store = createStore<State>({
 	state: {
 		// 皮肤
 		theme: uni.getStorageSync('theme') || 'default-skin',
 		themeList: [{
-				color: '#ffce30',
-				name: 'default-skin'
-			},
-			{
-				color: '#F36AA5',
-				font: '#ffffff',
-				name: 'pink-skin'
-			},
-			{
-				color: '#1A69B2',
-				font: '#ffffff',
-				name: 'blue-skin'
-			},
-			{
-				color: '#8181B7',
-				font: '#ffffff',
-				name: 'purple-skin'
-			},
-			{
-				color: '#F77821',
-				font: '#ffffff',
-				name: 'orange-skin'
-			}
+			color: '#ffce30',
+			name: 'default-skin'
+		},
+		{
+			color: '#F36AA5',
+			font: '#ffffff',
+			name: 'pink-skin'
+		},
+		{
+			color: '#1A69B2',
+			font: '#ffffff',
+			name: 'blue-skin'
+		},
+		{
+			color: '#8181B7',
+			font: '#ffffff',
+			name: 'purple-skin'
+		},
+		{
+			color: '#F77821',
+			font: '#ffffff',
+			name: 'orange-skin'
+		}
 		],
 		// 是否休息日
 		isHoliday: uni.getStorageSync('isHoliday') || false,
@@ -106,7 +145,4 @@ const store = createStore({
 			return state.profile.payoffTime
 		}
 	},
-	actions: {}
 })
-
-export default store

@@ -5,25 +5,15 @@
 		</view>
 	</view>
 </template>
-<script>
-export default {
-	name: 'happy-button'
-};
-</script>
-<script setup>
-import { computed, ref, toRefs } from 'vue';
-import { dateState } from '@/common/util.js';
-
-const props = defineProps({
-	buttonList: {
-		type: Array,
-		default: () => [{ title: '按钮名称', id: 0 }, { title: '按钮名称', id: 1 }]
-	},
-	activeId: {
-		type: Array,
-		default: () => [0]
-	},
-	message: Number
+<script setup lang="ts">
+import { toRefs } from 'vue';
+interface Props {
+	buttonList?: { title: string; id: number }[];
+	activeId?: number[];
+}
+const props = withDefaults(defineProps<Props>(), {
+	buttonList: [{ title: '按钮名称', id: 0 }, { title: '按钮名称', id: 1 }],
+	activeId: [0]
 });
 const { buttonList, activeId } = toRefs(props);
 </script>

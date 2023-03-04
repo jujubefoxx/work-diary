@@ -17,52 +17,41 @@
 		</view>
 	</uni-popup>
 </template>
-<script>
-export default {
-	name: 'modal'
-};
-</script>
-<script setup>
-import { ref, toRefs, nextTick } from 'vue';
+
+<script setup lang="ts">
+import { Ref, ref } from 'vue';
 import { useStore } from 'vuex';
-const store = useStore();
-const popup = ref(null);
-const emit = defineEmits(['confirmModal', 'handleCancel']);
-const props = defineProps({
-	showTitle: {
-		type: Boolean,
-		default: () => true
-	},
-	title: {
-		type: String,
-		default: () => '填写资料'
-	},
-	showCancel: {
-		type: Boolean,
-		default: () => true
-	},
-	cancelText: {
-		type: String,
-		default: () => '取消'
-	},
-	confirmText: {
-		type: String,
-		default: () => '确定'
-	},
-	showconfirm: {
-		type: Boolean,
-		default: () => true
-	},
-	showBtn: {
-		type: Boolean,
-		default: () => true
-	},
-	showAnimation: {
-		type: Boolean,
-		default: () => true
-	}
+import { key } from '@/store';
+const store = useStore(key);
+const popup: Ref = ref(null);
+// 事件导出
+const emit = defineEmits<{
+	(e: 'confirmModal'): void;
+	(e: 'handleCancel'): void;
+}>();
+// Props类型
+interface Props {
+	showTitle?: boolean;
+	title?: string;
+	cancelText?: string;
+	confirmText?: string;
+	showconfirm?: boolean;
+	showBtn?: boolean;
+	showAnimation?: boolean;
+}
+withDefaults(defineProps<Props>(), {
+	showTitle: true,
+	title: '填写资料',
+	showCancel: true,
+	cancelText: '取消',
+	confirmText: '确定',
+	showconfirm: true,
+	showBtn: true,
+	showAnimation: true
 });
-const show = ref(false);
+// 开关状态
+const show: Ref = ref(false);
+
 function openModal() {
 	store.commit('changeMeta', true);
 	show.value = true;

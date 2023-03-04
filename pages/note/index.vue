@@ -48,53 +48,46 @@
 		<modal ref="attention" title="注意" @confirmModal="attentionconfirm"><p class="t-c" v-html="modalContent"></p></modal>
 	</view>
 </template>
-<script>
+<script lang="ts">
 export default {
 	name: 'note'
 };
 </script>
-<script setup>
-import { computed, ref, watch } from 'vue';
-import { dateState, getNowDate } from '@/common/util.js';
+<script setup lang="ts">
+import { computed, ComputedRef, Ref, ref } from 'vue';
+import { getNowDate } from '@/common/util.js';
 import { useStore } from 'vuex';
+import { key, Note } from '@/store';
 import { usePage } from '@/common/usePage.js';
 const { onShareAppMessage, onShareTimeline, onReady } = usePage();
 onShareAppMessage();
 onShareTimeline();
 onReady();
-const store = useStore();
+const store = useStore(key);
 // 图片地址
 const { imgUrl } = getApp({ allowDefault: true }).globalData;
-const modalChild = ref(null);
-const attention = ref(null);
-const checkbox = ref(null);
-const deleteIndex = ref(-1);
-const modalContent = ref('');
-const modalTips = {
+const modalChild: Ref = ref(null);
+const attention: Ref = ref(null);
+const modalContent: Ref = ref('');
+const modalTips: { title: string; content: string[] } = {
 	title: '温馨提示',
 	content: ['已完成的事情会在次日零点自动删除，也可自行手动删除', '最多添加10件事情，事情堆的太多是不好的习惯哦']
 };
-/**
- *  笔记列表 数组对象
- *  content 内容
- *  date 创建/修改日期
- *  isComplete 是否完成
- *  index 下标
- */
-const noteList = computed(() => store.state.noteList.map((i, index) => ({ ...i, id: index })));
+const noteList: ComputedRef = computed(() => store.state.noteList.map((i: object, index: number) => ({ ...i, id: index })));
 // 渲染排序
-const renderList = computed(() => {
-	const arr = [...noteList.value];
+const renderList: ComputedRef = computed(() => {
+	const arr: Note[] = [...noteList.value];
 	// 按时间排序 降序
 
 	arr.sort((a, b) => b.date.localeCompare(a.date));
-	const leftList = [],
-		rightList = [];
+	const leftList: [] = [],
+		rightList: [] = [];
 
 	// 根据行数渲染瀑布流
-	let leftColumn = 0;
-	let rightColumn = 0;
-	function getColumn(item) {
+	let leftColumn: number = 0;
+	let rightColumn: number = 0;
+
+	function getColumn(item: Note) {
 		const str = item.content;
 		let len = 0;
 		// 正则表达式，判断是否为汉字
@@ -107,7 +100,7 @@ const renderList = computed(() => {
 		return Math.ceil((len + str.length) / 16) + 3;
 	}
 	// 分割成左右两侧的数据
-	arr.forEach((item, index) => {
+	arr.forEach((item: any) => {
 		if (leftColumn <= rightColumn) {
 			leftList.push(item);
 			leftColumn = leftColumn + getColumn(item);
@@ -120,14 +113,14 @@ const renderList = computed(() => {
 });
 
 // 是否编辑
-const isEdit = ref(false);
+const isEdit: Ref = ref(false);
 // 是否查看
-const isCheck = ref(false);
+const isCheck: Ref = ref(false);
 // 是否编辑
-const modalTitle = ref('');
+const modalTitle: Ref = ref('');
 // 表单数据
-const formData = ref({});
-const modalShow = computed(() => {
+const formData: Ref = ref({});
+const modalShow: ComputedRef = computed(() => {
 	if (modalChild.value) {
 		return modalChild.value.show;
 	} else {
@@ -135,7 +128,7 @@ const modalShow = computed(() => {
 	}
 });
 
-function openModal(edit = false, check = false, index) {
+function openModal(edit: boolean = false, check: boolean = false, index: number) {
 	if (modalShow.value) return;
 	isEdit.value = edit;
 	isCheck.value = check;
@@ -159,7 +152,6 @@ function modalconfirm() {
 		});
 		return;
 	}
-	const { length } = noteList.value;
 	const { year, month, day } = getNowDate();
 	formData.value.date = `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`;
 	if (isEdit.value) {
@@ -182,11 +174,11 @@ function modalconfirm() {
 }
 
 // 目标Index
-let activeIndex = -1;
+let activeIndex: number = -1;
 // 注意类型
-let attentionType = '';
+let attentionType: string = '';
 // 完成/取消完成
-function handleComplete(index) {
+function handleComplete(index: number) {
 	if (modalShow.value) return;
 	const { isComplete } = noteList.value[index];
 	activeIndex = index;
@@ -200,9 +192,8 @@ function handleComplete(index) {
 	}
 	attention.value.openModal();
 }
-function handleDelete(index) {
+function handleDelete(index: number) {
 	if (modalShow.value) return;
-	const { isComplete } = noteList.value[index];
 	activeIndex = index;
 	attentionType = 'delete';
 	modalContent.value = '确定删除完成这件事吗<br>已完成的事情会在次日自动清除哦~';
@@ -218,7 +209,7 @@ function attentionconfirm() {
 			icon: 'none'
 		});
 	} else {
-		const newObj = { ...noteList.value[activeIndex], isComplete: !isComplete };
+		const newObj: Note = { ...noteList.value[activeIndex], isComplete: !isComplete };
 		store.commit('setArrList', { arr: 'noteList', data: newObj, index: activeIndex, type: 'edit' });
 
 		if (isComplete) {

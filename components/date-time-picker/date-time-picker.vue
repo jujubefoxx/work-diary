@@ -30,44 +30,23 @@
 		<confirm-button @handleConfirm="handleConfirm" @handleCancel="close"></confirm-button>
 	</view>
 </template>
-<script>
-export default {
-	name: 'date-time-picker'
-};
-</script>
-<script setup>
-import { ref, toRefs, nextTick } from 'vue';
-const props = defineProps({
-	// 模式:time 时间选择器 date日期选择器 other其它 根据columnList生成
-	mode: {
-		type: String,
-		default: () => 'time'
-	},
-	// 显示年份
-	showYears: {
-		type: Boolean,
-		default: () => true
-	},
-	// 显示月份
-	showMonths: {
-		type: Boolean,
-		default: () => true
-	},
-	// 显示日期
-	showDays: {
-		type: Boolean,
-		default: () => true
-	},
-	// 初始位置
-	value: {
-		type: Array,
-		default: () => []
-	},
-	// 自定义选择器
-	columnList: {
-		type: Array,
-		default: () => []
-	}
+<script setup lang="ts">
+import { ref, toRefs } from 'vue';
+interface Props {
+	mode?: string;
+	showYears?: boolean;
+	showMonths?: boolean;
+	showDays?: boolean;
+	value?: number[];
+	columnList?: any[];
+}
+const props = withDefaults(defineProps<Props>(), {
+	mode: 'time',
+	showYears: true,
+	showMonths: true,
+	showDays: true,
+	value: [],
+	columnList: []
 });
 const { mode, value, showYears, showMonths, showDays, columnList } = toRefs(props);
 const emit = defineEmits(['confirm']);

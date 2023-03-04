@@ -1,9 +1,8 @@
 import App from './App'
-
+import { store, key } from './store'
 import {
 	createSSRApp
 } from 'vue'
-import store from './store'
 // #ifdef MP
 // if (uni.getSystemInfoSync().platform !== "devtools") {
 // 	console.log = () => {}
@@ -11,7 +10,7 @@ import store from './store'
 // #endif
 export function createApp() {
 	const app = createSSRApp(App)
-	app.use(store)
+	app.use(store, key)
 	app.config.globalProperties.$store = store
 	return {
 		app
