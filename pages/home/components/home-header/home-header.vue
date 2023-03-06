@@ -13,47 +13,47 @@
 		</view>
 	</view>
 </template>
-<script>
-export default {
-	name: 'home-header'
-};
-</script>
-<script setup>
-import { computed, ref } from 'vue';
+<script setup lang="ts">
+import { computed, ComputedRef, Ref, ref } from 'vue';
 import { dateState } from '@/common/util.js';
 import { useStore } from 'vuex';
-// import { mapState } from 'vuex'
-const store = useStore();
+import { key } from '@/store';
+const store = useStore(key);
 // 图片地址
 const { imgUrl } = getApp({ allowDefault: true }).globalData;
 // 是否假期
-const isHoliday = computed(() => store.state.isHoliday);
+const isHoliday: ComputedRef = computed(() => store.state.isHoliday);
+interface TimeWord {
+	morning: string;
+	afternoon: string;
+	evening: string;
+}
 // 打招呼内容
-const helloWord = {
+const helloWord: TimeWord = {
 	morning: '又是元气满满的一天！',
 	afternoon: '下班后好好吃一顿吧！',
 	evening: '辛苦了一天早点休息吧！'
 };
-const dateWord = {
+const dateWord: TimeWord = {
 	morning: '上午好呀打工人，',
 	afternoon: '下午好呀打工人，',
 	evening: '晚上好呀打工人，'
 };
 // 猫咪说的话
-const leftSaying = computed(() => {
+const leftSaying: ComputedRef = computed(() => {
 	if (isHoliday.value) {
 		return dateWord[dateState()] + '今天猫猫也休息哦';
 	}
 	return dateWord[dateState()] + helloWord[dateState()];
 });
 // 自己说的话
-const rightSaying = ref('');
+const rightSaying: Ref = ref('');
 // 获取输入内容
-function onKeyInput(e) {
+function onKeyInput(e: any) {
 	rightSaying.value = e.detail.value;
 }
 // input输入框宽度自适应
-const inputWid = computed(() => {
+const inputWid: ComputedRef = computed(() => {
 	if (rightSaying.value == '' || rightSaying.value == 0) {
 		return '314rpx';
 	} else {

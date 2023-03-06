@@ -62,7 +62,8 @@ export default {
 import { computed, ref, watch } from 'vue';
 import { dateState, getNowDate, getRepeatDay } from '@/common/util.js';
 import { useStore } from 'vuex';
-const store = useStore();
+import { key } from '@/store';
+const store = useStore(key);
 const modalChild = ref(null);
 const attention = ref(null);
 const checkbox = ref(null);

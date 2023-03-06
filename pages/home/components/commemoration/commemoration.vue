@@ -75,17 +75,13 @@
 		</p>
 	</modal>
 </template>
-<script>
-export default {
-	name: 'commemoration'
-};
-</script>
-<script setup>
-import { computed, ref, watch } from 'vue';
-import { onShow } from '@dcloudio/uni-app';
-import { dateState, getNowDate, getRepeatDay } from '@/common/util.js';
+<script setup lang="ts">
+import { computed, ComputedRef, Ref, ref } from 'vue';
+import { getNowDate, getRepeatDay } from '@/common/util.js';
 import { useStore } from 'vuex';
-const weekArr = [
+import { key } from '@/store';
+const store = useStore(key);
+const weekArr: { title: string; id: number }[] = [
 	{ title: '周一', id: 1 },
 	{ title: '周二', id: 2 },
 	{ title: '周三', id: 3 },
@@ -94,18 +90,17 @@ const weekArr = [
 	{ title: '周六', id: 6 },
 	{ title: '周日', id: 0 }
 ];
-const store = useStore();
-const modalChild = ref(null);
-const picker = ref(null);
+const modalChild: Ref = ref(null);
+const picker: Ref = ref(null);
 const checkbox = ref(null);
 const attention = ref(null);
 // 发工资时间
-const payoffTime = computed(() => store.getters.payoffTime);
+const payoffTime: ComputedRef<number> = computed(() => store.getters.payoffTime);
 // 图片地址
 const { imgUrl } = getApp({ allowDefault: true }).globalData;
 
 // 判断是否今天
-function isToday(day, type) {
+function isToday(day: number, type: number) {
 	return getRepeatDay(day, type) === 0;
 }
 
@@ -115,7 +110,14 @@ function isToday(day, type) {
  *  date 日期数据
  *  type 重复类型：1 月重复 2 年重复 3 周重复 4 不重复
  */
-const commemorationList = ref([{ alias: 'holiday', type: 3, date: [0, 6], title: '休息日', remark: '谁请我吃肯德基' }]);
+interface Commemoration {
+	alias?: string;
+	type?: number | string;
+	date?: number[];
+	title?: string;
+	remark?: string;
+}
+const commemorationList: Ref<Commemoration[]> = ref([{ alias: 'holiday', type: 3, date: [0, 6], title: '休息日', remark: '谁请我吃肯德基' }]);
 // 获取保存的数据
 if (uni.getStorageSync('commemoration')) {
 	commemorationList.value = uni.getStorageSync('commemoration');
@@ -123,7 +125,7 @@ if (uni.getStorageSync('commemoration')) {
 	uni.setStorageSync('commemoration', commemorationList.value);
 }
 // 如果是休息日 变更打工状态
-function checkHoliday(item) {
+function checkHoliday(item: Commemoration) {
 	if (item.alias !== 'holiday') return;
 	const holidayData = item;
 	if (getRepeatDay(holidayData.date, holidayData.type) === 0) {
@@ -133,13 +135,18 @@ function checkHoliday(item) {
 		store.commit('changeHoliday', false);
 	}
 }
-const modalTips = {
+const modalTips: { title: string; content: string[] } = {
 	title: '温馨提示',
 	content: ['发工资日只能在填写/修改薪资资料中新增或修改', '休息日目前限制为只能每周重复且不能删除，但可以改成你喜欢的名字哦', '最多添加4个自定义的激动时刻']
 };
 
+interface IdTitle {
+	id: number;
+	title: string;
+}
+
 // type 重复类型：1 月重复 2 年重复 3 周重复 4 不重复
-const typeList = [
+const typeList: IdTitle[] = [
 	{
 		id: 1,
 		title: '每月'
@@ -158,14 +165,14 @@ const typeList = [
 	}
 ];
 // 资料信息
-const formData = ref({});
+const formData: Ref<Commemoration> = ref({});
 
 // 是否编辑状态
-let isEdit = ref(false);
+let isEdit: Ref<boolean> = ref(false);
 // 编辑状态的表单下标
-let activeIndex = 0;
+let activeIndex: number = 0;
 // 打开填写资料弹窗
-function openModal(isEditValue = false, index) {
+function openModal(isEditValue = false, index: number): void {
 	isEdit.value = isEditValue;
 	if (isEdit.value) {
 		activeIndex = index;
@@ -185,27 +192,27 @@ function openModal(isEditValue = false, index) {
 	modalChild.value.openModal();
 }
 // 关闭填写资料弹窗
-function closeModal() {
+function closeModal(): void {
 	modalChild.value.closeModal();
 }
 // 当前日期
-const activeType = computed(() => {
+const activeType: ComputedRef<IdTitle> = computed(() => {
 	return typeList.find(item => item.id === formData.value.type) || { title: '', id: 1 };
 });
 
 // 当前使用选择器的表单
-let activeName = '';
+let activeName: string = '';
 // 选择器值
-let pickerValue = ref([]);
+let pickerValue: Ref<number[]> = ref([]);
 // 选择器模式
-let pickerMode = ref('');
+let pickerMode: Ref<string> = ref('');
 // 选择器开关
-let showYears = ref(true);
-let showMonths = ref(true);
+let showYears: Ref<boolean> = ref(true);
+let showMonths: Ref<boolean> = ref(true);
 // 重复类型选择列表
-const columnList = [typeList.map(i => i.title)];
+const columnList: string[][] = [typeList.map(i => i.title)];
 // 打开重复类型选择器
-function openPicker(string) {
+function openPicker(string: string): void {
 	activeName = string;
 	if (string === 'type') {
 		// 休息日不允许修改类型
@@ -223,21 +230,21 @@ function openPicker(string) {
 			const { date } = formData.value;
 			// 月重复
 			if (activeType.value.id === 1) {
-				const [index1] = date.length === 0 ? [day] : date;
+				const [index1]: number[] = date.length === 0 ? [day] : date;
 				pickerValue.value = [index1 - 1];
 				showMonths.value = false;
 				showYears.value = false;
 			}
 			// 年重复
 			if (activeType.value.id === 2) {
-				const [index1, index2] = date.length === 0 ? [month, day] : date;
+				const [index1, index2]: number[] = date.length === 0 ? [month, day] : date;
 				pickerValue.value = [index1 - 1, index2 - 1];
 				showMonths.value = true;
 				showYears.value = false;
 			}
 			// 不重复
 			if (activeType.value.id === 4) {
-				const [index1, index2, index3] = date.length === 0 ? [year, month, day] : date;
+				const [index1, index2, index3]: number[] = date.length === 0 ? [year, month, day] : date;
 				pickerValue.value = [index1 - 1990, index2 - 1, index3 - 1];
 				showMonths.value = true;
 				showYears.value = true;
@@ -248,7 +255,7 @@ function openPicker(string) {
 }
 
 // 选择器确认
-function pickerconfirm(data) {
+function pickerconfirm(data: []): void {
 	if (activeName === 'type') {
 		formData.value.type = typeList.find(item => item.title === data[0]).id;
 		formData.value.date = [];
@@ -259,13 +266,13 @@ function pickerconfirm(data) {
 	picker.value.close();
 }
 
-function checkboxconfirm(data) {
+function checkboxconfirm(data: []): void {
 	formData.value.date = data;
 	checkbox.value.close();
 }
 
 // 文字转换
-const filterDateText = computed(() => {
+const filterDateText: ComputedRef<string> = computed(() => {
 	const { date } = formData.value;
 	if (activeType.value.id === 1) {
 		return date.length > 0 ? `${date[0]}日` : '';
@@ -293,7 +300,7 @@ const filterDateText = computed(() => {
 });
 
 // 提交表单
-function confirmModal() {
+function confirmModal(): void {
 	const { title } = formData.value;
 	// 名称未填
 	if (!title) {
@@ -327,11 +334,11 @@ function confirmModal() {
 	closeModal();
 }
 // 删除确认
-function handleDelete() {
+function handleDelete(): void {
 	attention.value.openModal();
 }
 // 删除
-function deleteconfirm() {
+function deleteconfirm(): void {
 	const { title } = commemorationList.value[activeIndex];
 	commemorationList.value.splice(activeIndex, 1);
 	uni.setStorageSync('commemoration', commemorationList.value);

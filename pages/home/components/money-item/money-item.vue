@@ -91,38 +91,31 @@
 	</modal>
 	<date-time-picker ref="picker" :mode="pickerMode" :columnList="columnList" @confirm="pickerconfirm"></date-time-picker>
 </template>
-<script>
-export default {
-	name: 'money-item'
-};
-</script>
-<script setup>
-import { computed, ref, watch } from 'vue';
-import { dateState, getNowDate } from '@/common/util.js';
+<script setup lang="ts">
+import { computed, ComputedRef, Ref, ref, watch } from 'vue';
 import { useStore } from 'vuex';
-const store = useStore();
+import { key, Profile, Theme, Money } from '@/store';
+const store = useStore(key);
 // 是否填写信息
-const hasProfileData = ref(false);
+const hasProfileData: Ref<boolean> = ref(false);
 // 模态框
-const modalChild = ref(null);
-const themeModal = ref(null);
+const modalChild: Ref = ref(null);
+const themeModal: Ref = ref(null);
 // 选择器
-const picker = ref(null);
-// 今日工作时长/秒
-let realWorkTimes = 0;
+const picker: Ref = ref(null);
 // 定时器
-let timer = 0;
+let timer: Number = 0;
 // 定时器数组
-let timerList = [];
+let timerList: Number[] = [];
 // 今日已赚
-const computedMoney = ref('？');
+const computedMoney: Ref<Money> = ref('？');
 // 资料
-const profile = computed(() => store.state.profile);
+const profile: ComputedRef<Profile> = computed(() => store.state.profile);
 // 获取资料
-function getProfile() {
+function getProfile(): void {
 	if (Object.keys(profile.value).length !== 0) {
 		hasProfileData.value = true;
-		timer = setInterval(() => {
+		timer = window.setInterval(() => {
 			const date = new Date();
 			// 当前时间
 			const now = [date.getHours(), date.getMinutes(), date.getSeconds()];
@@ -169,10 +162,10 @@ function getProfile() {
 	}
 }
 // 清除定时器
-function intervalEnd() {
+function intervalEnd(): void {
 	if (timer) {
-		timerList.forEach((item, index) => {
-			clearInterval(item);
+		timerList.forEach((item: Number) => {
+			window.clearInterval(item);
 		});
 		timerList = [];
 		timer = 0;
@@ -180,23 +173,27 @@ function intervalEnd() {
 }
 getProfile();
 // 秒薪
-const secordMoney = computed(() => {
+const secordMoney: ComputedRef<number> = computed(() => {
 	const type = Number(profile.value.moneyType);
 	// 上班工时/分
 	const workMinute = profile.value.workMinutes - profile.value.breakMinutes;
 	// 日薪
-	let dayMoney = type === 2 ? profile.value.money : 0;
+	let dayMoney: number = type === 2 ? Number(profile.value.money) : 0;
 	if (type === 1) {
-		dayMoney = profile.value.money / profile.value.workDays;
+		dayMoney = Number(profile.value.money) / profile.value.workDays;
 	}
 	// 时薪
-	let hourMoney = type === 3 ? profile.value.money : dayMoney / (workMinute / 60);
+	let hourMoney: number = type === 3 ? Number(profile.value.money) : dayMoney / (workMinute / 60);
 	// 秒薪
 	return hourMoney / 60 / 60;
 });
 
+interface Button {
+	id: number;
+	title: string;
+}
 // 按钮
-const buttonList = {
+const buttonList: { noData: Button; working: Button; resting: Button } = {
 	noData: {
 		id: 0,
 		title: '请填写资料'
@@ -212,16 +209,18 @@ const buttonList = {
 };
 
 // 黄色按钮的Id
-let activeId = ref(store.state.isHoliday ? [0, 2] : [0, 1]);
+let activeId: Ref<number[]> = ref(store.state.isHoliday ? [0, 2] : [0, 1]);
+
 watch(
 	() => store.state.isHoliday,
 	() => {
 		activeId.value = store.state.isHoliday ? [0, 2] : [0, 1];
 	}
 );
+
 // 点击按钮事件
-function handleClick(value) {
-	const id = Number(value);
+function handleClick(value: number): void {
+	const id = value;
 	if (id !== 0) {
 		if (activeId.value.includes(id)) return;
 		activeId.value = [0, id];
@@ -232,14 +231,14 @@ function handleClick(value) {
 	}
 }
 
-const modalTips = { title: '秒薪计算方法', content: ['1.秒薪=时薪/60/60', '2.时薪=日薪/日工作时长<br>', '3.日薪=月薪/月工作日'] };
-const moneyTypeList = [
+const modalTips: { title: string; content: string[] } = { title: '秒薪计算方法', content: ['1.秒薪=时薪/60/60', '2.时薪=日薪/日工作时长<br>', '3.日薪=月薪/月工作日'] };
+const moneyTypeList: { id: number; title: string; string: string; default: Money; maxLength: number }[] = [
 	{ id: 1, title: '月薪', string: '一个月', default: '8000', maxLength: 6 },
 	{ id: 2, title: '日薪', string: '一天', default: '200', maxLength: 4 },
 	{ id: 3, title: '时薪', string: '一小时', default: '30', maxLength: 3 }
 ];
 // 资料表单
-const profileForm = ref({
+const profileForm: Ref<Profile> = ref({
 	// 上班时间
 	workingTime: [9, 0],
 	// 下班时间
@@ -263,7 +262,7 @@ const profileForm = ref({
 });
 
 // 打开填写资料弹窗
-function openModal() {
+function openModal(): void {
 	if (hasProfileData.value) {
 		moneyTypeList.find(item => item.id === profile.value.moneyType).default = profile.value.money;
 		profileForm.value = { ...profile.value };
@@ -271,30 +270,30 @@ function openModal() {
 	modalChild.value.openModal();
 }
 // 关闭填写资料弹窗
-function closeModal() {
+function closeModal(): void {
 	modalChild.value.closeModal();
 }
 // 转换时间数组格式
-function filterTime(array) {
+function filterTime(array: number[]) {
 	const [hour, time] = array;
 	return `${hour < 10 ? '0' + hour : hour}:${time < 10 ? '0' + time : time}`;
 }
 // 当前薪资类型
-const activeType = computed(() => {
+const activeType: ComputedRef<object> = computed(() => {
 	const obj = moneyTypeList.find(item => item.id === profileForm.value.moneyType);
 	profileForm.value.money = obj.default;
 	return obj;
 });
 // 当前使用选择器的表单
-let activeName = '';
+let activeName: string = '';
 // 选择器值
-let pickerValue = ref([]);
+let pickerValue: number[] = [];
 // 选择器模式
-let pickerMode = ref('');
+let pickerMode: Ref<string> = ref('');
 // 自定义选择列表
-let columnList = ref([]);
+let columnList: Ref<any[]> = ref([]);
 // 打开时间选择器
-function openPicker(name, mode = 'time') {
+function openPicker(name: string, mode: string = 'time') {
 	activeName = name;
 	pickerValue = profileForm.value[name];
 	pickerMode.value = mode;
@@ -313,7 +312,7 @@ function openPicker(name, mode = 'time') {
 		columnList.value[0].push('每月最后一天');
 		let index = 15;
 		const value = profileForm.value[name];
-		if (isNaN(value)) {
+		if (isNaN(value as number)) {
 			if (value === '不定时') {
 				index = 0;
 			} else if (value === '日结') {
@@ -322,7 +321,7 @@ function openPicker(name, mode = 'time') {
 				index = 99;
 			}
 		} else {
-			index = Number(value + 1);
+			index = Number((value as number) + 1);
 		}
 		pickerValue = [index];
 	}
@@ -331,10 +330,10 @@ function openPicker(name, mode = 'time') {
 }
 
 // 计算时间差
-function compareTime(st, et, mode = 'm') {
+function compareTime(st: number[], et: number[], mode: string = 'm'): number {
 	// 开始时间 st 结束时间 et
-	let s = st[0] * 60 + Number(st[1]);
-	let e = et[0] * 60 + Number(et[1]);
+	let s = st[0] * 60 + st[1];
+	let e = et[0] * 60 + et[1];
 
 	// 秒
 	if (mode === 's') {
@@ -353,7 +352,7 @@ function compareTime(st, et, mode = 'm') {
 	return e - s;
 }
 // 确认选择
-function pickerconfirm(data, index) {
+function pickerconfirm(data: number[]): void {
 	// 时间范围判断
 	const rangeTime = ['closingTime', 'workingTime', 'breakStart', 'breakEnd'];
 	if (rangeTime.includes(activeName)) {
@@ -394,11 +393,11 @@ function pickerconfirm(data, index) {
 	picker.value.close();
 }
 // 选择薪资类型
-function handleChoose(id) {
+function handleChoose(id: number): void {
 	profileForm.value.moneyType = id;
 }
 // 提交表单
-function confirmModal() {
+function confirmModal(): void {
 	const { money, workingTime, breakStart, breakMinutes, workMinutes, closingTime, breakEnd } = profileForm.value;
 	// 异常处理
 	if (compareTime(workingTime, breakStart) <= 0) {
@@ -435,21 +434,21 @@ function confirmModal() {
 	getProfile();
 	closeModal();
 }
-const themeList = computed(() => store.state.themeList);
-const theme = ref('');
+const themeList: ComputedRef<Theme[]> = computed(() => store.state.themeList);
+const theme: Ref<string> = ref('');
 // 换肤
-function changeTheme() {
+function changeTheme(): void {
 	// 主题变量
 	theme.value = store.state.theme;
 	themeModal.value.openModal();
 }
 
 // 点击皮肤
-function handleChangeTheme(name) {
+function handleChangeTheme(name: string): void {
 	theme.value = name;
 }
 // 换肤确认
-function cofirmTheme() {
+function cofirmTheme(): void {
 	const item = themeList.value.find(i => i.name === theme.value);
 	uni.setNavigationBarColor({
 		frontColor: item.font || '#000000',

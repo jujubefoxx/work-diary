@@ -17,19 +17,14 @@
 	</view>
 	<date-time-picker ref="picker" mode="other" :columnList="columnList" @confirm="pickerconfirm"></date-time-picker>
 </template>
-<script>
-export default {
-	name: 'date-item'
-};
-</script>
-<script setup>
-import { computed, ref } from 'vue';
-import { dateState, getNowDate } from '@/common/util.js';
+<script setup lang="ts">
+import { computed, ComputedRef, Ref, ref } from 'vue';
 import { useStore } from 'vuex';
-const store = useStore();
-const picker = ref(null);
+import { key } from '@/store';
+const store = useStore(key);
+const picker: Ref<object> = ref(null);
 const { year, month, day } = store.state.currentDayDate;
-const weather = computed(() => store.state.currentDayDate.weather);
+const weather: ComputedRef<string> = computed(() => store.state.currentDayDate.weather);
 const columnList = [['出太阳', '大阴天', '下雨啦', '刮大风', '下雪咯', '不知道']];
 // 点击选择天气
 function handleClick() {
