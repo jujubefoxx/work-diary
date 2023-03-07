@@ -16,7 +16,7 @@ export default {
 </script>
 <script setup>
 import { computed, reactive, ref, watch } from 'vue';
-import { dateState, getNowDate } from '@/common/util.js';
+import { dateState, getNowDate } from '@/common/util.ts';
 import { onShow } from '@dcloudio/uni-app';
 let lougeList = reactive([
 	{ title: '今天吃啥', shortTitle: '吃啥', path: 'pages/index/index', appid: 'wx18508a564e357535' },

@@ -11,7 +11,7 @@ export default {
 </script>
 <script setup>
 import { computed, ref } from 'vue';
-import { dateState } from '@/common/util.js';
+import { dateState } from '@/common/util.ts';
 import { useStore } from 'vuex';
 // import { mapState } from 'vuex'
 const store = useStore();

@@ -77,7 +77,7 @@
 </template>
 <script setup lang="ts">
 import { computed, ComputedRef, Ref, ref } from 'vue';
-import { getNowDate, getRepeatDay } from '@/common/util.js';
+import { getNowDate, getRepeatDay } from '@/common/util.ts';
 import { useStore } from 'vuex';
 import { key } from '@/store';
 const store = useStore(key);

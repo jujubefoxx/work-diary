@@ -14,46 +14,40 @@
 		<confirm-button @handleConfirm="handleConfirm" @handleCancel="close"></confirm-button>
 	</view>
 </template>
-<script>
-export default {
-	name: 'checkbox-item'
-};
-</script>
-<script setup>
-import { ref, toRefs, nextTick } from 'vue';
-const props = defineProps({
-	// 自定义选择器
-	columnList: {
-		type: Array,
-		default: () => []
-	}
+<script setup lang="ts">
+import { ref, toRefs, Ref } from 'vue';
+interface Props {
+	columnList?: any[];
+}
+const props = withDefaults(defineProps<Props>(), {
+	columnList: []
 });
-const { columnList, defaultChecked } = toRefs(props);
+const { columnList } = toRefs(props);
 const emit = defineEmits(['confirm']);
 // 展示开关
-const show = ref(false);
+const show: Ref<boolean> = ref(false);
 // 选择的值
-const checkedValue = ref([]);
+const checkedValue: Ref<number[]> = ref([]);
 
-function handleCheck(id) {
+function handleCheck(id: number): void {
 	if (checkedValue.value.includes(id)) {
 		checkedValue.value.splice(checkedValue.value.indexOf(id), 1);
 	} else {
 		checkedValue.value.push(id);
 	}
 }
-function handleConfirm() {
+function handleConfirm(): void {
 	emit('confirm', checkedValue.value.sort());
 }
 // 打开
-function open(value) {
+function open(value: number[]): void {
 	if (value) {
 		checkedValue.value = value;
 	}
 	show.value = true;
 }
 // 关闭
-function close() {
+function close(): void {
 	show.value = false;
 }
 defineExpose({ open, close });

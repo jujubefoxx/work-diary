@@ -1,5 +1,5 @@
 <script>
-import { getNowDate, getRepeatDay } from '@/common/util.js';
+import { getNowDate, getRepeatDay } from '@/common/util.ts';
 export default {
 	globalData: {
 		imgUrl: {

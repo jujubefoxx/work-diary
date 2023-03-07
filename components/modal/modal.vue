@@ -32,6 +32,7 @@ const emit = defineEmits<{
 // Props类型
 interface Props {
 	showTitle?: boolean;
+	showCancel?: boolean;
 	title?: string;
 	cancelText?: string;
 	confirmText?: string;

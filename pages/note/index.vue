@@ -55,7 +55,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { computed, ComputedRef, Ref, ref } from 'vue';
-import { getNowDate } from '@/common/util.js';
+import { getNowDate } from '@/common/util.ts';
 import { useStore } from 'vuex';
 import { key, Note } from '@/store';
 import { usePage } from '@/common/usePage.ts';

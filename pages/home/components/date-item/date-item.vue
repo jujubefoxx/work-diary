@@ -22,7 +22,7 @@ import { computed, ComputedRef, Ref, ref } from 'vue';
 import { useStore } from 'vuex';
 import { key } from '@/store';
 const store = useStore(key);
-const picker: Ref<object> = ref(null);
+const picker: Ref<any> = ref(null);
 const { year, month, day } = store.state.currentDayDate;
 const weather: ComputedRef<string> = computed(() => store.state.currentDayDate.weather);
 const columnList = [['出太阳', '大阴天', '下雨啦', '刮大风', '下雪咯', '不知道']];
@@ -30,7 +30,7 @@ const columnList = [['出太阳', '大阴天', '下雨啦', '刮大风', '下雪
 function handleClick() {
 	picker.value.open();
 }
-function pickerconfirm(data) {
+function pickerconfirm(data: any) {
 	const obj = store.state.currentDayDate;
 	obj.weather = data[0];
 	store.commit('setCurrentDayDate', obj);

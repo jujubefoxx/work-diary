@@ -1,8 +1,7 @@
 <template>
 	<view class="home-header">
 		<text class="iconfont icon-hudong"></text>
-		<text class="iconfont icon-banzhuan"></text>
-		<image class="home-header__cat" :src="imgUrl.diaryCat"></image>
+		<image class="home-header__cat" src="https://s1.ax1x.com/2023/01/05/pSAE5TA.png"></image>
 		<view class="flex flex-dir-column f-14">
 			<view class="home-header__left">
 				<text>{{ leftSaying }}</text>
@@ -15,12 +14,13 @@
 </template>
 <script setup lang="ts">
 import { computed, ComputedRef, Ref, ref } from 'vue';
-import { dateState } from '@/common/util.js';
+import { dateState } from '@/common/util';
 import { useStore } from 'vuex';
 import { key } from '@/store';
 const store = useStore(key);
 // 图片地址
 const { imgUrl } = getApp({ allowDefault: true }).globalData;
+console.log(imgUrl.diaryCat);
 // 是否假期
 const isHoliday: ComputedRef = computed(() => store.state.isHoliday);
 interface TimeWord {

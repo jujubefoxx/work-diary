@@ -11,7 +11,7 @@ export default {
 </script>
 <script setup>
 import { computed, ref, toRefs } from 'vue';
-import { dateState } from '@/common/util.js';
+import { dateState } from '@/common/util.ts';
 
 const props = defineProps({
 	showCancel: {
