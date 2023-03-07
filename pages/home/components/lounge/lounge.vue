@@ -9,16 +9,17 @@
 		</view>
 	</view>
 </template>
-<script>
-export default {
-	name: 'lounge'
-};
-</script>
-<script setup>
-import { computed, reactive, ref, watch } from 'vue';
-import { dateState, getNowDate } from '@/common/util.ts';
+<script setup lang="ts">
+import { reactive } from 'vue';
+import { getNowDate } from '@/common/util';
 import { onShow } from '@dcloudio/uni-app';
-let lougeList = reactive([
+interface Louge {
+	title: string;
+	shortTitle: string;
+	path?: any;
+	appid?: any;
+}
+let lougeList: Louge[] = reactive([
 	{ title: '今天吃啥', shortTitle: '吃啥', path: 'pages/index/index', appid: 'wx18508a564e357535' },
 	{ title: '广告招租', shortTitle: '广告' },
 	{ title: '广告招租', shortTitle: '广告' },
@@ -33,7 +34,7 @@ onShow(() => {
 	}
 });
 
-function openLounge(item) {
+function openLounge(item: Louge): void {
 	if (!item.path) return;
 	if (item.appid) {
 		uni.navigateToMiniProgram({

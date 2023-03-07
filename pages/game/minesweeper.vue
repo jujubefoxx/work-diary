@@ -92,10 +92,9 @@
 	</view>
 </template>
 
-<script setup>
-import { computed, ref, watch, reactive, onBeforeUnmount, onUnmounted } from 'vue';
+<script setup lang="ts">
+import { computed, ref, watch, reactive, onBeforeUnmount, Ref, ComputedRef } from 'vue';
 import GameHeader from './components/game-header/game-header.vue';
-import { useStore } from 'vuex';
 import { usePage } from '@/common/usePage.ts';
 const { onShareAppMessage, onShareTimeline, onReady } = usePage();
 onShareAppMessage({
@@ -108,17 +107,25 @@ onShareTimeline({
 });
 onReady();
 // 图片地址
-const { imgUrl } = getApp({ allowDefault: true }).globalData;
 const modalChild = ref(null);
 const attention = ref(null);
-const modalInfo = reactive({ content: '', cancelText: '', confirmText: '' });
-function openRule() {
+const modalInfo: { content: string; cancelText: string; confirmText: string } = reactive({ content: '', cancelText: '', confirmText: '' });
+function openRule(): void {
 	modalChild.value.openModal();
+}
+interface Config {
+	alias: string;
+	level: string;
+	xNum: number;
+	yNum: number;
+	boomNum: number;
+	record?: number | string;
+	time?: number | string;
 }
 
 // 选择难度 START
 //难度配置
-const config = [
+const config: Config[] = [
 	{
 		alias: 'easy',
 		level: '青铜',
@@ -143,9 +150,9 @@ const config = [
 ];
 
 // 是否选择了难度
-let hasChoseLevel = ref(false);
+let hasChoseLevel: Ref<boolean> = ref(false);
 // 当前游戏信息
-let gameInfo = ref({
+let gameInfo: Ref<Config> = ref({
 	alias: 'easy',
 	level: '青铜', // 难度等级
 	time: 0, // 时间
@@ -155,20 +162,15 @@ let gameInfo = ref({
 	boomNum: 10 // 炸弹数
 });
 // 旗帜数
-let flagNum = ref(0);
+let flagNum: Ref<number> = ref(0);
 // 当前难度的非雷格子数
-let saveNum = 0;
+let saveNum: number = 0;
 //剩余炸弹数量
 const remain = computed(() => {
 	return gameInfo.value.boomNum - flagNum.value < 0 ? 0 : gameInfo.value.boomNum - flagNum.value;
 });
 
-/**
- * 选择难度
- *
- * @param   {Object} item 选择的难度数据
- */
-function choseLevel(item) {
+function choseLevel(item: Config) {
 	const { alias } = item;
 
 	gameInfo.value = {
@@ -186,19 +188,26 @@ function choseLevel(item) {
 
 // 开始游戏 START
 // 棋盘
-let board = ref([]);
+
+interface Column {
+	data: string;
+	isShow: boolean;
+	isBoom: boolean;
+}
+
+let board: Ref<Column[][]> = ref([]);
 //保证第一个点击的格子不是雷
-let isInit = ref(false);
+let isInit: Ref<boolean> = ref(false);
 // 游戏是否结束
-let isOver = ref(false);
+let isOver: Ref<boolean> = ref(false);
 // 是否处于插旗模式
-let isSetFlag = ref(false);
+let isSetFlag: Ref<boolean> = ref(false);
 // 计时器
-let timer = null;
+let timer: number = null;
 // 开始计时
 function setTimer() {
-	timer = setInterval(() => {
-		const num = parseFloat(gameInfo.value.time) + 0.01;
+	timer = window.setInterval(() => {
+		const num: number = parseFloat(gameInfo.value.time as string) + 0.01;
 		gameInfo.value.time = num.toFixed(2);
 	}, 10);
 }
@@ -223,14 +232,13 @@ function restart() {
 // 开始游戏 END
 
 // 游戏过程 START
-
 /**
  * 插旗
  *
  * @param   {Array} click 点击的坐标
  * @param   {Object} column 点击坐标数据
  */
-function setFlag(click, column) {
+function setFlag(click: number[], column: Column) {
 	const [cY, cX] = click;
 	const { data, isBoom, isShow } = column;
 	if (isShow) return; // 如果这个格子已经翻开 直接返回
@@ -255,7 +263,7 @@ function setFlag(click, column) {
  * @param   {String|Number} y   需要修改的y坐标
  * @param   {Object} data   改变后的数据
  */
-function editBoard(x, y, data) {
+function editBoard(x: number, y: number, data: Column) {
 	const row = [...board.value[y]]; // 获取那一行的数据
 	row.splice(x, 1, data); // 修改
 	board.value[y] = row;
@@ -267,11 +275,11 @@ function editBoard(x, y, data) {
  * @param   {Array} click 点击的坐标
  *
  **/
-function setBoom(click) {
+function setBoom(click: number[]): void {
 	const { xNum, yNum, boomNum } = gameInfo.value;
 	const [cY, cX] = click;
-	const dx = [],
-		dy = [];
+	const dx: number[] = [],
+		dy: number[] = [];
 	//生成炸弹
 	while (dx.length < boomNum) {
 		const randomX = Math.round(Math.random() * (xNum - 1)); //获取一个范围内的随机数
@@ -303,14 +311,14 @@ function setBoom(click) {
  * @param   {Array} click 点击的坐标
  * @param   {Object} data 点击坐标数据值
  */
-function updateBoard(click, data = undefined) {
+function updateBoard(click: number[], data = undefined): void {
 	const { xNum, yNum } = gameInfo.value;
 	if (isOver.value || data === 'F') return; // 如果游戏已经结束或为旗帜 直接返回
 	const dx = [1, -1, 0, 0, -1, 1, -1, 1]; // 横坐标
 	const dy = [0, 0, 1, -1, 1, -1, -1, 1]; // 纵坐标
-	const inBound = (x, y) => x >= 0 && x < xNum && y >= 0 && y < yNum; // 辅助函数
+	const inBound = (x: number, y: number) => x >= 0 && x < xNum && y >= 0 && y < yNum; // 辅助函数
 
-	const update = (x, y) => {
+	const update = (x: number, y: number) => {
 		if (!inBound(x, y) || board.value[y][x].isShow || board.value[y][x].data === 'F') return; // 不在界内或已插旗或已翻开，直接返回
 		let count = 0;
 		for (let i = 0; i < 8; i++) {
@@ -360,9 +368,9 @@ function updateBoard(click, data = undefined) {
 }
 
 // 注意的类型
-let attentionType = '';
+let attentionType: string = '';
 // 重新开始确认
-function handleRestart(isRestart = true) {
+function handleRestart(isRestart: boolean = true) {
 	// 停止计时
 	clearInterval(timer);
 	if (isOver.value) {
@@ -382,7 +390,7 @@ function handleRestart(isRestart = true) {
 	}
 }
 //
-function closeModal() {
+function closeModal(): void {
 	if (attentionType === 'over') {
 		// 返回主页
 		setLevelPage();
@@ -392,7 +400,7 @@ function closeModal() {
 	}
 	attentionType = '';
 }
-function attentionConfirm() {
+function attentionConfirm(): void {
 	if (attentionType === 'restart' || attentionType === 'over') {
 		// 重新开始
 		restart();
@@ -405,7 +413,7 @@ function attentionConfirm() {
 	attention.value.closeModal();
 }
 // 打开难度选择页面
-function setLevelPage() {
+function setLevelPage(): void {
 	clearInterval(timer); // 清除定时器
 	hasChoseLevel.value = false;
 }
@@ -414,8 +422,8 @@ function setLevelPage() {
 
 // 游戏结束 START
 // 计算已翻开的格子数 当翻开的格子数=安全的格子数时游戏胜利
-const showCount = computed(() => {
-	const arr = board.value.flat();
+const showCount: ComputedRef<number> = computed(() => {
+	const arr: Column[] = board.value.flat();
 	let num = 0;
 	arr.forEach(item => {
 		if (item.isShow) {
@@ -426,7 +434,9 @@ const showCount = computed(() => {
 });
 
 // 难度评级配置
-const scoreLevel = {
+const scoreLevel: {
+	[key: string]: { [key: string]: string };
+} = {
 	easy: {
 		0.49: '100',
 		40: '99',
@@ -477,14 +487,14 @@ watch(showCount, () => {
 		let percent = '1';
 
 		for (const key in scoreLevel[alias]) {
-			if (parseFloat(time) < key) {
+			if (parseFloat(time as string) < key) {
 				percent = scoreLevel[alias][key];
 				break;
 			}
 		}
 
 		// 判断是否为最高纪录
-		if (!record || parseFloat(time) < parseFloat(record)) {
+		if (!record || parseFloat(time as string) < parseFloat(record as string)) {
 			uni.setStorageSync(`${alias}_record`, time);
 			gameInfo.value.record = time;
 		}
