@@ -77,10 +77,32 @@ export interface Profile {
 	// 发薪时间
 	payoffTime: number | string;
 }
+/**
+ *  当前日期
+ *  day 日
+ *  month 月
+ *  year 年
+ */
 export interface Current {
 	day: number;
 	month: number;
 	year: number;
+	weather: string;
+}
+/**
+ *  打卡列表
+ *  title 标题
+ *  remark 备注
+ *  total 次数
+ *  hasPunch 打卡状态
+ *  icon 图标
+ */
+export interface Daily {
+	title: string;
+	remark: string;
+	total?: number;
+	hasPunch?: boolean;
+	icon?: string;
 }
 // 定义 injection key
 export const key: InjectionKey<Store<State>> = Symbol();

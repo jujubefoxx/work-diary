@@ -53,25 +53,18 @@
 	</view>
 	<modal ref="attention" title="注意" @confirmModal="attentionconfirm"><p class="t-c" v-html="modalContent"></p></modal>
 </template>
-<script>
-export default {
-	name: 'daily-attendance'
-};
-</script>
-<script setup>
-import { computed, ref, watch } from 'vue';
-import { dateState, getNowDate, getRepeatDay } from '@/common/util.js';
+<script setup lang="ts">
+import { computed, ComputedRef, Ref, ref } from 'vue';
 import { useStore } from 'vuex';
-import { key } from '@/store';
+import { key, Daily } from '@/store';
 const store = useStore(key);
 const modalChild = ref(null);
 const attention = ref(null);
-const checkbox = ref(null);
 const deleteIndex = ref(-1);
 const modalContent = ref('');
 
-const dailyList = computed(() => store.state.dailyList);
-const defaultDailyList = [
+const dailyList: ComputedRef<Daily[]> = computed(() => store.state.dailyList);
+const defaultDailyList: Daily[] = [
 	{ title: '我摸鱼了', remark: '摸鱼咋还扎手', total: 0, hasPunch: false, icon: 'fish' },
 	{ title: '我发呆了', remark: '地球是我的了', total: 0, hasPunch: false, icon: 'emm' },
 	{ title: '我拉屎了', remark: '拉屎还通畅吗', total: 0, hasPunch: false, icon: 'shit' },
@@ -87,10 +80,10 @@ const modalTips = {
 };
 
 // 资料信息
-const formData = ref({});
+const formData: Ref<Daily> = ref({});
 
 // 打开填写资料弹窗
-function openModal(isEditValue = false, index) {
+function openModal(): void {
 	formData.value = {
 		// 名称
 		title: '',
@@ -100,12 +93,12 @@ function openModal(isEditValue = false, index) {
 	modalChild.value.openModal();
 }
 // 关闭填写资料弹窗
-function closeModal() {
+function closeModal(): void {
 	modalChild.value.closeModal();
 }
 
 // 提交表单
-function confirmModal() {
+function confirmModal(): void {
 	// 名称未填
 	if (!formData.value.title) {
 		uni.showToast({
@@ -123,19 +116,19 @@ function confirmModal() {
 	closeModal();
 }
 // 滑动距离
-const touchWidth = ref(0);
+const touchWidth: Ref<number> = ref(0);
 
 // 防抖
-let touchStart = { height: 0, width: 0 };
-let touchHeight = 0;
+let touchStart: { height: number; width: number } = { height: 0, width: 0 };
+let touchHeight: number = 0;
 // 临时
-let temWidth = 0;
-let hasMove = false;
-let attentionType = '';
-let attentionIndex = -1;
+let temWidth: number = 0;
+let hasMove: boolean = false;
+let attentionType: string = '';
+let attentionIndex: number = -1;
 
 // 打卡
-function punchCard(index) {
+function punchCard(index: number): void {
 	if (deleteIndex.value === index) return;
 	if (dailyList.value[index].hasPunch) {
 		modalContent.value = '确定反悔今天的打卡吗<br />当日打卡数据会在次日重置';
@@ -143,14 +136,14 @@ function punchCard(index) {
 		attentionIndex = index;
 		attention.value.openModal();
 	} else {
-		const newData = { ...dailyList.value[index], hasPunch: true };
+		const newData: Daily = { ...dailyList.value[index], hasPunch: true };
 		// 计算打卡次数
 		if (newData.icon) {
 			newData.total = newData.total > 0 ? Number(newData.total) + 1 : 1;
 		}
 		store.commit('setArrList', { data: newData, index, type: 'edit' });
-		const title = newData.title;
-		const shortTitle = title.replace('我', '').replace('了', '');
+		const title: string = newData.title;
+		const shortTitle: string = title.replace('我', '').replace('了', '');
 		uni.showToast({
 			title: `哦耶！${newData.icon ? `我已经${shortTitle}${newData.total}天了` : title}!`,
 			icon: 'none'
@@ -162,17 +155,17 @@ function punchCard(index) {
 }
 
 // 删除确认
-function handleDelete(index) {
+function handleDelete(index: number): void {
 	modalContent.value = '确定把' + dailyList.value[index].title + '丢进垃圾桶吗';
 	attentionType = 'delete';
 	attentionIndex = index;
 	attention.value.openModal();
 }
 // 注意确认
-function attentionconfirm() {
+function attentionconfirm(): void {
 	const { title } = dailyList.value[attentionIndex];
 	if (attentionType === 'cancel') {
-		const newData = { ...dailyList.value[attentionIndex], hasPunch: false };
+		const newData: Daily = { ...dailyList.value[attentionIndex], hasPunch: false };
 		// 计算打卡次数
 		if (newData.icon) {
 			newData.total = newData.total > 0 ? Number(newData.total) - 1 : 0;
@@ -193,14 +186,14 @@ function attentionconfirm() {
 /**
  * 触摸开始
  */
-function touchS(index, e) {
+function touchS(index: number, e: any) {
 	touchStart.width = e.touches[0].clientX;
 	touchStart.height = e.touches[0].clientY;
 }
 /**
  * 触摸移动
  */
-function touchM(index, e) {
+function touchM(index: number, e: any) {
 	// 无法删除前四个
 	if (index < 4) return;
 	if (e.touches[0].clientX) hasMove = true;
@@ -219,7 +212,7 @@ function touchM(index, e) {
 /**
  * 触摸结束
  */
-function touchE(index, e) {
+function touchE(index: number, e: any) {
 	if (!hasMove) return;
 	// 复位
 	// 避免上下滑动导致滑动
